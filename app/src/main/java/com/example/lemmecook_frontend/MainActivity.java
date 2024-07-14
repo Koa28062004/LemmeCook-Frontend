@@ -2,7 +2,6 @@ package com.example.lemmecook_frontend;
 
 import android.os.Bundle;
 
-import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
