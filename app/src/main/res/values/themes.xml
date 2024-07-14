@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.LemmeCookFrontend" parent="Base.Theme.LemmeCookFrontend" />
+
+    <style name="ProgressBarStyle" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/white</item>
+    </style>
 </resources>
