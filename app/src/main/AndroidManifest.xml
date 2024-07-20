@@ -21,7 +21,7 @@
             android:label="@string/title_activity_main2"
             android:theme="@style/Theme.LemmeCookFrontend" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".fragments.SignIn"
             android:exported="true"
             android:theme="@style/Theme.LemmeCookFrontend">
             <intent-filter>
