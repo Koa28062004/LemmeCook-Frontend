@@ -1,4 +1,4 @@
-package com.example.lemmecook_frontend;
+package com.example.lemmecook_frontend.fragments;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -6,16 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.lemmecook_frontend.api.ApiService;
+import com.example.lemmecook_frontend.models.Model;
+import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.databinding.FragmentFirstBinding;
-import com.google.android.material.textfield.TextInputLayout;
+import com.example.lemmecook_frontend.utilities.RetrofitClient;
 
 
 import retrofit2.Call;

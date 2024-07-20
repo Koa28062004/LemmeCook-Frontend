@@ -1,4 +1,4 @@
-package com.example.lemmecook_frontend;
+package com.example.lemmecook_frontend.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.databinding.FragmentSecondBinding;
 
 public class SecondFragment extends Fragment {

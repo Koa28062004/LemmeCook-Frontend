@@ -1,10 +1,10 @@
-package com.example.lemmecook_frontend;
+package com.example.lemmecook_frontend.api;
+
+import com.example.lemmecook_frontend.models.Model;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
-import java.util.List;
-import retrofit2.http.GET;
 
 public interface ApiService {
     @POST("tasks/")

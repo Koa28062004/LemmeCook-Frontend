@@ -1,4 +1,4 @@
-package com.example.lemmecook_frontend;
+package com.example.lemmecook_frontend.models;
 
 public class Model {
     String FirstName,LastName,PhoneNumber,Email;
