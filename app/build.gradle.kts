@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
 }
 
@@ -39,7 +40,7 @@ android {
         compose = true
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -70,6 +71,8 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.material)
     implementation(libs.material3.android)
+    implementation(libs.material3)
+    implementation(libs.activity)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -96,7 +99,8 @@ dependencies {
 
 
 
-
     implementation("com.google.code.gson:gson:2.6.2")
     implementation("com.squareup.retrofit2:converter-gson:2.1.0")
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    implementation("io.coil-kt:coil-compose:2.0.0")
 }

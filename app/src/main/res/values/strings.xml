@@ -45,4 +45,5 @@
     </string>
     <string name="hosted_at_python_pythonanywhere_com_support_whatsapp_255675839840">Hosted at: Python pythonanywhere.com [support: WhatsApp +255675839840]</string>
     <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_activity_explore_main">ExploreMain</string>
 </resources>
