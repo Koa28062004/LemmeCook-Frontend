@@ -81,7 +81,6 @@
     <ImageView
         android:layout_width="45dp"
         android:layout_height="45dp"
-
         android:padding="7dp"
         android:src="@drawable/magnifier"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
