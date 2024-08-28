@@ -3,7 +3,6 @@ package com.example.lemmecook_frontend.fragments
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,18 +18,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -46,7 +44,7 @@ import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 
 @Preview(showBackground = true)
 @Composable
-fun StateTestScreen() {
+fun StateTestScreenForRecipeOverview() {
     val title: String = "Healthy salad with salsa"
     val subtitles: List<String> = listOf("Lunch", "Easy", "15 minutes prep")
     val nutrients: Map<String, String> = mapOf(
@@ -140,13 +138,7 @@ fun RecipeOverview(
                     modifier = Modifier.padding(0.dp, 14.dp, 0.dp, 4.dp)
                 )
 
-                Text(
-                    text = "Thursday 10 AM",
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = sf_pro_display,
-                    fontSize = 17.sp,
-                    color = Color(67, 67, 67)
-                )
+                AnimatedTextLoop(texts = subtitles)
 
                 Box(
                     modifier = Modifier
@@ -182,6 +174,33 @@ fun RecipeOverview(
 }
 
 @Composable
+fun AnimatedTextLoop(texts: List<String>) {
+    // Remember the current index and the text state
+    var currentIndex by remember { mutableStateOf(0) }
+
+    // LaunchedEffect to loop through the texts
+    LaunchedEffect(Unit) {
+        while (true) {
+            // Delay for a certain time (e.g., 2 seconds)
+            kotlinx.coroutines.delay(2000)
+
+            // Update the index to the next item in the list
+            currentIndex = (currentIndex + 1) % texts.size
+        }
+    }
+
+    // Display the current text from the list
+    Text(
+        text = texts[currentIndex],
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = sf_pro_display,
+        fontSize = 17.sp,
+        color = Color(67, 67, 67)
+    )
+}
+
+
+@Composable
 fun NutrientItem(value: String, label: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -214,7 +233,7 @@ fun IngredientsSection(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 40.dp, top = 4.dp, end = 24.dp, bottom = 10.dp),
+            .padding(start = 40.dp, top = 4.dp, end = 26.dp, bottom = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
