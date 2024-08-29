@@ -19,11 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
-import com.example.lemmecook_frontend.activities.NavHost.navigateTo
-import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 
 @Composable
-fun LandingScreen(navController: NavHostController) {
+fun SignInScreen() {
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)) {
@@ -53,7 +51,7 @@ fun LandingScreen(navController: NavHostController) {
 //                .offset(y = (-20).dp),
         ) {
             Text(
-                text = "Healthy Recipes \nin your Hand.\nEvery Day.",
+                text = "Welcome Back!",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -62,7 +60,7 @@ fun LandingScreen(navController: NavHostController) {
             )
 
             TextButton(
-                onClick = { navController.navigateTo(SignInScreen.route) },
+                onClick = { },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
@@ -152,6 +150,6 @@ fun LandingScreen(navController: NavHostController) {
 
 //@Preview(showBackground = true)
 @Composable
-fun LandingScreenPreview(navController: NavHostController) {
-    LandingScreen(navController)
+fun SignInScreenPreview() {
+    SignInScreen()
 }

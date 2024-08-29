@@ -20,12 +20,8 @@
             android:exported="true" />
         <activity
             android:name=".activities.MainActivity"
-            android:exported="false"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/Theme.LemmeCookFrontend" />
-        <activity
-            android:name=".fragments.SignIn"
             android:exported="true"
+            android:label="@string/title_activity_main2"
             android:theme="@style/Theme.LemmeCookFrontend">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

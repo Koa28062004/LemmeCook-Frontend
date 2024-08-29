@@ -13,4 +13,6 @@
     <color name="alert">#FF3636</color>
     <color name="beige">#FFDDA2</color>
     <color name="main">#003B6C</color>
+    <color name="button_email">#55915E</color>
+    <color name="button_gg_fb">#D7D7D7</color>
 </resources>

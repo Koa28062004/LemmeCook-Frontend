@@ -2,13 +2,19 @@ package com.example.lemmecook_frontend.activities.NavHost
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.home.HomeScreen
+import com.example.lemmecook_frontend.fragments.LandingScreen
+import com.example.lemmecook_frontend.fragments.LandingScreenPreview
+import com.example.lemmecook_frontend.fragments.SignIn
+import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -18,21 +24,14 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Home.route,
+        startDestination = LandingScreen.route,
         modifier = modifier
     ) {
-        composable(route = Home.route) {
-            HomeScreen(
-//                onBookingSelected = { bookingId ->
-//                    navController.navigateTo(
-//                        "${Booking.route}/$bookingId"
-//                    if (bookingId == R.string.b2.toString()) {
-//                        navController.navigateTo(TransportBooking.route)
-//                    } else {
-//                        navController.navigateTo(ComingSoon.route)
-//                    }
-//                }
-            )
+        composable(route = LandingScreen.route) {
+            LandingScreenPreview(navController)
+        }
+        composable(route = SignInScreen.route) {
+            SignInScreenPreview()
         }
     }
 }
