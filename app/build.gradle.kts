@@ -97,10 +97,13 @@ dependencies {
     // Kotlin serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 
-
-
     implementation("com.google.code.gson:gson:2.6.2")
     implementation("com.squareup.retrofit2:converter-gson:2.1.0")
     implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
     implementation("io.coil-kt:coil-compose:2.0.0")
+
+    // use Glide to load an image URL
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation("jp.wasabeef:glide-transformations:4.3.0")
+
 }
