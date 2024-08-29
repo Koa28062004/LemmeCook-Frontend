@@ -13,6 +13,8 @@ import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.home.HomeScreen
 import com.example.lemmecook_frontend.fragments.LandingScreen
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
+import com.example.lemmecook_frontend.fragments.SignIn
+import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -26,7 +28,10 @@ fun AppNavHost(
         modifier = modifier
     ) {
         composable(route = LandingScreen.route) {
-            LandingScreenPreview()
+            LandingScreenPreview(navController)
+        }
+        composable(route = SignInScreen.route) {
+            SignInScreenPreview()
         }
     }
 }
