@@ -1,5 +1,6 @@
 package com.example.lemmecook_frontend.activities.NavHost
 
+import androidx.annotation.Nullable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ConfirmationNumber
 import androidx.compose.material.icons.outlined.Home
@@ -10,6 +11,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed interface AppDestination {
     val icon: ImageVector
     val route: String
+}
+
+data object LandingScreen : AppDestination {
+    override val icon = Icons.Outlined.Home
+    override val route = "LandingScreen"
 }
 
 data object Home : AppDestination {

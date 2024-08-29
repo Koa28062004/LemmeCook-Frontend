@@ -1,58 +1,161 @@
 package com.example.lemmecook_frontend.fragments
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import com.example.lemmecook_frontend.R
+import java.time.format.TextStyle
 
 @Composable
-fun StateTestScreen() {
-    LoginScreen()
-}
+fun LandingScreen() {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black)) {
 
-@Composable
-fun LoginScreen() {
-    Column (
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(painter = painterResource(id = R.drawable.landing_image),
-            contentDescription = "Login",
-            modifier = Modifier.size(200.dp))
+        // Top Image
+        Image(
+            painter = painterResource(id = R.drawable.landing_image),
+            contentDescription = "Healthy Salad",
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+                .clip(RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp))
+                .align(Alignment.TopCenter)
+                .offset(y = (-10).dp),
+            contentScale = ContentScale.Crop
+        )
 
-        Text(text = "Welcome Back", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+        // Content
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+                .background(Color.White)
+//                .padding(top = 0.dp, start = 20.dp, end = 20.dp, bottom = 0.dp)
+//                .offset(y = (-20).dp),
+        ) {
+            Text(
+                text = "Healthy Recipes \nin your Hand.\nEvery Day.",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                lineHeight = 30.sp,
+                modifier = Modifier.padding(vertical = 20.dp)
+            )
 
-        Text(text = "Login to your account")
+            TextButton(
+                onClick = {  },
+                modifier = Modifier
+                    .height(60.dp)
+                    .width(350.dp)
+                    .padding(start = 10.dp) // Spacing between the buttons
+                    .background(Color(86, 146, 95)),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                Text(
+                    text = "Sign in with email",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+            }
 
-        OutlinedTextField(value = "", onValueChange = {}, label = {
-            Text(text = "Email address")
-        })
+            Text(
+                text = "or use social sign up",
+                fontSize = 14.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            // Google Sign In Button
+            TextButton(
+                onClick = { /*TODO: Handle sign in with Google*/ },
+                modifier = Modifier
+                    .height(60.dp)
+                    .width(350.dp)
+                    .padding(start = 8.dp) // Spacing between the buttons
+                    .background(Color(0xFFD7D7D7)),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_google_logo),
+                        contentDescription = "Google Logo",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Continue with Google",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp)
+                }
+            }
 
-        OutlinedTextField(value = "", onValueChange = {}, label = {
-            Text(text = "Password")
-        })
+            Spacer(modifier = Modifier.height(15.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
+            // Facebook Sign In Button
+            TextButton(
+                onClick = { /*TODO: Handle sign in with Facebook*/ },
+                modifier = Modifier
+                    .height(60.dp)
+                    .width(350.dp)
+                    .padding(start = 8.dp) // Spacing between the buttons
+                    .background(Color(0xFFD7D7D7)),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_facebook_logo),
+                        contentDescription = "Facebook Logo",
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Continue with Facebook",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp)
+                }
+            }
 
-        Button(onClick = {}) {
-            Text(text = "Login")
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = "Don’t have an account yet? Sign up",
+                fontSize = 14.sp,
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(vertical = 10.dp)
+            )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LandingScreenPreview() {
+    LandingScreen()
 }
