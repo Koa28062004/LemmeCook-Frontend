@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
+import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
 import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 import com.example.lemmecook_frontend.fragments.SignUpScreenPreview
 
@@ -31,6 +32,9 @@ fun AppNavHost(
         }
         composable(route = SignUpScreen.route) {
             SignUpScreenPreview(navController)
+        }
+        composable(route = OnboardScreen.route) {
+            OnboardScreenPreview()
         }
     }
 }

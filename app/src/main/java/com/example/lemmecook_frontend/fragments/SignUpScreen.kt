@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
+import com.example.lemmecook_frontend.activities.NavHost.OnboardScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -203,7 +204,10 @@ fun SignUpScreen(navController: NavHostController) {
                     text = "Sign up",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .clickable { navController.navigateTo(OnboardScreen.route) }
                 )
             }
 
@@ -229,7 +233,7 @@ fun SignUpScreen(navController: NavHostController) {
     }
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun SignUpScreenPreview(navController: NavHostController) {
     SignUpScreen(navController)
