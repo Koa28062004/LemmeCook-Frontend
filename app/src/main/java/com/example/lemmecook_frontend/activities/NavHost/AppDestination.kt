@@ -38,6 +38,11 @@ data object Step1Screen : AppDestination {
     override val route = "Step1Screen"
 }
 
+data object Step2Screen : AppDestination {
+    override val icon = Icons.Outlined.Home
+    override val route = "Step2Screen"
+}
+
 data object Home : AppDestination {
     override val icon = Icons.Outlined.Home
     override val route = "Home"

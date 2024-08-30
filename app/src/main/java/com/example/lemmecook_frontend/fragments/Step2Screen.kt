@@ -17,13 +17,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.google.accompanist.flowlayout.FlowRow
-import com.example.lemmecook_frontend.activities.NavHost.Step2Screen
 
 @Composable
-fun Step1Screen(navController: NavHostController) {
+fun Step2Screen() {
     var selectedChips by remember { mutableStateOf(setOf<String>()) }
 
     Column(
@@ -41,7 +38,7 @@ fun Step1Screen(navController: NavHostController) {
             Text(
                 text = "Skip",
                 color = Color.Blue,
-                modifier = Modifier.clickable { onSkip() }
+                modifier = Modifier.clickable {  }
             )
         }
 
@@ -51,10 +48,9 @@ fun Step1Screen(navController: NavHostController) {
                 .fillMaxWidth()
         ) {
             Text(
-                text = "Any ingredient allergies?",
+                text = "Do you follow any of these diets?",
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
                 lineHeight = 30.sp,
                 modifier = Modifier.padding(top = 100.dp)
             )
@@ -72,7 +68,7 @@ fun Step1Screen(navController: NavHostController) {
                 .fillMaxWidth()
                 .padding(vertical = 60.dp)
         ) {
-            listOf("Gluten", "Dairy", "Egg", "Soy", "Peanut", "Wheat", "Milk", "Fish").forEach { item ->
+            listOf("None", "Vegan", "Pale", "Dukan", "Vegetarian", "Atkins", "Intermittent Fasting").forEach { item ->
                 Chip(
                     text = item,
                     isSelected = selectedChips.contains(item),
@@ -111,7 +107,7 @@ fun Step1Screen(navController: NavHostController) {
             Spacer(modifier = Modifier.width(16.dp))
 
             TextButton(
-                onClick = { navController.navigateTo(Step2Screen.route) },
+                onClick = {  },
                 modifier = Modifier
                     .weight(1f)
                     .background(Color(86, 146, 95)),
@@ -127,34 +123,8 @@ fun Step1Screen(navController: NavHostController) {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun Chip(
-    text: String,
-    isSelected: Boolean,
-    onChipClick: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier
-            .clickable { onChipClick(text) },
-        shape = RoundedCornerShape(16.dp),
-        color = if (isSelected) Color(0xFF55915E) else Color.Transparent,
-        border = BorderStroke(1.dp, if (isSelected) Color(0xFF55915E) else Color.Black)
-    ) {
-        Text(
-            text = text,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            color = if (isSelected) Color.White else Color.Black
-        )
-    }
-}
-
-fun onSkip() {
-    // Handle skip button click
-}
-
-//@Preview(showBackground = true)
-@Composable
-fun Step1ScreenPreview(navController: NavHostController) {
-    Step1Screen(navController)
+fun Step2ScreenPreview() {
+    Step2Screen()
 }

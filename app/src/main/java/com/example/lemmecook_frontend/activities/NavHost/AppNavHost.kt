@@ -13,6 +13,7 @@ import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
 import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 import com.example.lemmecook_frontend.fragments.SignUpScreenPreview
 import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
+import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -38,7 +39,10 @@ fun AppNavHost(
             OnboardScreenPreview(navController)
         }
         composable(route = Step1Screen.route) {
-            Step1ScreenPreview()
+            Step1ScreenPreview(navController)
+        }
+        composable(route = Step2Screen.route) {
+            Step2ScreenPreview()
         }
     }
 }
