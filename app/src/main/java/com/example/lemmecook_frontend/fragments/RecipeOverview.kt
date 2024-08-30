@@ -39,6 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 
@@ -63,11 +65,15 @@ fun StateTestScreenForRecipeOverview() {
             "Cucumbers" to "10pcs",
             "Large eggs" to "100g"
     )
+    val imgUrl = "https://img.spoonacular.com/recipes/716429-556x370.jpg"
+    val initServes = 1
     RecipeOverview(
             title = title,
             subtitles = subtitles,
             nutrients = nutrients,
-            ingredients = ingredients
+            ingredients = ingredients,
+            imgUrl = imgUrl,
+            initServes = initServes
     )
 }
 @Composable
@@ -75,14 +81,20 @@ fun RecipeOverview(
         title: String,
         subtitles: List<String>,
         nutrients: Map<String, String>,
-        ingredients: Map<String, String>
+        ingredients: Map<String, String>,
+        imgUrl: String,
+        initServes: Int
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
         Image(
-            painter = painterResource(id = R.drawable.recipe_demo_img1),
+            painter = rememberAsyncImagePainter(
+                model = imgUrl,
+                placeholder = painterResource(id = R.drawable.recipe_demo_img1),
+                error = painterResource(id = R.drawable.recipe_demo_img1)
+            ),
             contentDescription = "Recipe overview image",
             modifier = Modifier
                 .fillMaxWidth()
@@ -165,7 +177,7 @@ fun RecipeOverview(
                     }
                 }
 
-                IngredientsSection(1)
+                IngredientsSection(initialServes = initServes)
                 IngredientsList(ingredients = ingredients)
                 BottomButtonsSection()
             }
