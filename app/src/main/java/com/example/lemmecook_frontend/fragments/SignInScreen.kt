@@ -5,7 +5,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -22,6 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +41,7 @@ import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 fun SignInScreen(navController: NavHostController) {
     var textEmail by remember { mutableStateOf("") }
     var textPassword by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     val customGreen = Color(0xFF55915E)
 
@@ -70,18 +78,18 @@ fun SignInScreen(navController: NavHostController) {
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 lineHeight = 30.sp,
-                modifier = Modifier.padding(top = 15.dp)
+                modifier = Modifier.padding(top = 10.dp)
             )
 
             Text(
-                text = "It is so nice to see you",
+                text = "It is so nice to see you!",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(top = 8.dp)
             )
 
             Text(
-                text = "We have new recipes for you",
+                text = "We have new recipes for you!",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -108,7 +116,7 @@ fun SignInScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Password TextField
+            // Password TextField with visibility toggle
             TextField(
                 value = textPassword,
                 onValueChange = { textPassword = it },
@@ -124,6 +132,20 @@ fun SignInScreen(navController: NavHostController) {
                     errorIndicatorColor = Color.Red
                 ),
                 singleLine = true,
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (passwordVisible) {
+                        Icons.Filled.Visibility
+                    } else {
+                        Icons.Filled.VisibilityOff
+                    }
+
+                    IconButton(onClick = {
+                        passwordVisible = !passwordVisible
+                    }) {
+                        Icon(imageVector = image, contentDescription = "Toggle Password Visibility")
+                    }
+                },
                 shape = RoundedCornerShape(0.dp) // No top or side borders
             )
 
@@ -159,13 +181,13 @@ fun SignInScreen(navController: NavHostController) {
             )
 
             Text(
-                text ="Forgot your password ?",
+                text = "Forgot your password?",
                 fontSize = 16.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
-                    .clickable {  }
+                    .clickable { /* Handle forgot password navigation */ }
             )
         }
     }
