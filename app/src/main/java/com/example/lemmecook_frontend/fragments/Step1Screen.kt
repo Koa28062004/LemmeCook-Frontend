@@ -103,11 +103,11 @@ fun Step1Screen(navController: NavHostController) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 SliderCircle(Color(0xFFDADADA))
-                SliderCircle(Color(0xFF55915E))
                 SliderCircle(Color(0xFFDADADA))
+                SliderCircle(Color(0xFF55915E))
             }
 
-            Spacer(modifier = Modifier.height(320.dp))
+            Spacer(modifier = Modifier.height(360.dp))
             Spacer(modifier = Modifier.width(16.dp))
 
             TextButton(

@@ -192,7 +192,7 @@ fun SignUpScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
-                onClick = {  },
+                onClick = { navController.navigateTo(OnboardScreen.route) },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
@@ -207,7 +207,6 @@ fun SignUpScreen(navController: NavHostController) {
                     fontSize = 18.sp,
                     modifier = Modifier
                         .padding(bottom = 8.dp)
-                        .clickable { navController.navigateTo(OnboardScreen.route) }
                 )
             }
 

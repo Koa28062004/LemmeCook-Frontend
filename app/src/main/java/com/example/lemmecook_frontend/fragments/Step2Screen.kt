@@ -123,7 +123,7 @@ fun Step2Screen() {
     }
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun Step2ScreenPreview() {
     Step2Screen()
