@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +32,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.getValue
@@ -44,12 +42,51 @@ import androidx.compose.runtime.setValue
 @Preview(showBackground = true)
 @Composable
 fun StateTestScreenForRecipePrep() {
-    RecipePrep()
+    val totalSteps = 5
+    val stepIngredients = listOf(
+        listOf(
+            "Bacon" to "50 gr",
+            "Soy Sauce" to "200 ml"
+        ),
+        listOf(
+            "Garlic" to "4 cloves, minced",
+            "Ginger" to "1 inch, grated",
+            "Brown Sugar" to "2 tbsp",
+            "Chicken Stock" to "500 ml"
+        ),
+        listOf(
+            "Spring Onions" to "2 stalks, chopped",
+            "Sesame Seeds" to "1 tbsp"
+        ),
+        listOf(
+            // Add ingredients for step 4 if needed
+        ),
+        listOf(
+            // Add ingredients for step 5 if needed
+        )
+    )
+    val stepInstructions = listOf(
+        "We tie the bacon with twine so that the skin is on the outside and one end and the other practically meet. Heat a little oil in a pressure cooker and mark the bacon all over until golden brown. We remove and discard the oil.",
+        "Add minced garlic and grated ginger to the pressure cooker and sauté until fragrant. Add the brown sugar and stir until it caramelizes slightly.",
+        "Return the bacon to the pressure cooker. Pour in the soy sauce and chicken stock. Bring to a boil, then cover and cook under pressure for 30 minutes.",
+        "Release the pressure and check the bacon. It should be tender and flavorful. Remove the bacon and let it rest before slicing.",
+        "Serve the bacon slices topped with chopped spring onions and a sprinkle of sesame seeds. Enjoy!"
+    )
+
+    RecipePrep(
+        totalSteps = totalSteps,
+        stepIngredients = stepIngredients,
+        stepInstructions = stepInstructions
+    )
 }
 
 
 @Composable
-fun RecipePrep() {
+fun RecipePrep(
+    totalSteps: Int,
+    stepIngredients: List<List<Pair<String, String>>>,
+    stepInstructions: List<String>
+) {
     // Manage the current step state
     var currentStep by remember { mutableIntStateOf(1) }
 
@@ -66,7 +103,7 @@ fun RecipePrep() {
             contentScale = ContentScale.Crop
         )
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 300.dp)
@@ -74,29 +111,26 @@ fun RecipePrep() {
                     Color.White,
                     RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp)
                 ),
-            contentAlignment = Alignment.TopCenter
+
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PrepStep(stepNumber = 1)
-                RecipeSteps(stepsCount = 4, currentStep = currentStep)
+                RecipeSteps(stepsCount = totalSteps, currentStep = currentStep)
                 StepContent(
-                    ingredients = listOf(
-                        "Bacon" to "50 gr",
-                        "Soy Sauce" to "200 ml"
-                    ),
-                    summary = "We tie the bacon with twine so that the skin is on the outside and one end and the other practically meet. Heat a little oil in a pressure cooker and mark the bacon all over until golden brown. We remove and discard the oil."
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                BottomButtonsSteps(
-                    onPreviousClick = { if (currentStep > 1) currentStep-- },
-                    onNextClick = { if (currentStep < 4) currentStep++ } // Adjust for 4 steps (3 + flag)
+                    ingredients = stepIngredients[currentStep - 1],
+                    summary = stepInstructions[currentStep - 1]
                 )
             }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            BottomButtonsSteps(
+                onPreviousClick = { if (currentStep > 1) currentStep-- },
+                onNextClick = { if (currentStep < totalSteps) currentStep++ } // Adjust for 4 steps (3 + flag)
+            )
         }
     }
 }
@@ -115,20 +149,48 @@ fun PrepStep(stepNumber: Int) {
 
 @Composable
 fun RecipeSteps(stepsCount: Int, currentStep: Int) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    // Determine the number of steps for each row
+    val circlesPerRow = if (stepsCount <= 5) stepsCount else (stepsCount + 1) / 2
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(vertical = 8.dp)
     ) {
-        // Draw circles for each step and highlight the active step
-        for (i in 1 until stepsCount) { // Loop until stepsCount (excluding the flag step)
-            StepCircle(stepNumber = i, isActive = i == currentStep)
+        // First row
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            if (stepsCount <= 5) {
+                for (i in 1..<circlesPerRow) {
+                    StepCircle(stepNumber = i, isActive = i == currentStep)
+                }
+                FlagCircle(isActive = currentStep == stepsCount)
+            } else {
+                for (i in 1..circlesPerRow) {
+                    StepCircle(stepNumber = i, isActive = i == currentStep)
+                }
+            }
         }
 
-        // Draw the flag icon as the last step
-        FlagCircle(isActive = currentStep == stepsCount) // Check if the flag step is active
+        // Second row (only if there are more than 5 steps)
+        if (stepsCount > 5) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                for (i in (circlesPerRow + 1) until stepsCount) {
+                    StepCircle(stepNumber = i, isActive = i == currentStep)
+                }
+
+                // Draw the flag icon as the last step
+                FlagCircle(isActive = currentStep == stepsCount) // Check if the flag step is active
+            }
+        }
     }
 }
+
 
 @Composable
 fun StepCircle(stepNumber: Int, isActive: Boolean) {
@@ -238,8 +300,6 @@ fun BottomButtonsSteps(
         modifier = Modifier
             .fillMaxWidth()
             .padding(25.dp),
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         TextButton(
             onClick = { onPreviousClick() },
