@@ -39,7 +39,7 @@ fun LandingScreen(navController: NavHostController) {
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp))
                 .align(Alignment.TopCenter)
-                .offset(y = (-10).dp),
+                .offset(y = (-5).dp),
             contentScale = ContentScale.Crop
         )
 
@@ -56,11 +56,11 @@ fun LandingScreen(navController: NavHostController) {
         ) {
             Text(
                 text = "Healthy Recipes \nin your Hand.\nEvery Day.",
-                fontSize = 30.sp,
+                fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 lineHeight = 30.sp,
-                modifier = Modifier.padding(vertical = 20.dp)
+                modifier = Modifier.padding(vertical = 15.dp)
             )
 
             TextButton(
@@ -146,7 +146,7 @@ fun LandingScreen(navController: NavHostController) {
                 fontSize = 14.sp,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)
+                modifier = Modifier.padding(top = 10.dp)
             )
 
             Text(
