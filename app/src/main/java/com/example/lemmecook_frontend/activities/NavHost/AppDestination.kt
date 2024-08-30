@@ -33,6 +33,11 @@ data object OnboardScreen : AppDestination {
     override val route = "OnboardScreen"
 }
 
+data object Step1Screen : AppDestination {
+    override val icon = Icons.Outlined.Home
+    override val route = "Step1Screen"
+}
+
 data object Home : AppDestination {
     override val icon = Icons.Outlined.Home
     override val route = "Home"

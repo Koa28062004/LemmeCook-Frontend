@@ -19,10 +19,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.activities.NavHost.Step1Screen
 
 @Composable
-fun OnboardScreen() {
+fun OnboardScreen(navController: NavHostController) {
 
     Column(
         modifier = Modifier
@@ -85,7 +88,7 @@ fun OnboardScreen() {
             Spacer(modifier = Modifier.width(16.dp))
 
             TextButton(
-                onClick = { /* Handle click */ },
+                onClick = { navController.navigateTo(Step1Screen.route) },
                 modifier = Modifier
                     .height(50.dp)
                     .weight(1f)
@@ -102,19 +105,9 @@ fun OnboardScreen() {
     }
 }
 
-@Composable
-fun SliderCircle(color: Color) {
-    Box(
-        modifier = Modifier
-            .size(8.dp)
-            .background(color, CircleShape)
-    )
 
-    Spacer(modifier = Modifier.width(8.dp))
-}
-
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun OnboardScreenPreview() {
-    OnboardScreen()
+fun OnboardScreenPreview(navController: NavHostController) {
+    OnboardScreen(navController)
 }
