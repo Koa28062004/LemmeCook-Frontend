@@ -23,12 +23,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ExploreMain extends AppCompatActivity {
-    String apiKey = "72c52e0281ea48a1bb1c9ce506e067a4";
-    String ingredients = "rice,chicken";
-    int number = 5;
-    private List<Recipe> recipes;
-    private RecyclerView recyclerView;
-    private PopularRecipeAdapter adapter;
+    private String apiKey = "72c52e0281ea48a1bb1c9ce506e067a4";
+    private int number = 5;
+    private List<Recipe> popularRecipes, recommendedRecipes, veganRecipes;
+    private RecyclerView rvPopularRecipes, rvRecommendedRecipes, rvVeganRecipes;
+    private PopularRecipeAdapter adapterPopularRecipes, adapterRecommendedRecipes, adapterVeganRecipes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,35 +40,95 @@ public class ExploreMain extends AppCompatActivity {
             return insets;
         });
 
-        recipes = new ArrayList<>();
+        popularRecipes = new ArrayList<>();
+        recommendedRecipes = new ArrayList<>();
+        veganRecipes = new ArrayList<>();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.spoonacular.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         ApiRecipeJava api = retrofit.create(ApiRecipeJava.class);
 
-        // Call the API
-        fetchRecipes(api);
+        // fetch recipes api
+        fetchPopularRecipes(api, "chicken,rice", number, apiKey);
+        fetchRecommendedRecipes(api, "beef", number, apiKey);
+        fetchVeganRecipes(api, "salad", number, apiKey);
 
-        recyclerView = findViewById(R.id.rvPopularRecipe);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new PopularRecipeAdapter(this, recipes);
-        recyclerView.setAdapter(adapter);
+        rvPopularRecipes = findViewById(R.id.rvPopularRecipe);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvPopularRecipes.setLayoutManager(layoutManager1);
+        adapterPopularRecipes = new PopularRecipeAdapter(this, popularRecipes);
+        rvPopularRecipes.setAdapter(adapterPopularRecipes);
+
+        rvRecommendedRecipes = findViewById(R.id.rvRecommendedRecipe);
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvRecommendedRecipes.setLayoutManager(layoutManager2);
+        adapterRecommendedRecipes = new PopularRecipeAdapter(this, recommendedRecipes);
+        rvRecommendedRecipes.setAdapter(adapterRecommendedRecipes);
+
+        rvVeganRecipes = findViewById(R.id.rvVeganRecipe);
+        LinearLayoutManager layoutManager3 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvVeganRecipes .setLayoutManager(layoutManager3);
+        adapterVeganRecipes = new PopularRecipeAdapter(this, veganRecipes);
+        rvVeganRecipes.setAdapter(adapterVeganRecipes);
     }
 
-    private void fetchRecipes(ApiRecipeJava api) {
-        Call<List<Recipe>> call = api.getRecipes(ingredients, number, apiKey);
+    private void fetchPopularRecipes(ApiRecipeJava api, String ingredients, int number, String apiKey) {
+        Call<List<Recipe>> call = api.getRecipes(ingredients, number, apiKey, "");
         call.enqueue(new retrofit2.Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, retrofit2.Response<List<Recipe>> response) {
                 if (response.isSuccessful()) {
-                    recipes.addAll(response.body());
-                    for (Recipe r : recipes) {
-                        Log.d("Recipe title", r.getTitle());
+                    popularRecipes.addAll(response.body());
+                    for (Recipe r : popularRecipes) {
+                        Log.d("Popular recipe title", r.getTitle());
                     }
-                    adapter.notifyDataSetChanged();
+                    adapterPopularRecipes.notifyDataSetChanged();
+                } else {
+                    // Handle the error
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                // Handle the failure
+            }
+        });
+    }
+
+    private void fetchRecommendedRecipes(ApiRecipeJava api, String ingredients, int number, String apiKey) {
+        Call<List<Recipe>> call = api.getRecipes(ingredients, number, apiKey, "");
+        call.enqueue(new retrofit2.Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(Call<List<Recipe>> call, retrofit2.Response<List<Recipe>> response) {
+                if (response.isSuccessful()) {
+                    recommendedRecipes.addAll(response.body());
+                    for (Recipe r : recommendedRecipes) {
+                        Log.d("Popular recipe title", r.getTitle());
+                    }
+                    adapterRecommendedRecipes.notifyDataSetChanged();
+                } else {
+                    // Handle the error
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                // Handle the failure
+            }
+        });
+    }
+
+    private void fetchVeganRecipes(ApiRecipeJava api, String ingredients, int number, String apiKey) {
+        Call<List<Recipe>> call = api.getRecipes(ingredients, number, apiKey, "vegan");
+        call.enqueue(new retrofit2.Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(Call<List<Recipe>> call, retrofit2.Response<List<Recipe>> response) {
+                if (response.isSuccessful()) {
+                    veganRecipes.addAll(response.body());
+                    for (Recipe r : veganRecipes) {
+                        Log.d("Popular recipe title", r.getTitle());
+                    }
+                    adapterVeganRecipes.notifyDataSetChanged();
                 } else {
                     // Handle the error
                 }

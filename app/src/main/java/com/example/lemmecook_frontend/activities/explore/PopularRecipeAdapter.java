@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
@@ -40,9 +41,11 @@ public class PopularRecipeAdapter extends RecyclerView.Adapter<PopularRecipeAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Recipe recipe = recipeList.get(position);
         holder.textView.setText(recipe.getTitle());
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(30));
         Glide.with(context)
-                .load(recipe.getImage())
-                .circleCrop()
+                .load(recipe.getImage()) // Replace with your image URL or resource
+                .apply(requestOptions)
                 .into(holder.imageView);
     }
 

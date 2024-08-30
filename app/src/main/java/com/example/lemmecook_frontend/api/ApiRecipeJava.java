@@ -13,6 +13,7 @@ public interface ApiRecipeJava {
     Call<List<Recipe>> getRecipes(
             @Query("ingredients") String ingredients,
             @Query("number") int number,
-            @Query("apiKey") String apiKey
+            @Query("apiKey") String apiKey,
+            @Query("diet") String diet // New vegan parameter
     );
 }
