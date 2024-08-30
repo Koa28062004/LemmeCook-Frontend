@@ -2,11 +2,19 @@ package com.example.lemmecook_frontend.fragments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -14,14 +22,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInScreen() {
+fun SignInScreen(navController: NavHostController) {
+    var textEmail by remember { mutableStateOf("") }
+    var textPassword by remember { mutableStateOf("") }
+
+    val customGreen = Color(0xFF55915E)
+
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)) {
@@ -47,8 +62,7 @@ fun SignInScreen() {
                 .align(Alignment.BottomCenter)
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
                 .background(Color.White)
-//                .padding(top = 0.dp, start = 20.dp, end = 20.dp, bottom = 0.dp)
-//                .offset(y = (-20).dp),
+                .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
         ) {
             Text(
                 text = "Welcome Back!",
@@ -56,11 +70,67 @@ fun SignInScreen() {
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 lineHeight = 30.sp,
-                modifier = Modifier.padding(vertical = 20.dp)
+                modifier = Modifier.padding(top = 15.dp)
             )
 
+            Text(
+                text = "It is so nice to see you",
+                fontSize = 14.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Text(
+                text = "We have new recipes for you",
+                fontSize = 14.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            // Email TextField
+            TextField(
+                value = textEmail,
+                onValueChange = { textEmail = it },
+                label = { Text("Email") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = customGreen,
+                    unfocusedIndicatorColor = customGreen,
+                    disabledIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Red
+                ),
+                singleLine = true,
+                shape = RoundedCornerShape(0.dp) // No top or side borders
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Password TextField
+            TextField(
+                value = textPassword,
+                onValueChange = { textPassword = it },
+                label = { Text("Password") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = customGreen,
+                    unfocusedIndicatorColor = customGreen,
+                    disabledIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Red
+                ),
+                singleLine = true,
+                shape = RoundedCornerShape(0.dp) // No top or side borders
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             TextButton(
-                onClick = { },
+                onClick = {  },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
@@ -69,80 +139,33 @@ fun SignInScreen() {
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = "Sign in with email",
+                    text = "Sign in",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
             }
 
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Clickable Texts
             Text(
-                text = "or use social sign up",
+                text = "or back to landing screen",
                 fontSize = 14.sp,
                 color = Color.Gray,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .clickable { navController.navigateTo(com.example.lemmecook_frontend.activities.NavHost.LandingScreen.route) }
             )
 
-            // Google Sign In Button
-            TextButton(
-                onClick = { /*TODO: Handle sign in with Google*/ },
-                modifier = Modifier
-                    .height(60.dp)
-                    .width(350.dp)
-                    .padding(start = 8.dp) // Spacing between the buttons
-                    .background(Color(0xFFD7D7D7)),
-                shape = RoundedCornerShape(8.dp),
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_google_logo),
-                        contentDescription = "Google Logo",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Continue with Google",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            // Facebook Sign In Button
-            TextButton(
-                onClick = { /*TODO: Handle sign in with Facebook*/ },
-                modifier = Modifier
-                    .height(60.dp)
-                    .width(350.dp)
-                    .padding(start = 8.dp) // Spacing between the buttons
-                    .background(Color(0xFFD7D7D7)),
-                shape = RoundedCornerShape(8.dp),
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_facebook_logo),
-                        contentDescription = "Facebook Logo",
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Continue with Facebook",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp)
-                }
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
             Text(
-                text = "Don’t have an account yet? Sign up",
-                fontSize = 14.sp,
+                text ="Forgot your password ?",
+                fontSize = 16.sp,
                 color = Color.Black,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(vertical = 10.dp)
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .clickable {  }
             )
         }
     }
@@ -150,6 +173,6 @@ fun SignInScreen() {
 
 //@Preview(showBackground = true)
 @Composable
-fun SignInScreenPreview() {
-    SignInScreen()
+fun SignInScreenPreview(navController: NavHostController) {
+    SignInScreen(navController)
 }

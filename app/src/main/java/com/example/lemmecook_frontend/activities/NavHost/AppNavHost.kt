@@ -2,18 +2,13 @@ package com.example.lemmecook_frontend.activities.NavHost
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.lemmecook_frontend.R
-import com.example.lemmecook_frontend.activities.home.HomeScreen
-import com.example.lemmecook_frontend.fragments.LandingScreen
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
-import com.example.lemmecook_frontend.fragments.SignIn
 import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -31,7 +26,7 @@ fun AppNavHost(
             LandingScreenPreview(navController)
         }
         composable(route = SignInScreen.route) {
-            SignInScreenPreview()
+            SignInScreenPreview(navController)
         }
     }
 }
