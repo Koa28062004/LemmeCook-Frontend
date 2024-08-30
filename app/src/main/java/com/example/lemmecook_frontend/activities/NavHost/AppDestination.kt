@@ -23,6 +23,11 @@ data object SignInScreen : AppDestination {
     override val route = "SignInScreen"
 }
 
+data object SignUpScreen : AppDestination {
+    override val icon = Icons.Outlined.Home
+    override val route = "SignUpScreen"
+}
+
 data object Home : AppDestination {
     override val icon = Icons.Outlined.Home
     override val route = "Home"

@@ -30,19 +30,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
-import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
+import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInScreen(navController: NavHostController) {
+fun SignUpScreen(navController: NavHostController) {
     var textEmail by remember { mutableStateOf("") }
     var textPassword by remember { mutableStateOf("") }
+    var textConfirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     val customGreen = Color(0xFF55915E)
 
@@ -74,7 +77,7 @@ fun SignInScreen(navController: NavHostController) {
                 .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
         ) {
             Text(
-                text = "Welcome Back!",
+                text = "Create Account",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -83,14 +86,14 @@ fun SignInScreen(navController: NavHostController) {
             )
 
             Text(
-                text = "It is so nice to see you!",
+                text = "One more step from discovering the best recipes",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(top = 8.dp)
             )
 
             Text(
-                text = "We have new recipes for you!",
+                text = "and joining a happy and healthy community.",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(bottom = 8.dp)
@@ -150,6 +153,41 @@ fun SignInScreen(navController: NavHostController) {
                 shape = RoundedCornerShape(0.dp) // No top or side borders
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Confrim Password TextField with visibility toggle
+            TextField(
+                value = textConfirmPassword,
+                onValueChange = { textConfirmPassword = it },
+                label = { Text("Confirm Password") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = customGreen,
+                    unfocusedIndicatorColor = customGreen,
+                    disabledIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Red
+                ),
+                singleLine = true,
+                visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val image = if (confirmPasswordVisible) {
+                        Icons.Filled.Visibility
+                    } else {
+                        Icons.Filled.VisibilityOff
+                    }
+
+                    IconButton(onClick = {
+                        confirmPasswordVisible = !confirmPasswordVisible
+                    }) {
+                        Icon(imageVector = image, contentDescription = "Toggle Password Visibility")
+                    }
+                },
+                shape = RoundedCornerShape(0.dp) // No top or side borders
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
@@ -162,7 +200,7 @@ fun SignInScreen(navController: NavHostController) {
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = "Sign in",
+                    text = "Sign up",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
@@ -171,31 +209,28 @@ fun SignInScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Clickable Texts
             Text(
-                text = "or back to landing screen",
+                text = "Already have an account?",
                 fontSize = 14.sp,
                 color = Color.Gray,
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .clickable { navController.navigateTo(LandingScreen.route) }
+                modifier = Modifier.padding(top = 8.dp)
             )
 
             Text(
-                text = "Forgot your password?",
+                text = "Sign in",
                 fontSize = 16.sp,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
-                    .clickable { /* Handle forgot password navigation */ }
+                    .clickable { navController.navigateTo(SignInScreen.route) }
             )
         }
     }
 }
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
-fun SignInScreenPreview(navController: NavHostController) {
-    SignInScreen(navController)
+fun SignUpScreenPreview(navController: NavHostController) {
+    SignUpScreen(navController)
 }

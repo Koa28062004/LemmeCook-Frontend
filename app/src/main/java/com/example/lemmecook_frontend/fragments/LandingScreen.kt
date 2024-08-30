@@ -2,6 +2,7 @@ package com.example.lemmecook_frontend.fragments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -21,6 +22,7 @@ import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
+import com.example.lemmecook_frontend.activities.NavHost.SignUpScreen
 
 @Composable
 fun LandingScreen(navController: NavHostController) {
@@ -140,11 +142,21 @@ fun LandingScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text = "Don’t have an account yet? Sign up",
+                text = "Don’t have an account yet?",
                 fontSize = 14.sp,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(vertical = 10.dp)
+                modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)
+            )
+
+            Text(
+                text = "Sign up",
+                fontSize = 16.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .clickable { navController.navigateTo(SignUpScreen.route) }
             )
         }
     }
