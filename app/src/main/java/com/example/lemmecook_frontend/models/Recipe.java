@@ -11,18 +11,6 @@ public class Recipe implements Parcelable {
     String image;
     String imageType;
 
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
-        @Override
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
-
     public int getId() {
         return id;
     }
@@ -39,12 +27,31 @@ public class Recipe implements Parcelable {
         return imageType;
     }
 
+    public Recipe(int id, String title, String image, String imageType) {
+        this.id = id;
+        this.title = title;
+        this.image = image;
+        this.imageType = imageType;
+    }
+
     public Recipe(Parcel in) {
         id = in.readInt();
         title = in.readString();
         image = in.readString();
         imageType = in.readString();
     }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     @Override
     public int describeContents() {

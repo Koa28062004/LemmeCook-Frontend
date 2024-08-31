@@ -56,18 +56,20 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-        <AutoCompleteTextView
-            android:id="@+id/actvSearch"
+        <TextView
+            android:id="@+id/tvSearch"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="15dp"
             android:layout_weight="1"
             android:background="@drawable/search_bar_round_square"
             android:backgroundTint="#3355915E"
-            android:hint="Search for a meal"
+            android:text="Search for a meal"
             android:paddingLeft="46dp"
+            android:paddingTop="9dp"
             android:textColorHint="#66000000"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:clickable="true"/>
 
         <ImageButton
             android:layout_width="45dp"

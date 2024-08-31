@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +33,7 @@ public class ExploreMain extends AppCompatActivity {
     private RecyclerView rvPopularRecipes, rvRecommendedRecipes, rvVeganRecipes;
     private PopularRecipeAdapter adapterPopularRecipes, adapterRecommendedRecipes, adapterVeganRecipes;
     private List<Recipe> recentSearchedRecipe;
-    private AutoCompleteTextView actvSearch;
+    private TextView tvSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +79,12 @@ public class ExploreMain extends AppCompatActivity {
         adapterVeganRecipes = new PopularRecipeAdapter(this, veganRecipes);
         rvVeganRecipes.setAdapter(adapterVeganRecipes);
 
-        actvSearch = findViewById(R.id.actvSearch);
-        actvSearch.setOnClickListener(new View.OnClickListener() {
+        tvSearch = findViewById(R.id.tvSearch);
+        tvSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ExploreMain.this, ExploreSearch.class);
                 recentSearchedRecipe = popularRecipes;
-                ArrayList<Recipe> recipesArrayList = new ArrayList<>(recentSearchedRecipe);
-                intent.putParcelableArrayListExtra("recent_recipe_list", recipesArrayList);
                 startActivity(intent);
             }
         });
@@ -100,6 +99,9 @@ public class ExploreMain extends AppCompatActivity {
                     popularRecipes.addAll(response.body());
                     for (Recipe r : popularRecipes) {
                         Log.d("Popular recipe title", r.getTitle());
+                        Log.d("id", String.valueOf(r.getId()));
+                        Log.d("image", r.getImage());
+                        Log.d("image type", r.getImageType());
                     }
                     adapterPopularRecipes.notifyDataSetChanged();
                 } else {

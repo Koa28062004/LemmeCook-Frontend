@@ -107,5 +107,5 @@ dependencies {
     implementation("jp.wasabeef:glide-transformations:4.3.0")
 
     implementation("com.google.accompanist:accompanist-flowlayout:0.28.0")
-
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 }
