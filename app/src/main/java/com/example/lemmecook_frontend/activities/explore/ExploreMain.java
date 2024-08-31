@@ -1,7 +1,10 @@
 package com.example.lemmecook_frontend.activities.explore;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AutoCompleteTextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +31,8 @@ public class ExploreMain extends AppCompatActivity {
     private List<Recipe> popularRecipes, recommendedRecipes, veganRecipes;
     private RecyclerView rvPopularRecipes, rvRecommendedRecipes, rvVeganRecipes;
     private PopularRecipeAdapter adapterPopularRecipes, adapterRecommendedRecipes, adapterVeganRecipes;
+    private List<Recipe> recentSearchedRecipe;
+    private AutoCompleteTextView actvSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +77,18 @@ public class ExploreMain extends AppCompatActivity {
         rvVeganRecipes .setLayoutManager(layoutManager3);
         adapterVeganRecipes = new PopularRecipeAdapter(this, veganRecipes);
         rvVeganRecipes.setAdapter(adapterVeganRecipes);
+
+        actvSearch = findViewById(R.id.actvSearch);
+        actvSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ExploreMain.this, ExploreSearch.class);
+                recentSearchedRecipe = popularRecipes;
+                ArrayList<Recipe> recipesArrayList = new ArrayList<>(recentSearchedRecipe);
+                intent.putParcelableArrayListExtra("recent_recipe_list", recipesArrayList);
+                startActivity(intent);
+            }
+        });
     }
 
     private void fetchPopularRecipes(ApiRecipeJava api, String ingredients, int number, String apiKey) {

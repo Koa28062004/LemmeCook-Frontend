@@ -57,7 +57,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <AutoCompleteTextView
-            android:id="@+id/actv"
+            android:id="@+id/actvSearch"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="15dp"
