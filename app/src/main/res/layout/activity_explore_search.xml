@@ -53,6 +53,7 @@
             android:textSize="18dp" />
 
         <ImageButton
+            android:id="@+id/imageButtonFilter"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_marginHorizontal="15dp"
