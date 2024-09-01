@@ -37,16 +37,15 @@ fun ProgressComponent(
             modifier = Modifier
                 .fillMaxWidth()
                 .graphicsLayer {
-                    shadowElevation = 2.dp.toPx() // Convert dp to pixels
-                    translationY = (-4.5).dp.toPx() // Y-axis translation for the shadow
-                    translationX = (-1.5).dp.toPx()
+                    shadowElevation = 0.5.dp.toPx() // Convert dp to pixels
+                    translationY = (-0.8).dp.toPx() // Y-axis translation for the shadow
                 }
                 .shadow(
-                    elevation = 10.dp,
+                    elevation = 2.dp,
                     shape = RoundedCornerShape(30.dp),
                     clip = false,
-                    ambientColor = Color(0x1A063336), // Custom shadow color with opacity
-                    spotColor = Color(0x1A063336) // Custom shadow color with opacity
+                    ambientColor = Color(242, 242, 242), // Custom shadow color with opacity
+                    spotColor = Color(242, 242, 242) // Custom shadow color with opacity
                 ),
         ) {
             Column(
@@ -62,7 +61,7 @@ fun ProgressComponent(
                     Text(
                         text = "Today's Progress",
                         fontFamily = sf_pro_display,
-                        fontSize = 20.sp,
+                        fontSize = 21.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(bottom = 10.dp)
                     )
@@ -83,7 +82,7 @@ fun ProgressComponent(
                 }
                 Row (
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
+                    horizontalArrangement = Arrangement.SpaceAround,
                 ) {
                     Calories(currentCalories = currentCalo)
 
@@ -140,7 +139,7 @@ fun NutrientProgress(percentage: Float, label: String, color: Color) {
                 Text(
                     text = label,
                     fontFamily = sf_pro_display,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     color = Color.Gray
                 )
             }

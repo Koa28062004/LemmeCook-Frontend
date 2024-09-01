@@ -4,6 +4,7 @@ import ProgressComponent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,8 +32,11 @@ import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
@@ -52,10 +56,11 @@ fun StateTestScreenForRecipeCongrats() {
         goalFat = 1000,
         goalPro = 1000,
         goalCarb = 1000,
-        allowChange = false
+        allowChange = false,
+        difficult = 4,
+        rate = 3
     )
 }
-
 
 @Composable
 fun RecipeCongrats(
@@ -66,8 +71,12 @@ fun RecipeCongrats(
     goalFat: Int,
     goalPro: Int,
     goalCarb: Int,
-    allowChange: Boolean
+    allowChange: Boolean,
+    difficult: Int,
+    rate: Int
 ) {
+    var difficulty by remember { mutableIntStateOf(difficult) }
+    var rating by remember { mutableIntStateOf(rate) }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -136,6 +145,82 @@ fun RecipeCongrats(
                 allowChange = allowChange,
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
             )
+
+            DifficultyRating(
+                rating = difficulty,
+                onRatingChanged = {difficulty = it},
+                criteria = "difficulty",
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 12.dp)
+            )
+
+            DifficultyRating(
+                rating = rating,
+                onRatingChanged = {rating = it},
+                criteria = "food",
+                modifier = Modifier.padding(horizontal = 28.dp, vertical = 12.dp)
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            DoneButton(
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 15.dp),
+                onClick = {/* TODO: back to home */}
+            )
         }
+    }
+}
+
+@Composable
+fun DifficultyRating(
+    rating: Int,
+    onRatingChanged: (Int) -> Unit,
+    criteria: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        Text(
+            text = "Rate the $criteria",
+            fontSize = 21.sp,
+            fontFamily = sf_pro_display,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        Row (
+            modifier = Modifier.padding(top = 5.dp)
+        ) {
+            for (i in 1..5) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_star_outline),
+                    contentDescription = "Star $i",
+                    tint = if (i <= rating) Color(255, 203, 69) else Color(242, 242, 242),
+                    modifier = Modifier
+                        .size(45.dp)
+                        .clickable { onRatingChanged(i) }
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun DoneButton(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        colors = ButtonDefaults.buttonColors(Color(86, 146, 95)),
+        shape = RoundedCornerShape(24.dp) // Rounded edges
+    ) {
+        Text(
+            text = "Done",
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
