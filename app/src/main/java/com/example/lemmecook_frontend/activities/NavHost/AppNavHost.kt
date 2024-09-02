@@ -8,6 +8,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
 import com.example.lemmecook_frontend.fragments.SignInScreenPreview
@@ -47,6 +48,13 @@ fun AppNavHost(
         }
         composable(route = ForgetPasswordScreen.route) {
             ForgetPasswordScreenPreview(navController)
+        }
+        composable(
+            route = "choose_name/{email}/{password}"
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email")
+            val password = backStackEntry.arguments?.getString("password")
+            ChooseNameScreenPreview(navController, email, password)
         }
     }
 }

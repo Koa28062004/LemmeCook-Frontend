@@ -7,12 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -30,16 +25,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
-import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
-import com.example.lemmecook_frontend.activities.NavHost.ChooseNameScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
+import com.example.lemmecook_frontend.activities.NavHost.OnboardScreen
+import com.example.lemmecook_frontend.activities.NavHost.ForgetPasswordScreen
 import com.example.lemmecook_frontend.api.UsersApi
 import com.example.lemmecook_frontend.models.data.RegisterDataModel
 import com.example.lemmecook_frontend.models.response.StatusResponse
@@ -50,12 +44,9 @@ import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUpScreen(navController: NavHostController) {
-    var textEmail by remember { mutableStateOf("") }
-    var textPassword by remember { mutableStateOf("") }
-    var textConfirmPassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var confirmPasswordVisible by remember { mutableStateOf(false) }
+fun ChooseNameScreen(navController: NavHostController, email: String?, password: String?) {
+    var username by remember { mutableStateOf("") }
+    var fullName by remember { mutableStateOf("") }
 
     val context = LocalContext.current
 
@@ -89,7 +80,7 @@ fun SignUpScreen(navController: NavHostController) {
                 .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
         ) {
             Text(
-                text = "Create Account",
+                text = "Choose Your Name!",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -98,24 +89,17 @@ fun SignUpScreen(navController: NavHostController) {
             )
 
             Text(
-                text = "One more step from discovering the best recipes",
+                text = "What a lovely name!",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            Text(
-                text = "and joining a happy and healthy community.",
-                fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            // Email TextField
+            // username TextField
             TextField(
-                value = textEmail,
-                onValueChange = { textEmail = it },
-                label = { Text("Email") },
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("username") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -134,8 +118,8 @@ fun SignUpScreen(navController: NavHostController) {
 
             // Password TextField with visibility toggle
             TextField(
-                value = textPassword,
-                onValueChange = { textPassword = it },
+                value = fullName,
+                onValueChange = { fullName= it },
                 label = { Text("Password") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -148,62 +132,13 @@ fun SignUpScreen(navController: NavHostController) {
                     errorIndicatorColor = Color.Red
                 ),
                 singleLine = true,
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    val image = if (passwordVisible) {
-                        Icons.Filled.Visibility
-                    } else {
-                        Icons.Filled.VisibilityOff
-                    }
-
-                    IconButton(onClick = {
-                        passwordVisible = !passwordVisible
-                    }) {
-                        Icon(imageVector = image, contentDescription = "Toggle Password Visibility")
-                    }
-                },
-                shape = RoundedCornerShape(0.dp) // No top or side borders
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Confrim Password TextField with visibility toggle
-            TextField(
-                value = textConfirmPassword,
-                onValueChange = { textConfirmPassword = it },
-                label = { Text("Confirm Password") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    focusedIndicatorColor = customGreen,
-                    unfocusedIndicatorColor = customGreen,
-                    disabledIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Red
-                ),
-                singleLine = true,
-                visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    val image = if (confirmPasswordVisible) {
-                        Icons.Filled.Visibility
-                    } else {
-                        Icons.Filled.VisibilityOff
-                    }
-
-                    IconButton(onClick = {
-                        confirmPasswordVisible = !confirmPasswordVisible
-                    }) {
-                        Icon(imageVector = image, contentDescription = "Toggle Password Visibility")
-                    }
-                },
                 shape = RoundedCornerShape(0.dp) // No top or side borders
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
-                onClick = { signUpAction(context, navController, textEmail, textPassword, textConfirmPassword) },
+                onClick = { ChooseNameAction(navController, context, username, fullName, email, password) },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
@@ -212,50 +147,56 @@ fun SignUpScreen(navController: NavHostController) {
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = "Sign up",
+                    text = "Confirm",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                text = "Already have an account?",
-                fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            Text(
-                text = "Sign in",
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .clickable { navController.navigateTo(SignInScreen.route) }
-            )
         }
     }
 }
 
-fun signUpAction(context: Context, navController: NavHostController, textEmail: String, textPassword: String, textConfirmPassword: String) {
-    if (validateInputs(context, textEmail, textPassword, textConfirmPassword)) {
-        if (textPassword != textConfirmPassword) {
-            Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
-        }
-        else {
-            navController.navigate("choose_name/$textEmail/$textPassword")
-        }
+fun ChooseNameAction(navController: NavHostController, context: Context, username: String, fullName: String, email: String?, password: String?) {
+    if (validateInputs(context, username, fullName)) {
+        val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
+
+        val nonNullEmail: String = email!!
+        val nonNullPassword: String = password!!
+
+        val registerData = RegisterDataModel(
+            username = username,
+            fullName = fullName,
+            email = email,
+            password = password
+        )
+
+        usersApi.userRegister(registerData).enqueue(object : Callback<StatusResponse> {
+            override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+                if (response.isSuccessful) {
+                    val statusResponse = response.body()
+                    if (statusResponse?.status == "success") {
+                        Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT).show()
+                        navController.navigateTo(OnboardScreen.route)
+                    } else {
+                        Toast.makeText(context, "1 - Register failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    Toast.makeText(context, "2 - Register failed: ${response.message()}", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+                Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+            }
+        })
     }
 }
 
-private fun validateInputs(context: Context, textEmail: String, textPassword: String, textConfirmPassword: String): Boolean {
+private fun validateInputs(context: Context, username: String, fullName: String): Boolean {
     var isValid = true
 
-    if (textEmail.isBlank() || textPassword.isBlank() || textConfirmPassword.isBlank()) {
+    if (username.isBlank() || fullName.isBlank()) {
         Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
         isValid = false
     }
@@ -265,6 +206,6 @@ private fun validateInputs(context: Context, textEmail: String, textPassword: St
 
 //@Preview(showBackground = true)
 @Composable
-fun SignUpScreenPreview(navController: NavHostController) {
-    SignUpScreen(navController)
+fun ChooseNameScreenPreview(navController: NavHostController, email: String?, password: String?) {
+    ChooseNameScreen(navController, email, password)
 }

@@ -11,4 +11,7 @@ data class RegisterDataModel(
 
     @SerializedName("password")
     var password: String = "",
+
+    @SerializedName("fullName")
+    var fullName: String = "",
 )
