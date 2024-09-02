@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -17,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.api.ApiRecipeJava;
-import com.example.lemmecook_frontend.models.Recipe;
+import com.example.lemmecook_frontend.models.data.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;

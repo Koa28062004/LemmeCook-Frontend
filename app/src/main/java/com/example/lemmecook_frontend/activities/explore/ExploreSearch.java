@@ -1,7 +1,6 @@
 package com.example.lemmecook_frontend.activities.explore;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -16,10 +15,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lemmecook_frontend.R;
-import com.example.lemmecook_frontend.models.Recipe;
+import com.example.lemmecook_frontend.models.data.Recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
