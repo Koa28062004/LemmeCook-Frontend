@@ -33,14 +33,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
-import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
-import com.example.lemmecook_frontend.activities.NavHost.OnboardScreen
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.api.UsersApi
+import com.example.lemmecook_frontend.models.data.RegisterDataModel
+import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.utilities.ApiUtility
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -238,12 +243,56 @@ fun SignUpScreen(navController: NavHostController) {
 }
 
 fun signUpAction(context: Context, navController: NavHostController, textEmail: String, textPassword: String, textConfirmPassword: String) {
-    if (textPassword != textConfirmPassword) {
-        Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+    if (validateInputs(context, textEmail, textPassword, textConfirmPassword)) {
+        if (textPassword != textConfirmPassword) {
+            Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
+            val registerData = RegisterDataModel(
+                username = textEmail,
+                email = textEmail,
+                password = textPassword
+            )
+//
+//            val registerData = RegisterDataModel(
+//                username = "exampleUser",
+//                email = "johndoe@example.com",
+//                password = "password123"
+//            )
+
+            usersApi.userRegister(registerData).enqueue(object : Callback<StatusResponse> {
+                override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+                    if (response.isSuccessful) {
+                        val statusResponse = response.body()
+                        if (statusResponse?.status == "success") {
+                            Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show()
+                            navController.navigateTo(SignInScreen.route)
+                        } else {
+                            Toast.makeText(context, "1 - Registration failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        Toast.makeText(context, "2 - Registration failed: ${response.message()}", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+                    Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+                }
+            })
+        }
     }
-    else {
-        navController.navigateTo(OnboardScreen.route)
+}
+
+private fun validateInputs(context: Context, textEmail: String, textPassword: String, textConfirmPassword: String): Boolean {
+    var isValid = true
+
+    if (textEmail.isBlank() || textPassword.isBlank() || textConfirmPassword.isBlank()) {
+        Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
+        isValid = false
     }
+
+    return isValid
 }
 
 //@Preview(showBackground = true)

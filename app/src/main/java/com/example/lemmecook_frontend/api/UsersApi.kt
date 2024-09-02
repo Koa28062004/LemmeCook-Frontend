@@ -12,7 +12,7 @@ import retrofit2.http.Path
 
 interface UsersApi {
     @POST("users/register")
-    fun userLogin(
+    fun userRegister(
         @Body registerDataModel: RegisterDataModel
     ): Call<StatusResponse>
 }
