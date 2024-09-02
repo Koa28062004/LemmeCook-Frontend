@@ -8,6 +8,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
 import com.example.lemmecook_frontend.fragments.SignInScreenPreview
@@ -43,6 +44,9 @@ fun AppNavHost(
         }
         composable(route = Step2Screen.route) {
             Step2ScreenPreview()
+        }
+        composable(route = ForgetPasswordScreen.route) {
+            ForgetPasswordScreenPreview(navController)
         }
     }
 }
