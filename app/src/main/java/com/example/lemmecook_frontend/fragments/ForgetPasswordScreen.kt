@@ -205,33 +205,14 @@ fun ForgetPasswordScreen(navController: NavHostController) {
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = "Sign up",
+                    text = "Confirm",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier
-                        .padding(bottom = 8.dp)
+                    fontSize = 18.sp
                 )
             }
 
             Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                text = "Already have an account?",
-                fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            Text(
-                text = "Sign in",
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .clickable { navController.navigateTo(SignInScreen.route) }
-            )
         }
     }
 }

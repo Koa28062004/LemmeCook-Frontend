@@ -39,6 +39,7 @@ import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
+import com.example.lemmecook_frontend.activities.NavHost.ForgetPasswordScreen
 import com.example.lemmecook_frontend.api.UsersApi
 import com.example.lemmecook_frontend.models.data.LoginDataModel
 import com.example.lemmecook_frontend.models.response.StatusResponse
@@ -200,7 +201,7 @@ fun SignInScreen(navController: NavHostController) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .padding(bottom = 8.dp)
-                    .clickable { /* Handle forgot password navigation */ }
+                    .clickable { navController.navigateTo(ForgetPasswordScreen.route) }
             )
         }
     }
