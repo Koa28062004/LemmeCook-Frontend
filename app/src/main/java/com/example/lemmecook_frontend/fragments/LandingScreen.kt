@@ -1,5 +1,7 @@
 package com.example.lemmecook_frontend.fragments
 
+import android.content.Context
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,19 +15,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
-import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 import com.example.lemmecook_frontend.activities.NavHost.SignUpScreen
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import android.content.Intent
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 
 @Composable
 fun LandingScreen(navController: NavHostController) {
+    val context = LocalContext.current
+
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)) {
@@ -50,9 +65,7 @@ fun LandingScreen(navController: NavHostController) {
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                .background(Color.White)
-//                .padding(top = 0.dp, start = 20.dp, end = 20.dp, bottom = 0.dp)
-//                .offset(y = (-20).dp),
+                .background(Color.White),
         ) {
             Text(
                 text = "Healthy Recipes \nin your Hand.\nEvery Day.",
@@ -68,7 +81,7 @@ fun LandingScreen(navController: NavHostController) {
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
-                    .padding(start = 10.dp) // Spacing between the buttons
+                    .padding(start = 10.dp)
                     .background(Color(86, 146, 95)),
                 shape = RoundedCornerShape(8.dp),
             ) {
@@ -89,11 +102,13 @@ fun LandingScreen(navController: NavHostController) {
 
             // Google Sign In Button
             TextButton(
-                onClick = { /*TODO: Handle sign in with Google*/ },
+                onClick = {
+
+                },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
-                    .padding(start = 8.dp) // Spacing between the buttons
+                    .padding(start = 8.dp)
                     .background(Color(0xFFD7D7D7)),
                 shape = RoundedCornerShape(8.dp),
             ) {
@@ -120,7 +135,7 @@ fun LandingScreen(navController: NavHostController) {
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
-                    .padding(start = 8.dp) // Spacing between the buttons
+                    .padding(start = 8.dp)
                     .background(Color(0xFFD7D7D7)),
                 shape = RoundedCornerShape(8.dp),
             ) {
@@ -162,7 +177,6 @@ fun LandingScreen(navController: NavHostController) {
     }
 }
 
-//@Preview(showBackground = true)
 @Composable
 fun LandingScreenPreview(navController: NavHostController) {
     LandingScreen(navController)

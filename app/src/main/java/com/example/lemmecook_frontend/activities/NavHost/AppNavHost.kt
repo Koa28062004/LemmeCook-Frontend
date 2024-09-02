@@ -9,12 +9,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
-import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
 import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 import com.example.lemmecook_frontend.fragments.SignUpScreenPreview
 import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
 import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
+import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
