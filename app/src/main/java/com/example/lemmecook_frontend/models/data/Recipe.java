@@ -1,4 +1,4 @@
-package com.example.lemmecook_frontend.models;
+package com.example.lemmecook_frontend.models.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;

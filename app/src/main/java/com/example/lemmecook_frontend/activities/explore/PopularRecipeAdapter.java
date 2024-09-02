@@ -15,11 +15,9 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
-import com.example.lemmecook_frontend.models.Recipe;
+import com.example.lemmecook_frontend.models.data.Recipe;
 
 import java.util.List;
-
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class PopularRecipeAdapter extends RecyclerView.Adapter<PopularRecipeAdapter.ViewHolder>{
     private List<Recipe> recipeList;
