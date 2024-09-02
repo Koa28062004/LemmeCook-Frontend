@@ -254,12 +254,6 @@ fun signUpAction(context: Context, navController: NavHostController, textEmail: 
                 email = textEmail,
                 password = textPassword
             )
-//
-//            val registerData = RegisterDataModel(
-//                username = "exampleUser",
-//                email = "johndoe@example.com",
-//                password = "password123"
-//            )
 
             usersApi.userRegister(registerData).enqueue(object : Callback<StatusResponse> {
                 override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
