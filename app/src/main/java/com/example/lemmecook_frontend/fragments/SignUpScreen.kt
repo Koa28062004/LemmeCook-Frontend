@@ -40,7 +40,7 @@ import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.api.UsersApi
-import com.example.lemmecook_frontend.models.data.RegisterDataModel
+import com.example.lemmecook_frontend.models.auth.RegisterDataModel
 import com.example.lemmecook_frontend.models.response.StatusResponse
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import retrofit2.Call

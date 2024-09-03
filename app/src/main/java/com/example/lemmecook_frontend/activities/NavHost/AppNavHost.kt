@@ -27,6 +27,7 @@ fun AppNavHost(
         startDestination = LandingScreen.route,
         modifier = modifier
     ) {
+        // Authentication & Onboarding
         composable(route = LandingScreen.route) {
             LandingScreenPreview(navController)
         }
@@ -48,6 +49,17 @@ fun AppNavHost(
         composable(route = ForgetPasswordScreen.route) {
             ForgetPasswordScreenPreview(navController)
         }
+
+        // Recipe Details
+//        composable(
+//            route = RecipeOverviewScreen.route + "/{recipe}",
+//            arguments = listOf(navArgument("recipe") {
+//                type = NavType.ParcelableType(Recipe::class.java)
+//            })
+//        ) {
+//            val recipe = it.arguments?.getParcelable<Recipe>("recipe")
+//            RecipeOverview(navController, recipe)
+//        }
     }
 }
 

@@ -1,8 +1,11 @@
-package com.example.lemmecook_frontend.models.data
+package com.example.lemmecook_frontend.models.auth
 
 import com.google.gson.annotations.SerializedName
 
-data class LoginDataModel(
+data class RegisterDataModel(
+    @SerializedName("username")
+    var username: String = "",
+
     @SerializedName("email")
     var email: String = "",
 

@@ -48,6 +48,21 @@ data object Step2Screen : AppDestination {
     override val route = "Step2Screen"
 }
 
+data object RecipeOverviewScreen : AppDestination {
+    override val icon = Icons.Outlined.Home
+    override val route = "RecipeOverviewScreen"
+}
+
+data object RecipePrepScreen : AppDestination {
+    override val icon = Icons.Outlined.Home
+    override val route = "RecipePrepScreen"
+}
+
+data object RecipeCongratsScreen : AppDestination {
+    override val icon = Icons.Outlined.Home
+    override val route = "RecipeCongratsScreen"
+}
+
 data object Home : AppDestination {
     override val icon = Icons.Outlined.Home
     override val route = "Home"
