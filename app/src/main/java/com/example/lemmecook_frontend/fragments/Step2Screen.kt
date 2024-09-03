@@ -21,9 +21,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.api.MealApi
 import com.example.lemmecook_frontend.models.data.AllergyDataModel
 import com.example.lemmecook_frontend.models.data.DietDataModel
+import com.example.lemmecook_frontend.models.request.AllergiesRequest
+import com.example.lemmecook_frontend.models.request.DietsRequest
+import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import com.google.accompanist.flowlayout.FlowRow
 import retrofit2.Call
@@ -124,7 +129,11 @@ fun Step2Screen() {
             Spacer(modifier = Modifier.width(16.dp))
 
             TextButton(
-                onClick = {  },
+                onClick = {
+                    val userId = UserSession.userId
+                    Log.d("Step2Screen", "Selected Chips: $selectedChips")
+                    addDietsToUser(context, userId, selectedChips)
+                },
                 modifier = Modifier
                     .weight(1f)
                     .background(Color(86, 146, 95)),
@@ -163,6 +172,37 @@ fun getDietsData(context: Context, diets: MutableState<List<DietDataModel>>) {
 
         override fun onFailure(call: Call<Map<String, List<DietDataModel>>>, t: Throwable) {
             Log.e("Step2Screen", "Failure: ${t.message}")
+            Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+        }
+    })
+}
+
+fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>) {
+    if (userId == null) {
+        Toast.makeText(context, "User ID is missing", Toast.LENGTH_LONG).show()
+        return
+    }
+
+    val mealApi = ApiUtility.getApiClient().create(MealApi::class.java)
+    val dietsData = DietsRequest(userId, selectedDiets.toList())
+
+    Log.d("Step2Screen", "Sending request body: $dietsData")
+
+    mealApi.addUserDiets(dietsData).enqueue(object : Callback<StatusResponse> {
+        override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+            if (response.isSuccessful) {
+                val statusResponse = response.body()
+                if (statusResponse?.status == "success") {
+                    Toast.makeText(context, "Diets added successfully!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Failed to add diets: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
             Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
         }
     })
