@@ -25,6 +25,7 @@ import com.example.lemmecook_frontend.activities.NavHost.Step2Screen
 @Composable
 fun Step1Screen(navController: NavHostController) {
     var selectedChips by remember { mutableStateOf(setOf<String>()) }
+    var allergies by remember { mutableStateOf<List<String>?>(null) }
 
     Column(
         modifier = Modifier
