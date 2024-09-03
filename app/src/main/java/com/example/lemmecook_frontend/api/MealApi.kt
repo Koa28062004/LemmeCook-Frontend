@@ -7,7 +7,7 @@ import retrofit2.http.GET
 
 interface MealApi {
     @GET("meal/allergies")
-    fun getAllergies(): Call<List<AllergyDataModel>>
+    fun getAllergies(): Call<Map<String, List<AllergyDataModel>>>
 
     @GET("meal/diets")
     fun getDiets(): Call<List<DietDataModel>>

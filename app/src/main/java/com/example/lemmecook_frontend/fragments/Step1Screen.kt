@@ -144,11 +144,16 @@ fun Step1Screen(navController: NavHostController) {
 fun getAllergiesData(context: Context, allergies: MutableState<List<AllergyDataModel>>) {
     val mealApi = ApiUtility.getApiClient().create(MealApi::class.java)
 
-    mealApi.getAllergies().enqueue(object : Callback<List<AllergyDataModel>> {
-        override fun onResponse(call: Call<List<AllergyDataModel>>, response: Response<List<AllergyDataModel>>) {
+    mealApi.getAllergies().enqueue(object : Callback<Map<String, List<AllergyDataModel>>> {
+        override fun onResponse(
+            call: Call<Map<String, List<AllergyDataModel>>>,
+            response: Response<Map<String, List<AllergyDataModel>>>
+        ) {
+            Log.d("Step1Screen", "Response code: ${response.code()}")
+            Log.d("Step1Screen", "Response body: ${response.body()}")
+
             if (response.isSuccessful) {
-                Log.d("Step1Screen", "Response body: ${response.body()}")
-                response.body()?.let { allergiesList ->
+                response.body()?.get("allergies")?.let { allergiesList ->
                     allergies.value = allergiesList
                 }
             } else {
@@ -157,11 +162,13 @@ fun getAllergiesData(context: Context, allergies: MutableState<List<AllergyDataM
             }
         }
 
-        override fun onFailure(call: Call<List<AllergyDataModel>>, t: Throwable) {
+        override fun onFailure(call: Call<Map<String, List<AllergyDataModel>>>, t: Throwable) {
+            Log.e("Step1Screen", "Failure: ${t.message}")
             Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
         }
     })
 }
+
 
 @Composable
 fun Chip(

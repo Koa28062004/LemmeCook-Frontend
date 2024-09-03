@@ -158,39 +158,41 @@ fun ChooseNameScreen(navController: NavHostController, email: String?, password:
 }
 
 fun ChooseNameAction(navController: NavHostController, context: Context, username: String, fullName: String, email: String?, password: String?) {
-    if (validateInputs(context, username, fullName)) {
-        val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
+//    if (validateInputs(context, username, fullName)) {
+//        val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
+//
+//        val nonNullEmail: String = email!!
+//        val nonNullPassword: String = password!!
+//
+//        val registerData = RegisterDataModel(
+//            username = username,
+//            fullName = fullName,
+//            email = email,
+//            password = password
+//        )
+//
+//        usersApi.userRegister(registerData).enqueue(object : Callback<StatusResponse> {
+//            override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+//                if (response.isSuccessful) {
+//                    val statusResponse = response.body()
+//                    if (statusResponse?.status == "success") {
+//                        Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT).show()
+//                        navController.navigateTo(OnboardScreen.route)
+//                    } else {
+//                        Toast.makeText(context, "1 - Register failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+//                    }
+//                } else {
+//                    Toast.makeText(context, "2 - Register failed: ${response.message()}", Toast.LENGTH_LONG).show()
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+//                Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+//            }
+//        })
+//    }
 
-        val nonNullEmail: String = email!!
-        val nonNullPassword: String = password!!
-
-        val registerData = RegisterDataModel(
-            username = username,
-            fullName = fullName,
-            email = email,
-            password = password
-        )
-
-        usersApi.userRegister(registerData).enqueue(object : Callback<StatusResponse> {
-            override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
-                if (response.isSuccessful) {
-                    val statusResponse = response.body()
-                    if (statusResponse?.status == "success") {
-                        Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT).show()
-                        navController.navigateTo(OnboardScreen.route)
-                    } else {
-                        Toast.makeText(context, "1 - Register failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
-                    }
-                } else {
-                    Toast.makeText(context, "2 - Register failed: ${response.message()}", Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
-                Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
-            }
-        })
-    }
+    navController.navigateTo(OnboardScreen.route)
 }
 
 private fun validateInputs(context: Context, username: String, fullName: String): Boolean {

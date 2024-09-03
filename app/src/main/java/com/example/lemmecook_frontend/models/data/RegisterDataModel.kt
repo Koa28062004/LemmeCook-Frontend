@@ -15,7 +15,3 @@ data class RegisterDataModel(
     @SerializedName("fullName")
     var fullName: String = "",
 )
-
-data class EmailRequest(
-    @SerializedName("email") val textEmail: String
-)
