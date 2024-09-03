@@ -53,6 +53,7 @@
         tools:layout_editor_absoluteX="15dp">
 
         <Button
+            android:id="@+id/button_diet_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="fill"
@@ -60,6 +61,7 @@
             android:text="All" />
 
         <Button
+            android:id="@+id/button_diet_vegan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -67,6 +69,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_diet_vegetarian"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -74,6 +77,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_diet_gluten_free"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -81,6 +85,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_nut_free"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -110,6 +115,7 @@
         tools:layout_editor_absoluteX="15dp">
 
         <Button
+            android:id="@+id/button_category_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="fill"
@@ -117,6 +123,7 @@
             android:text="All" />
 
         <Button
+            android:id="@+id/button_category_breakfast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -124,6 +131,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_category_lunch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -131,6 +139,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_category_dinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -138,6 +147,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_category_soup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -145,6 +155,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_category_salad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -152,6 +163,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_category_snack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -181,6 +193,7 @@
         tools:layout_editor_absoluteX="15dp">
 
         <Button
+            android:id="@+id/button_preparation_time_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="fill"
@@ -188,6 +201,7 @@
             android:text="All" />
 
         <Button
+            android:id="@+id/button_preparation_time_15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -195,6 +209,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_preparation_time_30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -202,6 +217,7 @@
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_preparation_time_45"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -231,6 +247,7 @@
         tools:layout_editor_absoluteX="15dp">
 
         <Button
+            android:id="@+id/button_sort_by_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="fill"
@@ -238,25 +255,21 @@
             android:text="All" />
 
         <Button
+            android:id="@+id/button_sort_by_newest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="Easy"
+            android:text="Newest"
             android:textColor="#55915E" />
 
         <Button
+            android:id="@+id/button_sort_most_popular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="Hard"
+            android:text="Most popular"
             android:textColor="#55915E" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:text="Expert"
-            android:textColor="#55915E" />
     </GridLayout>
 
     <TextView
@@ -264,11 +277,67 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:text="By ingredients"
+        android:text="Difficulty"
         android:textSize="23dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gridLayout5" />
+
+    <GridLayout
+        android:id="@+id/gridLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="15dp"
+        android:columnCount="4"
+        android:rowCount="1"
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        tools:layout_editor_absoluteX="15dp">
+
+        <Button
+            android:id="@+id/button_difficulty_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill"
+            android:backgroundTint="#55915E"
+            android:text="All" />
+
+        <Button
+            android:id="@+id/button_difficulty_easy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="Easy"
+            android:textColor="#55915E" />
+
+        <Button
+            android:id="@+id/button_difficulty_hard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="Hard"
+            android:textColor="#55915E" />
+
+        <Button
+            android:id="@+id/button_difficulty_expert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="Expert"
+            android:textColor="#55915E" />
+
+    </GridLayout>
+
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:text="By ingredients"
+        android:textSize="23dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout6" />
 
     <AutoCompleteTextView
         android:id="@+id/actv"
@@ -282,7 +351,7 @@
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <ImageView
         android:id="@+id/imageViewSearch"
@@ -296,9 +365,42 @@
         app:layout_constraintTop_toTopOf="@+id/actv" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actv" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/actv"
-        android:orientation="horizontal"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="5dp">
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="15dp"
+            android:background="@drawable/search_bar_round_square"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/btnConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm"
+            android:background="@drawable/search_bar_round_square"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="15dp"
+            android:textStyle="bold"
+            android:textSize="25dp"/>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

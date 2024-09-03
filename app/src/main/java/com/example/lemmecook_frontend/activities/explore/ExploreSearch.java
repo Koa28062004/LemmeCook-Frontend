@@ -74,6 +74,10 @@ public class ExploreSearch extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ExploreSearch.this, ExploreFilter.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("filterOptionMap", filterOptionMap);
+                bundle.putStringArrayList("filterSearchByIngredient", new ArrayList<>(filterSearchByIngredient));
+                intent.putExtras(bundle);
                 filterLauncher.launch(intent);
             }
         });
