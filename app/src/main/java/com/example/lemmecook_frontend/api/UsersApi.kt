@@ -1,6 +1,6 @@
 package com.example.lemmecook_frontend.api
 
-import com.example.lemmecook_frontend.models.data.EmailRequest
+import com.example.lemmecook_frontend.models.request.EmailRequest
 import com.example.lemmecook_frontend.models.data.ForgetPasswordDataModel
 import com.example.lemmecook_frontend.models.data.LoginDataModel
 import com.example.lemmecook_frontend.models.data.RegisterDataModel

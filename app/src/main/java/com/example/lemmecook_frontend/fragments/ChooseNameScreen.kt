@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.fragments
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -179,6 +180,7 @@ fun ChooseNameAction(navController: NavHostController, context: Context, usernam
                     if (statusResponse?.status == "success") {
                         Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT).show()
                         UserSession.userId = statusResponse.userId
+                        Log.d("ChooseNameScreen", "User ID set to: ${UserSession.userId}")
                         navController.navigateTo(OnboardScreen.route)
                     } else {
                         Toast.makeText(context, "1 - Register failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
@@ -193,8 +195,6 @@ fun ChooseNameAction(navController: NavHostController, context: Context, usernam
             }
         })
     }
-
-    navController.navigateTo(OnboardScreen.route)
 }
 
 private fun validateInputs(context: Context, username: String, fullName: String): Boolean {

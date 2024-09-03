@@ -26,6 +26,9 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.example.lemmecook_frontend.activities.NavHost.Step2Screen
 import com.example.lemmecook_frontend.api.MealApi
 import com.example.lemmecook_frontend.models.data.AllergyDataModel
+import com.example.lemmecook_frontend.models.request.AllergiesRequest
+import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,6 +39,8 @@ fun Step1Screen(navController: NavHostController) {
     var selectedChips by remember { mutableStateOf(setOf<String>()) }
     val allergies = remember { mutableStateOf<List<AllergyDataModel>>(emptyList()) }
     val context = LocalContext.current
+    val userId = UserSession.userId
+    Log.d("Step1Screen", "User ID in Step1Screen: $userId")
 
     LaunchedEffect(Unit) {
         getAllergiesData(context, allergies)
@@ -125,7 +130,11 @@ fun Step1Screen(navController: NavHostController) {
             Spacer(modifier = Modifier.width(16.dp))
 
             TextButton(
-                onClick = { navController.navigateTo(Step2Screen.route) },
+                onClick = {
+                    Log.d("Step1Screen", "Selected Chips: $selectedChips")
+                    addAllergiesToUser(context, userId, selectedChips)
+                    navController.navigateTo(Step2Screen.route)
+                },
                 modifier = Modifier
                     .weight(1f)
                     .background(Color(86, 146, 95)),
@@ -164,6 +173,37 @@ fun getAllergiesData(context: Context, allergies: MutableState<List<AllergyDataM
 
         override fun onFailure(call: Call<Map<String, List<AllergyDataModel>>>, t: Throwable) {
             Log.e("Step1Screen", "Failure: ${t.message}")
+            Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+        }
+    })
+}
+
+fun addAllergiesToUser(context: Context, userId: String?, selectedAllergies: Set<String>) {
+    if (userId == null) {
+        Toast.makeText(context, "User ID is missing", Toast.LENGTH_LONG).show()
+        return
+    }
+
+    val mealApi = ApiUtility.getApiClient().create(MealApi::class.java)
+    val allergiesData = AllergiesRequest(userId, selectedAllergies.toList())
+
+    Log.d("Step1Screen", "Sending request body: $allergiesData")
+
+    mealApi.addUserAllergies(allergiesData).enqueue(object : Callback<StatusResponse> {
+        override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+            if (response.isSuccessful) {
+                val statusResponse = response.body()
+                if (statusResponse?.status == "success") {
+                    Toast.makeText(context, "Allergies added successfully!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Failed to add allergies: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
             Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
         }
     })

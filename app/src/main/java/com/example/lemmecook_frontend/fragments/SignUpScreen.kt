@@ -38,15 +38,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
-import com.example.lemmecook_frontend.activities.NavHost.ChooseNameScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.api.UsersApi
-import com.example.lemmecook_frontend.models.data.EmailRequest
-import com.example.lemmecook_frontend.models.data.LoginDataModel
-import com.example.lemmecook_frontend.models.data.RegisterDataModel
+import com.example.lemmecook_frontend.models.request.EmailRequest
 import com.example.lemmecook_frontend.models.response.StatusResponse
 import com.example.lemmecook_frontend.utilities.ApiUtility
-import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -245,39 +241,37 @@ fun SignUpScreen(navController: NavHostController) {
 }
 
 fun signUpAction(context: Context, navController: NavHostController, textEmail: String, textPassword: String, textConfirmPassword: String) {
-//    if (validateInputs(context, textEmail, textPassword, textConfirmPassword)) {
-//        if (textPassword != textConfirmPassword) {
-//            Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
-//        }
-//        else {
-//            val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
-//            val emailRequest = EmailRequest(
-//                textEmail = textEmail
-//            )
-//
-//            usersApi.userCheckEmail(emailRequest).enqueue(object : Callback<StatusResponse> {
-//                override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
-//                    if (response.isSuccessful) {
-//                        val statusResponse = response.body()
-//                        if (statusResponse?.status == "success") {
-//                            Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
-//                            navController.navigate("choose_name/$textEmail/$textPassword")
-//                        } else {
-//                            Toast.makeText(context, "1 - Sign Up failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
-//                        }
-//                    } else {
-//                        Toast.makeText(context, "2 - Sign Up failed: ${response.message()}", Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
-//                    Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
-//                }
-//            })
-//        }
-//    }
+    if (validateInputs(context, textEmail, textPassword, textConfirmPassword)) {
+        if (textPassword != textConfirmPassword) {
+            Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
+            val emailRequest = EmailRequest(
+                textEmail = textEmail
+            )
 
-    navController.navigate("choose_name/$textEmail/$textPassword")
+            usersApi.userCheckEmail(emailRequest).enqueue(object : Callback<StatusResponse> {
+                override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+                    if (response.isSuccessful) {
+                        val statusResponse = response.body()
+                        if (statusResponse?.status == "success") {
+                            Toast.makeText(context, "Sign Up successful!", Toast.LENGTH_SHORT).show()
+                            navController.navigate("choose_name/$textEmail/$textPassword")
+                        } else {
+                            Toast.makeText(context, "1 - Sign Up failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        Toast.makeText(context, "2 - Sign Up failed: ${response.message()}", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+                    Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+                }
+            })
+        }
+    }
 }
 
 private fun validateInputs(context: Context, textEmail: String, textPassword: String, textConfirmPassword: String): Boolean {
