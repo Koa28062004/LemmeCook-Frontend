@@ -43,6 +43,7 @@ import com.example.lemmecook_frontend.activities.NavHost.ForgetPasswordScreen
 import com.example.lemmecook_frontend.api.UsersApi
 import com.example.lemmecook_frontend.models.data.LoginDataModel
 import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import retrofit2.Call
 import retrofit2.Callback
@@ -221,6 +222,7 @@ fun SignInAction(context: Context, textEmail: String, textPassword: String) {
                     val statusResponse = response.body()
                     if (statusResponse?.status == "success") {
                         Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                        UserSession.userId = statusResponse.userId
                     } else {
                         Toast.makeText(context, "1 - Login failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
                     }
