@@ -1,5 +1,6 @@
 package com.example.lemmecook_frontend.api
 
+import com.example.lemmecook_frontend.models.data.EmailRequest
 import com.example.lemmecook_frontend.models.data.ForgetPasswordDataModel
 import com.example.lemmecook_frontend.models.data.LoginDataModel
 import com.example.lemmecook_frontend.models.data.RegisterDataModel
@@ -25,5 +26,8 @@ interface UsersApi {
         @Body forgetPasswordDataModel: ForgetPasswordDataModel
     ): Call<StatusResponse>
 
-
+    @POST("users/check_email")
+    fun userCheckEmail(
+        @Body checkEmailData : EmailRequest
+    ): Call<StatusResponse>
 }

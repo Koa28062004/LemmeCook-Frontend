@@ -120,7 +120,7 @@ fun ChooseNameScreen(navController: NavHostController, email: String?, password:
             TextField(
                 value = fullName,
                 onValueChange = { fullName= it },
-                label = { Text("Password") },
+                label = { Text("Fullname") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),

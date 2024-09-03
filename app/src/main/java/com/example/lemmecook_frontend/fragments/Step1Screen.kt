@@ -1,5 +1,8 @@
 package com.example.lemmecook_frontend.fragments
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,26 +15,36 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.google.accompanist.flowlayout.FlowRow
 import com.example.lemmecook_frontend.activities.NavHost.Step2Screen
+import com.example.lemmecook_frontend.api.MealApi
+import com.example.lemmecook_frontend.models.data.AllergyDataModel
+import com.example.lemmecook_frontend.utilities.ApiUtility
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun Step1Screen(navController: NavHostController) {
     var selectedChips by remember { mutableStateOf(setOf<String>()) }
-    var allergies by remember { mutableStateOf<List<String>?>(null) }
+    val allergies = remember { mutableStateOf<List<AllergyDataModel>>(emptyList()) }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        getAllergiesData(context, allergies)
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-//        verticalArrangement = Arrangement.SpaceBetween
     ) {
         // Skip Button and Title
         Row(
@@ -73,10 +86,10 @@ fun Step1Screen(navController: NavHostController) {
                 .fillMaxWidth()
                 .padding(vertical = 60.dp)
         ) {
-            listOf("Gluten", "Dairy", "Egg", "Soy", "Peanut", "Wheat", "Milk", "Fish").forEach { item ->
+            allergies.value.forEach { allergy ->
                 Chip(
-                    text = item,
-                    isSelected = selectedChips.contains(item),
+                    text = allergy.allergy,
+                    isSelected = selectedChips.contains(allergy.allergy),
                     onChipClick = { chipText ->
                         selectedChips = if (selectedChips.contains(chipText)) {
                             selectedChips - chipText
@@ -126,6 +139,28 @@ fun Step1Screen(navController: NavHostController) {
             }
         }
     }
+}
+
+fun getAllergiesData(context: Context, allergies: MutableState<List<AllergyDataModel>>) {
+    val mealApi = ApiUtility.getApiClient().create(MealApi::class.java)
+
+    mealApi.getAllergies().enqueue(object : Callback<List<AllergyDataModel>> {
+        override fun onResponse(call: Call<List<AllergyDataModel>>, response: Response<List<AllergyDataModel>>) {
+            if (response.isSuccessful) {
+                Log.d("Step1Screen", "Response body: ${response.body()}")
+                response.body()?.let { allergiesList ->
+                    allergies.value = allergiesList
+                }
+            } else {
+                Log.e("Step1Screen", "Response error code: ${response.code()}")
+                Toast.makeText(context, "Get Allergies failed", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        override fun onFailure(call: Call<List<AllergyDataModel>>, t: Throwable) {
+            Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+        }
+    })
 }
 
 @Composable

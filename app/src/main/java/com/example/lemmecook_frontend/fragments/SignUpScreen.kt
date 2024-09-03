@@ -41,9 +41,12 @@ import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 import com.example.lemmecook_frontend.activities.NavHost.ChooseNameScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.api.UsersApi
+import com.example.lemmecook_frontend.models.data.EmailRequest
+import com.example.lemmecook_frontend.models.data.LoginDataModel
 import com.example.lemmecook_frontend.models.data.RegisterDataModel
 import com.example.lemmecook_frontend.models.response.StatusResponse
 import com.example.lemmecook_frontend.utilities.ApiUtility
+import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -247,7 +250,30 @@ fun signUpAction(context: Context, navController: NavHostController, textEmail: 
             Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
         }
         else {
-            navController.navigate("choose_name/$textEmail/$textPassword")
+            val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
+            val emailRequest = EmailRequest(
+                textEmail = textEmail
+            )
+
+            usersApi.userCheckEmail(emailRequest).enqueue(object : Callback<StatusResponse> {
+                override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+                    if (response.isSuccessful) {
+                        val statusResponse = response.body()
+                        if (statusResponse?.status == "success") {
+                            Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                            navController.navigate("choose_name/$textEmail/$textPassword")
+                        } else {
+                            Toast.makeText(context, "1 - Sign Up failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        Toast.makeText(context, "2 - Sign Up failed: ${response.message()}", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+                    Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+                }
+            })
         }
     }
 }
