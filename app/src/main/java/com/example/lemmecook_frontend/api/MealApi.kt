@@ -10,5 +10,5 @@ interface MealApi {
     fun getAllergies(): Call<Map<String, List<AllergyDataModel>>>
 
     @GET("meal/diets")
-    fun getDiets(): Call<List<DietDataModel>>
+    fun getDiets(): Call<Map<String, List<DietDataModel>>>
 }

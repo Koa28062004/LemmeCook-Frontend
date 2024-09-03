@@ -1,5 +1,8 @@
 package com.example.lemmecook_frontend.fragments
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,16 +15,30 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.lemmecook_frontend.api.MealApi
+import com.example.lemmecook_frontend.models.data.AllergyDataModel
+import com.example.lemmecook_frontend.models.data.DietDataModel
+import com.example.lemmecook_frontend.utilities.ApiUtility
 import com.google.accompanist.flowlayout.FlowRow
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun Step2Screen() {
     var selectedChips by remember { mutableStateOf(setOf<String>()) }
+    val diets = remember { mutableStateOf<List<DietDataModel>>(emptyList()) }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        getDietsData(context, diets)
+    }
 
     Column(
         modifier = Modifier
@@ -68,10 +85,10 @@ fun Step2Screen() {
                 .fillMaxWidth()
                 .padding(vertical = 60.dp)
         ) {
-            listOf("None", "Vegan", "Pale", "Dukan", "Vegetarian", "Atkins", "Intermittent Fasting").forEach { item ->
+            diets.value.forEach { diet ->
                 Chip(
-                    text = item,
-                    isSelected = selectedChips.contains(item),
+                    text = diet.diet,
+                    isSelected = selectedChips.contains(diet.diet),
                     onChipClick = { chipText ->
                         selectedChips = if (selectedChips.contains(chipText)) {
                             selectedChips - chipText
@@ -122,6 +139,35 @@ fun Step2Screen() {
         }
     }
 }
+
+fun getDietsData(context: Context, diets: MutableState<List<DietDataModel>>) {
+    val mealApi = ApiUtility.getApiClient().create(MealApi::class.java)
+
+    mealApi.getDiets().enqueue(object : Callback<Map<String, List<DietDataModel>>> {
+        override fun onResponse(
+            call: Call<Map<String, List<DietDataModel>>>,
+            response: Response<Map<String, List<DietDataModel>>>
+        ) {
+            Log.d("Step2Screen", "Response code: ${response.code()}")
+            Log.d("Step2Screen", "Response body: ${response.body()}")
+
+            if (response.isSuccessful) {
+                response.body()?.get("diets")?.let { dietsList ->
+                    diets.value = dietsList
+                }
+            } else {
+                Log.e("Step2Screen", "Response error code: ${response.code()}")
+                Toast.makeText(context, "Get Diets failed", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        override fun onFailure(call: Call<Map<String, List<DietDataModel>>>, t: Throwable) {
+            Log.e("Step2Screen", "Failure: ${t.message}")
+            Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+        }
+    })
+}
+
 
 //@Preview(showBackground = true)
 @Composable

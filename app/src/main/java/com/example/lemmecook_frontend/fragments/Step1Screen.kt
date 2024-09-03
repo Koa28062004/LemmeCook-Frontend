@@ -169,7 +169,6 @@ fun getAllergiesData(context: Context, allergies: MutableState<List<AllergyDataM
     })
 }
 
-
 @Composable
 fun Chip(
     text: String,
