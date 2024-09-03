@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -14,10 +16,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lemmecook_frontend.R;
+import com.example.lemmecook_frontend.adapter.FilterOptionAdapter;
+import com.example.lemmecook_frontend.adapter.IngredientOptionAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +33,11 @@ public class ExploreFilter extends AppCompatActivity {
     private List<String> filterSearchByIngredient = new ArrayList<>();
     private ImageButton ibBack;
     private Button btnReset, btnConfirm;
+    private AutoCompleteTextView actvSearchIngredient;
+    private List<String> ingredients = new ArrayList<>();
+    private RecyclerView rvIngredientOption;
+    private IngredientOptionAdapter adapterIngredientOption;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +94,9 @@ public class ExploreFilter extends AppCompatActivity {
                 filterOptionMap.put("Preparation time", "All");
                 filterOptionMap.put("Sort by", "All");
                 filterOptionMap.put("Difficulty", "All");
+                filterSearchByIngredient.clear();
+
+                adapterIngredientOption.notifyDataSetChanged();
 
                 handleEventDiet();
                 handleEventCategory();
@@ -89,6 +104,24 @@ public class ExploreFilter extends AppCompatActivity {
                 handleEventSortBy();
                 handleEventDifficulty();
             }
+        });
+
+        rvIngredientOption = findViewById(R.id.recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rvIngredientOption.setLayoutManager(layoutManager);
+        adapterIngredientOption = new IngredientOptionAdapter(filterSearchByIngredient);
+        rvIngredientOption.setAdapter(adapterIngredientOption);
+
+        actvSearchIngredient = findViewById(R.id.actv);
+        generateFakeIngredients();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, ingredients);
+        actvSearchIngredient.setAdapter(adapter);
+        actvSearchIngredient.setThreshold(1);
+        actvSearchIngredient.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedIngredient = (String) parent.getItemAtPosition(position);
+            filterSearchByIngredient.add(selectedIngredient);
+            adapterIngredientOption.notifyDataSetChanged();
+            actvSearchIngredient.setText("");
         });
 
     }
@@ -314,4 +347,40 @@ public class ExploreFilter extends AppCompatActivity {
         }
     }
 
+    void generateFakeIngredients() {
+        ingredients = Arrays.asList(
+                "Almonds", "Anchovy", "Apple", "Apricots", "Artichoke", "Arugula", "Asparagus", "Avocado",
+                "Bacon", "Baking Powder", "Baking Soda", "Balsamic Vinegar", "Banana", "Basil", "Bay Leaves",
+                "Beef", "Beetroot", "Bell Pepper", "Black Beans", "Black Pepper", "Blackberries", "Blueberry",
+                "Bok Choy", "Bran", "Brie Cheese", "Broccoli", "Brown Sugar", "Brussels Sprouts", "Butter",
+                "Buttermilk", "Cabbage", "Cacao", "Cajun Spice", "Cajun Seasoning", "Canned Tomatoes",
+                "Cantaloupe", "Capers", "Carrot", "Cashews", "Cauliflower", "Celery", "Cheddar Cheese",
+                "Cherries", "Chicken", "Chicken Broth", "Chickpeas", "Chili Powder", "Chives", "Chocolate",
+                "Cilantro", "Cinnamon", "Cloves", "Coconut", "Coconut Milk", "Coconut Oil", "Cod",
+                "Coffee", "Corn", "Coriander", "Cottage Cheese", "Couscous", "Crab", "Cream Cheese",
+                "Cream of Tartar", "Cucumber", "Cumin", "Curry Powder", "Dates", "Dijon Mustard",
+                "Dill", "Duck", "Eggplant", "Eggs", "Fennel", "Feta Cheese", "Figs", "Fish Sauce",
+                "Flour", "French Beans", "Garlic", "Ghee", "Ginger", "Goat Cheese", "Grapefruit",
+                "Grapes", "Green Beans", "Green Onion", "Ground Beef", "Ground Turkey", "Halibut",
+                "Hazelnuts", "Honey", "Hummus", "Iceberg Lettuce", "Jalapeño", "Jasmine Rice", "Kale",
+                "Kefir", "Ketchup", "Kidney Beans", "Kimchi", "Kiwifruit", "Lamb", "Leeks", "Lemon",
+                "Lentils", "Lettuce", "Lime", "Linguine", "Lobster", "Mackerel", "Mango", "Maple Syrup",
+                "Marjoram", "Mayonnaise", "Melon", "Milk", "Mint", "Miso", "Mushrooms", "Mustard",
+                "Nutmeg", "Nuts", "Oat Bran", "Oatmeal", "Oats", "Octopus", "Olive Oil", "Olives", "Onion",
+                "Orange", "Oregano", "Oysters", "Papaya", "Paprika", "Parmesan Cheese", "Parsley",
+                "Parsnip", "Pasta", "Peach", "Peanut Butter", "Peanuts", "Pear", "Peas", "Pecans",
+                "Pepper", "Pesto", "Pickles", "Pine Nuts", "Pineapple", "Pinto Beans", "Pistachios",
+                "Plum", "Pomegranate", "Poppy Seeds", "Pork", "Potato", "Pumpkin", "Quinoa", "Radish",
+                "Raisins", "Raspberries", "Red Beans", "Red Onion", "Red Pepper", "Rice", "Rice Noodles",
+                "Ricotta Cheese", "Romaine Lettuce", "Rosemary", "Rye Bread", "Saffron", "Salmon",
+                "Sardines", "Sausage", "Scallions", "Seaweed", "Sesame Oil", "Sesame Seeds", "Shallots",
+                "Shrimp", "Snap Peas", "Snow Peas", "Sour Cream", "Soy Sauce", "Spaghetti", "Spinach",
+                "Squash", "Steak", "Strawberries", "Sugar", "Sunflower Seeds", "Sweet Potato", "Swiss Chard",
+                "Tarragon", "Tarragon Vinegar", "Thyme", "Tilapia", "Tofu", "Tomato", "Tomato Paste",
+                "Trout", "Tuna", "Turkey", "Turnip", "Vanilla Extract", "Vegetable Oil", "Vinegar",
+                "Walnuts", "Watercress", "Watermelon", "Whipping Cream", "White Beans", "White Pepper",
+                "Whole Grain Bread", "Worcestershire Sauce", "Yams", "Yeast", "Yellow Beans", "Yogurt",
+                "Zucchini"
+        );
+    }
 }

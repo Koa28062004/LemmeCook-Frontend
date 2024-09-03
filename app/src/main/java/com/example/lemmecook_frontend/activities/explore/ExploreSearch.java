@@ -1,14 +1,17 @@
 package com.example.lemmecook_frontend.activities.explore;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -31,6 +34,7 @@ public class ExploreSearch extends AppCompatActivity {
     private List<String> filterSearchByIngredient = new ArrayList<>();
     private ImageButton ibFilter;
     private ActivityResultLauncher<Intent> filterLauncher;
+    private AutoCompleteTextView actvSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +63,30 @@ public class ExploreSearch extends AppCompatActivity {
         fragmentTransaction.commit();
 
         ivSearch = findViewById(R.id.imageViewSearch);
+        actvSearch = findViewById(R.id.actv);
         ivSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, search_result.newInstance(filterOptionMap, filterSearchByIngredient));
-                fragmentTransaction.commit();
+                if (actvSearch.getText().toString().isEmpty()) {
+                    new AlertDialog.Builder(ExploreSearch.this)
+                            .setTitle("Not found") // Tiêu đề của hộp thoại
+                            .setMessage("Title cannot be empty !") // Nội dung thông báo
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Xử lý khi nhấn nút OK
+                                    dialog.dismiss(); // Đóng hộp thoại
+                                }
+                            })
+                            .setCancelable(false) // Ngăn người dùng bấm ra ngoài để đóng hộp thoại
+                            .show();
+                }
+                else {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container, search_result.newInstance(filterOptionMap, filterSearchByIngredient));
+                    fragmentTransaction.commit();
+                }
             }
         });
 
