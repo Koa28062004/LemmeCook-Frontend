@@ -1,5 +1,8 @@
 package com.example.lemmecook_frontend.fragments
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,16 +15,35 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.api.MealApi
+import com.example.lemmecook_frontend.models.data.AllergyDataModel
+import com.example.lemmecook_frontend.models.data.DietDataModel
+import com.example.lemmecook_frontend.models.request.AllergiesRequest
+import com.example.lemmecook_frontend.models.request.DietsRequest
+import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.singleton.UserSession
+import com.example.lemmecook_frontend.utilities.ApiUtility
 import com.google.accompanist.flowlayout.FlowRow
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun Step2Screen() {
     var selectedChips by remember { mutableStateOf(setOf<String>()) }
+    val diets = remember { mutableStateOf<List<DietDataModel>>(emptyList()) }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        getDietsData(context, diets)
+    }
 
     Column(
         modifier = Modifier
@@ -68,10 +90,10 @@ fun Step2Screen() {
                 .fillMaxWidth()
                 .padding(vertical = 60.dp)
         ) {
-            listOf("None", "Vegan", "Pale", "Dukan", "Vegetarian", "Atkins", "Intermittent Fasting").forEach { item ->
+            diets.value.forEach { diet ->
                 Chip(
-                    text = item,
-                    isSelected = selectedChips.contains(item),
+                    text = diet.diet,
+                    isSelected = selectedChips.contains(diet.diet),
                     onChipClick = { chipText ->
                         selectedChips = if (selectedChips.contains(chipText)) {
                             selectedChips - chipText
@@ -107,7 +129,11 @@ fun Step2Screen() {
             Spacer(modifier = Modifier.width(16.dp))
 
             TextButton(
-                onClick = {  },
+                onClick = {
+                    val userId = UserSession.userId
+                    Log.d("Step2Screen", "Selected Chips: $selectedChips")
+                    addDietsToUser(context, userId, selectedChips)
+                },
                 modifier = Modifier
                     .weight(1f)
                     .background(Color(86, 146, 95)),
@@ -122,6 +148,66 @@ fun Step2Screen() {
         }
     }
 }
+
+fun getDietsData(context: Context, diets: MutableState<List<DietDataModel>>) {
+    val mealApi = ApiUtility.getApiClient().create(MealApi::class.java)
+
+    mealApi.getDiets().enqueue(object : Callback<Map<String, List<DietDataModel>>> {
+        override fun onResponse(
+            call: Call<Map<String, List<DietDataModel>>>,
+            response: Response<Map<String, List<DietDataModel>>>
+        ) {
+            Log.d("Step2Screen", "Response code: ${response.code()}")
+            Log.d("Step2Screen", "Response body: ${response.body()}")
+
+            if (response.isSuccessful) {
+                response.body()?.get("diets")?.let { dietsList ->
+                    diets.value = dietsList
+                }
+            } else {
+                Log.e("Step2Screen", "Response error code: ${response.code()}")
+                Toast.makeText(context, "Get Diets failed", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        override fun onFailure(call: Call<Map<String, List<DietDataModel>>>, t: Throwable) {
+            Log.e("Step2Screen", "Failure: ${t.message}")
+            Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+        }
+    })
+}
+
+fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>) {
+    if (userId == null) {
+        Toast.makeText(context, "User ID is missing", Toast.LENGTH_LONG).show()
+        return
+    }
+
+    val mealApi = ApiUtility.getApiClient().create(MealApi::class.java)
+    val dietsData = DietsRequest(userId, selectedDiets.toList())
+
+    Log.d("Step2Screen", "Sending request body: $dietsData")
+
+    mealApi.addUserDiets(dietsData).enqueue(object : Callback<StatusResponse> {
+        override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+            if (response.isSuccessful) {
+                val statusResponse = response.body()
+                if (statusResponse?.status == "success") {
+                    Toast.makeText(context, "Diets added successfully!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Failed to add diets: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+            Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+        }
+    })
+}
+
 
 //@Preview(showBackground = true)
 @Composable

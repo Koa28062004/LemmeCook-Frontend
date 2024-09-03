@@ -1,18 +1,14 @@
 package com.example.lemmecook_frontend.fragments
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -30,8 +26,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,9 +33,10 @@ import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
+import com.example.lemmecook_frontend.activities.NavHost.OnboardScreen
 import com.example.lemmecook_frontend.activities.NavHost.ForgetPasswordScreen
 import com.example.lemmecook_frontend.api.UsersApi
-import com.example.lemmecook_frontend.models.data.LoginDataModel
+import com.example.lemmecook_frontend.models.data.RegisterDataModel
 import com.example.lemmecook_frontend.models.response.StatusResponse
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
@@ -51,10 +46,9 @@ import retrofit2.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignInScreen(navController: NavHostController) {
-    var textEmail by remember { mutableStateOf("") }
-    var textPassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
+fun ChooseNameScreen(navController: NavHostController, email: String?, password: String?) {
+    var username by remember { mutableStateOf("") }
+    var fullName by remember { mutableStateOf("") }
 
     val context = LocalContext.current
 
@@ -88,7 +82,7 @@ fun SignInScreen(navController: NavHostController) {
                 .padding(top = 20.dp, start = 20.dp, end = 20.dp, bottom = 20.dp),
         ) {
             Text(
-                text = "Welcome Back!",
+                text = "Choose Your Name!",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -97,24 +91,17 @@ fun SignInScreen(navController: NavHostController) {
             )
 
             Text(
-                text = "It is so nice to see you!",
+                text = "What a lovely name!",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 modifier = Modifier.padding(top = 8.dp)
             )
 
-            Text(
-                text = "We have new recipes for you!",
-                fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            // Email TextField
+            // username TextField
             TextField(
-                value = textEmail,
-                onValueChange = { textEmail = it },
-                label = { Text("Email") },
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("username") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -133,9 +120,9 @@ fun SignInScreen(navController: NavHostController) {
 
             // Password TextField with visibility toggle
             TextField(
-                value = textPassword,
-                onValueChange = { textPassword = it },
-                label = { Text("Password") },
+                value = fullName,
+                onValueChange = { fullName= it },
+                label = { Text("Fullname") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -147,27 +134,13 @@ fun SignInScreen(navController: NavHostController) {
                     errorIndicatorColor = Color.Red
                 ),
                 singleLine = true,
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    val image = if (passwordVisible) {
-                        Icons.Filled.Visibility
-                    } else {
-                        Icons.Filled.VisibilityOff
-                    }
-
-                    IconButton(onClick = {
-                        passwordVisible = !passwordVisible
-                    }) {
-                        Icon(imageVector = image, contentDescription = "Toggle Password Visibility")
-                    }
-                },
                 shape = RoundedCornerShape(0.dp) // No top or side borders
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
-                onClick = { SignInAction(context, textEmail, textPassword) },
+                onClick = { ChooseNameAction(navController, context, username, fullName, email, password) },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
@@ -176,58 +149,44 @@ fun SignInScreen(navController: NavHostController) {
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = "Sign in",
+                    text = "Confirm",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // Clickable Texts
-            Text(
-                text = "or back to landing screen",
-                fontSize = 14.sp,
-                color = Color.Gray,
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .clickable { navController.navigateTo(LandingScreen.route) }
-            )
-
-            Text(
-                text = "Forgot your password?",
-                fontSize = 16.sp,
-                color = Color.Black,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(bottom = 8.dp)
-                    .clickable { navController.navigateTo(ForgetPasswordScreen.route) }
-            )
         }
     }
 }
 
-fun SignInAction(context: Context, textEmail: String, textPassword: String) {
-    if (validateInputs(context, textEmail, textPassword)) {
+fun ChooseNameAction(navController: NavHostController, context: Context, username: String, fullName: String, email: String?, password: String?) {
+    if (validateInputs(context, username, fullName)) {
         val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
-        val loginData = LoginDataModel(
-            email = textEmail,
-            password = textPassword
+
+        val nonNullEmail: String = email!!
+        val nonNullPassword: String = password!!
+
+        val registerData = RegisterDataModel(
+            username = username,
+            fullName = fullName,
+            email = email,
+            password = password
         )
 
-        usersApi.userLogin(loginData).enqueue(object : Callback<StatusResponse> {
+        usersApi.userRegister(registerData).enqueue(object : Callback<StatusResponse> {
             override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
                 if (response.isSuccessful) {
                     val statusResponse = response.body()
                     if (statusResponse?.status == "success") {
-                        Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT).show()
                         UserSession.userId = statusResponse.userId
+                        Log.d("ChooseNameScreen", "User ID set to: ${UserSession.userId}")
+                        navController.navigateTo(OnboardScreen.route)
                     } else {
-                        Toast.makeText(context, "1 - Login failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "1 - Register failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
                     }
                 } else {
-                    Toast.makeText(context, "2 - Login failed: ${response.message()}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "2 - Register failed: ${response.message()}", Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -236,13 +195,12 @@ fun SignInAction(context: Context, textEmail: String, textPassword: String) {
             }
         })
     }
-
 }
 
-private fun validateInputs(context: Context, textEmail: String, textPassword: String): Boolean {
+private fun validateInputs(context: Context, username: String, fullName: String): Boolean {
     var isValid = true
 
-    if (textEmail.isBlank() || textPassword.isBlank()) {
+    if (username.isBlank() || fullName.isBlank()) {
         Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
         isValid = false
     }
@@ -252,6 +210,6 @@ private fun validateInputs(context: Context, textEmail: String, textPassword: St
 
 //@Preview(showBackground = true)
 @Composable
-fun SignInScreenPreview(navController: NavHostController) {
-    SignInScreen(navController)
+fun ChooseNameScreenPreview(navController: NavHostController, email: String?, password: String?) {
+    ChooseNameScreen(navController, email, password)
 }

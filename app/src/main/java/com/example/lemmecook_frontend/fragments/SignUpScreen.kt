@@ -40,7 +40,7 @@ import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.api.UsersApi
-import com.example.lemmecook_frontend.models.data.RegisterDataModel
+import com.example.lemmecook_frontend.models.request.EmailRequest
 import com.example.lemmecook_frontend.models.response.StatusResponse
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import retrofit2.Call
@@ -247,24 +247,22 @@ fun signUpAction(context: Context, navController: NavHostController, textEmail: 
         }
         else {
             val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
-            val registerData = RegisterDataModel(
-                username = textEmail,
-                email = textEmail,
-                password = textPassword
+            val emailRequest = EmailRequest(
+                textEmail = textEmail
             )
 
-            usersApi.userRegister(registerData).enqueue(object : Callback<StatusResponse> {
+            usersApi.userCheckEmail(emailRequest).enqueue(object : Callback<StatusResponse> {
                 override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
                     if (response.isSuccessful) {
                         val statusResponse = response.body()
                         if (statusResponse?.status == "success") {
-                            Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show()
-                            navController.navigateTo(SignInScreen.route)
+                            Toast.makeText(context, "Sign Up successful!", Toast.LENGTH_SHORT).show()
+                            navController.navigate("choose_name/$textEmail/$textPassword")
                         } else {
-                            Toast.makeText(context, "1 - Registration failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "1 - Sign Up failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
                         }
                     } else {
-                        Toast.makeText(context, "2 - Registration failed: ${response.message()}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "2 - Sign Up failed: ${response.message()}", Toast.LENGTH_LONG).show()
                     }
                 }
 
