@@ -61,8 +61,6 @@ public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdap
                     int index = holder.llList.indexOf(l);
                     Recipe recipeChosenByUser = chunkedItems.get(position).get(index);
 
-                    Log.d("chosen", recipeChosenByUser.getTitle());
-
                     // NGO THIEN BAO
                     // recipeChosenByUser is the recipe chosen by user
                     // ...
