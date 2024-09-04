@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -35,6 +36,7 @@ public class ExploreSearch extends AppCompatActivity {
     private ImageButton ibFilter;
     private ActivityResultLauncher<Intent> filterLauncher;
     private AutoCompleteTextView actvSearch;
+    private String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,22 +71,23 @@ public class ExploreSearch extends AppCompatActivity {
             public void onClick(View v) {
                 if (actvSearch.getText().toString().isEmpty()) {
                     new AlertDialog.Builder(ExploreSearch.this)
-                            .setTitle("Not found") // Tiêu đề của hộp thoại
-                            .setMessage("Title cannot be empty !") // Nội dung thông báo
+                            .setTitle("Not found")
+                            .setMessage("Title cannot be empty !")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // Xử lý khi nhấn nút OK
-                                    dialog.dismiss(); // Đóng hộp thoại
+                                    dialog.dismiss();
                                 }
                             })
-                            .setCancelable(false) // Ngăn người dùng bấm ra ngoài để đóng hộp thoại
+                            .setCancelable(false)
                             .show();
                 }
                 else {
+                    query = actvSearch.getText().toString();
+
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, search_result.newInstance(filterOptionMap, filterSearchByIngredient));
+                    fragmentTransaction.replace(R.id.fragment_container, search_result.newInstance(filterOptionMap, filterSearchByIngredient, query));
                     fragmentTransaction.commit();
                 }
             }

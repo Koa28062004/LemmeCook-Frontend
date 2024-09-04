@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.api;
 
 import com.example.lemmecook_frontend.models.data.Recipe;
+import com.example.lemmecook_frontend.models.data.RecipeResponse;
 
 import java.util.List;
 
@@ -14,6 +15,13 @@ public interface ApiRecipeJava {
             @Query("ingredients") String ingredients,
             @Query("number") int number,
             @Query("apiKey") String apiKey,
-            @Query("diet") String diet // New vegan parameter
+            @Query("diet") String diet
+    );
+
+    @GET("recipes/complexSearch")
+    Call<RecipeResponse> getComplexSearchRecipes(
+            @Query("number") int number,
+            @Query("apiKey") String apiKey,
+            @Query("query") String query
     );
 }

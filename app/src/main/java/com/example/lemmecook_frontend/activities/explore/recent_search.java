@@ -1,5 +1,6 @@
 package com.example.lemmecook_frontend.activities.explore;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +26,7 @@ public class recent_search extends Fragment {
     private ImageView img1, img2, img3, img4;
     private TextView tv1, tv2, tv3, tv4;
     List<Recipe> recentSearchedRecipe = new ArrayList<>();
+    private LinearLayout ll1;
 
     public recent_search() {
         // Required empty public constructor
@@ -82,6 +85,16 @@ public class recent_search extends Fragment {
         tv2.setText(recentSearchedRecipe.get(n - 2).getTitle());
         tv3.setText(recentSearchedRecipe.get(n - 3).getTitle());
         tv4.setText(recentSearchedRecipe.get(n - 4).getTitle());
+
+//        ll1 = view.findViewById(R.id.ll1);
+//        ll1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(ExploreSearch.this, ?.class);
+//                intent.putExtra("ID_PASS",recentSearchedRecipe.get(n - 1).getId());
+//                startActivity(intent);
+//            }
+//        });
         return view;
     }
 }
