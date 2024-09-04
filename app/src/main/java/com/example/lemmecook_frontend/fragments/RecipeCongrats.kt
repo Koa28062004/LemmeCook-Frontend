@@ -108,18 +108,15 @@ fun RecipeCongrats(
             contentScale = ContentScale.Crop
         )
 
-        IconButton(
-            onClick = { /*TODO*/ },
+        ThreeDotMenu(
+            buttonItems = listOf(
+                MenuItem("Add to Favorites") {/* TODO: Add to favorites backend */},
+                MenuItem("Share") {/* TODO: Share this recipe */}
+            ),
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(50.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.utils_icon),
-                contentDescription = "Back arrow icon",
-            )
-        }
+                .padding(vertical = 12.dp)
+        )
 
         Column(
             modifier = Modifier
