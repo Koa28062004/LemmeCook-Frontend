@@ -42,6 +42,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
@@ -64,6 +65,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
@@ -87,6 +89,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"

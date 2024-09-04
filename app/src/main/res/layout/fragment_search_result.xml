@@ -7,10 +7,10 @@
     tools:context=".activities.explore.search_result">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textViewAnnounce"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="256 recipes based on your preferences"
+        android:text="Search..."
         android:textSize="21dp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewAnnounce" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

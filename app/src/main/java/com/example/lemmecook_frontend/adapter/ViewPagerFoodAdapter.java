@@ -1,9 +1,11 @@
 package com.example.lemmecook_frontend.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import java.util.List;
 
 public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdapter.ViewHolder> {
     private List<List<Recipe>> chunkedItems;
+
 
     public ViewPagerFoodAdapter(List<Recipe> items) {
         this.chunkedItems = chunkItems(items, 4);
@@ -50,6 +53,22 @@ public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdap
         bindRecipe(holder.textView2, holder.imageView2, chunk, 1);
         bindRecipe(holder.textView3, holder.imageView3, chunk, 2);
         bindRecipe(holder.textView4, holder.imageView4, chunk, 3);
+
+        for (LinearLayout l : holder.llList) {
+            l.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = holder.llList.indexOf(l);
+                    Recipe recipeChosenByUser = chunkedItems.get(position).get(index);
+
+                    Log.d("chosen", recipeChosenByUser.getTitle());
+
+                    // NGO THIEN BAO
+                    // recipeChosenByUser is the recipe chosen by user
+                    // ...
+                }
+            });
+        }
     }
 
     private void bindRecipe(TextView titleView, ImageView imageView, List<Recipe> chunk, int index) {
@@ -76,6 +95,8 @@ public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textView1, textView2, textView3, textView4;
         ImageView imageView1, imageView2, imageView3, imageView4;
+        LinearLayout ll1, ll2, ll3, ll4;
+        private List<LinearLayout> llList = new ArrayList<>();
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +108,15 @@ public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdap
             imageView2 = itemView.findViewById(R.id.img2);
             imageView3 = itemView.findViewById(R.id.img3);
             imageView4 = itemView.findViewById(R.id.img4);
+
+            ll1 = itemView.findViewById(R.id.ll1);
+            ll2 = itemView.findViewById(R.id.ll2);
+            ll3 = itemView.findViewById(R.id.ll3);
+            ll4 = itemView.findViewById(R.id.ll4);
+            llList.add(ll1);
+            llList.add(ll2);
+            llList.add(ll3);
+            llList.add(ll4);
         }
     }
 }
