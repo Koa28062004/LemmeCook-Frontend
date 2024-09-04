@@ -44,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavHostController
 
 @Preview(showBackground = true)
 @Composable
@@ -59,6 +60,23 @@ fun StateTestScreenForRecipeCongrats() {
         allowChange = false,
         difficult = 4,
         rate = 3
+    )
+}
+
+@Composable
+fun RecipeCongratsScreen(navHostController: NavHostController) {
+    // fetch data from database
+    RecipeCongrats(
+        currentCalo = 1289,
+        currentFat = 290,
+        currentPro = 580,
+        currentCarb = 850,
+        goalFat = 1000,
+        goalPro = 1000,
+        goalCarb = 1000,
+        allowChange = false,
+        difficult = 5,
+        rate = 5
     )
 }
 

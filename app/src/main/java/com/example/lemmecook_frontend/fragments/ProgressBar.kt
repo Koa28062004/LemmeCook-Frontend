@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lemmecook_frontend.R
+import com.example.lemmecook_frontend.fragments.MenuItem
+import com.example.lemmecook_frontend.fragments.ThreeDotMenu
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 
 @Composable
@@ -32,7 +34,9 @@ fun ProgressComponent(
     allowChange: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))) {
+    Box(modifier = modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(10.dp))) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -67,17 +71,13 @@ fun ProgressComponent(
                     )
 
                     if (allowChange) {
-                        IconButton(
-                            onClick = { /* TODO: Handle the click event */ },
-//                        modifier = Modifier
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.utils_icon), // Replace with your icon resource
-                                contentDescription = "Edit Icon",
-                                tint = Color.Gray,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
+                        // TODO: Implement updating nutrition progress
+                        ThreeDotMenu(buttonItems = listOf(
+                            MenuItem("Set calories goal") {},
+                            MenuItem("Set fat goal") {},
+                            MenuItem("Set protein goal") {},
+                            MenuItem("Set carb goal") {}
+                        ))
                     }
                 }
                 Row (

@@ -38,57 +38,42 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.lemmecook_frontend.activities.NavHost.RecipeCongratsScreen
+import com.example.lemmecook_frontend.activities.NavHost.RecipeOverviewScreen
+import com.example.lemmecook_frontend.activities.NavHost.RecipePrepScreen
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.models.recipe.AnalyzedInstruction
+import com.example.lemmecook_frontend.models.recipe.ExtendedIngredient
+import com.example.lemmecook_frontend.models.recipe.InstructionStep
+import com.example.lemmecook_frontend.models.recipe.RecipeInformation
+import com.example.lemmecook_frontend.models.recipe.SampleData
 
 @Preview(showBackground = true)
 @Composable
 fun StateTestScreenForRecipePrep() {
-    val totalSteps = 5
-    val stepIngredients = listOf(
-        listOf(
-            "Bacon" to "50 gr",
-            "Soy Sauce" to "200 ml"
-        ),
-        listOf(
-            "Garlic" to "4 cloves, minced",
-            "Ginger" to "1 inch, grated",
-            "Brown Sugar" to "2 tbsp",
-            "Chicken Stock" to "500 ml"
-        ),
-        listOf(
-            "Spring Onions" to "2 stalks, chopped",
-            "Sesame Seeds" to "1 tbsp"
-        ),
-        listOf(
-            // Add ingredients for step 4 if needed
-        ),
-        listOf(
-            // Add ingredients for step 5 if needed
-        )
-    )
-    val stepInstructions = listOf(
-        "We tie the bacon with twine so that the skin is on the outside and one end and the other practically meet. Heat a little oil in a pressure cooker and mark the bacon all over until golden brown. We remove and discard the oil.",
-        "Add minced garlic and grated ginger to the pressure cooker and sauté until fragrant. Add the brown sugar and stir until it caramelizes slightly.",
-        "Return the bacon to the pressure cooker. Pour in the soy sauce and chicken stock. Bring to a boil, then cover and cook under pressure for 30 minutes.",
-        "Release the pressure and check the bacon. It should be tender and flavorful. Remove the bacon and let it rest before slicing.",
-        "Serve the bacon slices topped with chopped spring onions and a sprinkle of sesame seeds. Enjoy!"
-    )
-
+    val navHostController = rememberNavController()
     RecipePrep(
-        totalSteps = totalSteps,
-        stepIngredients = stepIngredients,
-        stepInstructions = stepInstructions
+        navController = navHostController,
+        recipeInfo = SampleData.sampleRecipeInformation
     )
 }
 
+@Composable
+fun RecipePrepScreen(navController: NavHostController) {
+    val recipeInfo = SampleData.sampleRecipeInformation
+    RecipePrep(navController, recipeInfo)
+}
 
 @Composable
 fun RecipePrep(
-    totalSteps: Int,
-    stepIngredients: List<List<Pair<String, String>>>,
-    stepInstructions: List<String>
+    navController: NavHostController,
+    recipeInfo: RecipeInformation
 ) {
     // Manage the current step state
     var currentStep by remember { mutableIntStateOf(1) }
+    val totalStep = recipeInfo.analyzedInstructions.steps.size
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -101,6 +86,19 @@ fun RecipePrep(
                 .fillMaxWidth()
                 .height(350.dp),
             contentScale = ContentScale.Crop
+        )
+
+        ThreeDotMenu(
+            buttonItems = listOf(
+                MenuItem("Add to Favorites") {/* TODO: Add to favorites backend */},
+                MenuItem("Share") {/* TODO: Share this recipe */},
+                MenuItem("Quit cooking") {
+                    navController.navigateTo(RecipeOverviewScreen.route)
+                }
+            ),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(vertical = 12.dp)
         )
 
         Column(
@@ -118,18 +116,26 @@ fun RecipePrep(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PrepStep(stepNumber = 1)
-                RecipeSteps(stepsCount = totalSteps, currentStep = currentStep)
+                RecipeSteps(stepsCount = totalStep, currentStep = currentStep)
                 StepContent(
-                    ingredients = stepIngredients[currentStep - 1],
-                    summary = stepInstructions[currentStep - 1]
+                    instructionStep = recipeInfo.analyzedInstructions.steps[currentStep - 1],
+                    extendedIngredient = recipeInfo.extendedIngredients
                 )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             BottomButtonsSteps(
-                onPreviousClick = { if (currentStep > 1) currentStep-- },
-                onNextClick = { if (currentStep < totalSteps) currentStep++ } // Adjust for 4 steps (3 + flag)
+                onPreviousClick = {
+                    if (currentStep > 1)
+                        currentStep--
+                },
+                onNextClick = {
+                    if (currentStep < totalStep)
+                        currentStep++
+                    if (currentStep == totalStep)
+                        navController.navigateTo(RecipeCongratsScreen.route)
+                }
             )
         }
     }
@@ -271,18 +277,27 @@ fun IngredientItemStep(ingredientName: String, ingredientQuantity: String) {
 }
 
 @Composable
-fun StepContent(ingredients: List<Pair<String, String>>, summary: String) {
+fun StepContent(instructionStep: InstructionStep, extendedIngredient: List<ExtendedIngredient>) {
+    val processedIngredients = mutableListOf<Pair<String, String>>()
+
+    for (ingredient in instructionStep.ingredients) {
+        val extendedInfo = extendedIngredient.find { it.name == ingredient.name }
+        if (extendedInfo != null) {
+            val processedIngredient = Pair(ingredient.name, "${extendedInfo.amount.toInt()} ${extendedInfo.unit}")
+            processedIngredients.add(processedIngredient)
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        IngredientList(ingredients = ingredients)
+        IngredientList(ingredients = processedIngredients)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = summary,
+            text = instructionStep.step,
             modifier = Modifier.padding(horizontal = 30.dp, vertical = 8.dp),
             fontFamily = sf_pro_display,
             fontSize = 18.sp
