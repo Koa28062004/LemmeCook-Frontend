@@ -21,7 +21,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lemmecook_frontend.R;
-import com.example.lemmecook_frontend.models.data.Recipe;
+import com.example.lemmecook_frontend.models.recipe.Recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;

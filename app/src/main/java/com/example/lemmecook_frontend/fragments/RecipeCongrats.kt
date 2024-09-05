@@ -44,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavHostController
 
 @Preview(showBackground = true)
 @Composable
@@ -59,6 +60,23 @@ fun StateTestScreenForRecipeCongrats() {
         allowChange = false,
         difficult = 4,
         rate = 3
+    )
+}
+
+@Composable
+fun RecipeCongratsScreen(navHostController: NavHostController) {
+    // fetch data from database
+    RecipeCongrats(
+        currentCalo = 1289,
+        currentFat = 290,
+        currentPro = 580,
+        currentCarb = 850,
+        goalFat = 1000,
+        goalPro = 1000,
+        goalCarb = 1000,
+        allowChange = false,
+        difficult = 5,
+        rate = 5
     )
 }
 
@@ -90,18 +108,15 @@ fun RecipeCongrats(
             contentScale = ContentScale.Crop
         )
 
-        IconButton(
-            onClick = { /*TODO*/ },
+        ThreeDotMenu(
+            buttonItems = listOf(
+                MenuItem("Add to Favorites") {/* TODO: Add to favorites backend */},
+                MenuItem("Share") {/* TODO: Share this recipe */}
+            ),
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(50.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.utils_icon),
-                contentDescription = "Back arrow icon",
-            )
-        }
+                .padding(vertical = 12.dp)
+        )
 
         Column(
             modifier = Modifier

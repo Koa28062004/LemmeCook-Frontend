@@ -6,9 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
+import androidx.navigation.navArgument
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
 import com.example.lemmecook_frontend.fragments.SignInScreenPreview
@@ -16,6 +18,10 @@ import com.example.lemmecook_frontend.fragments.SignUpScreenPreview
 import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
 import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
+import com.example.lemmecook_frontend.fragments.RecipeCongratsScreen
+import com.example.lemmecook_frontend.fragments.RecipeOverviewScreen
+import com.example.lemmecook_frontend.fragments.RecipePrepScreen
+import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -28,6 +34,7 @@ fun AppNavHost(
         startDestination = LandingScreen.route,
         modifier = modifier
     ) {
+        // Authentication & Onboarding
         composable(route = LandingScreen.route) {
             LandingScreenPreview(navController)
         }
@@ -55,6 +62,17 @@ fun AppNavHost(
             val email = backStackEntry.arguments?.getString("email")
             val password = backStackEntry.arguments?.getString("password")
             ChooseNameScreenPreview(navController, email, password)
+        }
+
+        // Recipe Details
+        composable(route = RecipeOverviewScreen.route) {
+            RecipeOverviewScreen(navController)
+        }
+        composable(route = RecipePrepScreen.route) {
+            RecipePrepScreen(navController)
+        }
+        composable(route = RecipeCongratsScreen.route) {
+            RecipeCongratsScreen(navController)
         }
     }
 }

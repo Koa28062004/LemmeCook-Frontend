@@ -24,6 +24,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.MoreHoriz
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -58,6 +60,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lemmecook_frontend.R
+import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 
 @Composable
 fun TitleWithBackButton(
@@ -489,3 +492,54 @@ fun SliderCircle(color: Color) {
 
     Spacer(modifier = Modifier.width(8.dp))
 }
+
+@Composable
+fun ThreeDotMenu(
+    buttonItems: List<MenuItem>,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val buttonIcon = Icons.Outlined.MoreHoriz
+
+    // Box to handle the dropdown menu
+    Box(modifier = modifier) {
+        // Three dot button
+        Icon(
+            imageVector = buttonIcon,
+            contentDescription = "More options",
+            modifier = Modifier
+                .clickable { expanded = !expanded }
+                .padding(5.dp)
+                .size(38.dp)
+        )
+
+        // Dropdown menu
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            buttonItems.forEach { item ->
+                DropdownMenuItem(
+                    onClick = {
+                        item.onClick()
+                        expanded = false
+                    },
+                    text = {
+                        Text(
+                            text = item.label,
+                            fontFamily = sf_pro_display,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp
+                        )
+                    }
+                )
+            }
+        }
+    }
+}
+
+// Data class for menu items
+data class MenuItem(
+    val label: String,
+    val onClick: () -> Unit
+)

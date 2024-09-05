@@ -1,7 +1,7 @@
 package com.example.lemmecook_frontend.api;
 
-import com.example.lemmecook_frontend.models.data.Recipe;
-import com.example.lemmecook_frontend.models.data.RecipeResponse;
+import com.example.lemmecook_frontend.models.recipe.Recipe;
+import com.example.lemmecook_frontend.models.recipe.RecipeResponse;
 
 import java.util.List;
 

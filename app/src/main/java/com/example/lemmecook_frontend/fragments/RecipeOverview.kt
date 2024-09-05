@@ -39,51 +39,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.lemmecook_frontend.R
+import com.example.lemmecook_frontend.activities.NavHost.RecipeOverviewScreen
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.models.recipe.ExtendedIngredient
+import com.example.lemmecook_frontend.models.recipe.Nutrient
+import com.example.lemmecook_frontend.models.recipe.Nutrition
+import com.example.lemmecook_frontend.models.recipe.RecipeInformation
+import com.example.lemmecook_frontend.models.recipe.SampleData
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 
 @Preview(showBackground = true)
 @Composable
 fun StateTestScreenForRecipeOverview() {
-    val title: String = "Healthy salad with salsa"
-    val subtitles: List<String> = listOf("Lunch", "Easy", "15 minutes prep")
-    val nutrients: Map<String, String> = mapOf(
-            "Energy" to "100k",
-            "Protein" to "8g",
-            "Carbs" to "30g",
-            "Fat" to "5g"
-    )
-    val ingredients: Map<String, String> = mapOf(
-            "Chicken breasts" to "250g",
-            "Unsalted butter" to "1tbsp",
-            "Sesame oil and vegetable oil" to "2tsp",
-            "Fresh ginger" to "2tsp",
-            "Salad" to "400g",
-            "Tomatoes" to "6pcs",
-            "Cucumbers" to "10pcs",
-            "Large eggs" to "100g"
-    )
-    val imgUrl = "https://img.spoonacular.com/recipes/716429-556x370.jpg"
-    val initServes = 1
-    RecipeOverview(
-            title = title,
-            subtitles = subtitles,
-            nutrients = nutrients,
-            ingredients = ingredients,
-            imgUrl = imgUrl,
-            initServes = initServes
-    )
+    val recipe = SampleData.sampleRecipeInformation
+    val navHostController = rememberNavController()
+    RecipeOverview(navHostController ,recipe)
 }
+
+@Composable
+fun RecipeOverviewScreen(navHostController: NavHostController) {
+    val recipe = SampleData.sampleRecipeInformation
+    RecipeOverview(navController = navHostController, recipeInfo = recipe)
+}
+
 @Composable
 fun RecipeOverview(
-        title: String,
-        subtitles: List<String>,
-        nutrients: Map<String, String>,
-        ingredients: Map<String, String>,
-        imgUrl: String,
-        initServes: Int
+        navController: NavHostController,
+        recipeInfo: RecipeInformation,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -91,7 +79,7 @@ fun RecipeOverview(
     ) {
         Image(
             painter = rememberAsyncImagePainter(
-                model = imgUrl,
+                model = recipeInfo.image,
                 placeholder = painterResource(id = R.drawable.recipe_demo_img1),
                 error = painterResource(id = R.drawable.recipe_demo_img1)
             ),
@@ -103,7 +91,7 @@ fun RecipeOverview(
         )
 
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = {  },
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp)
@@ -112,22 +100,19 @@ fun RecipeOverview(
             Icon(
                 painter = painterResource(id = R.drawable.back_arrow_icon),
                 contentDescription = "Back arrow icon",
-                modifier = Modifier.size(70.dp)
+                modifier = Modifier.size(60.dp)
             )
         }
 
-        IconButton(
-            onClick = { /*TODO*/ },
+        ThreeDotMenu(
+            buttonItems = listOf(
+                MenuItem("Add to Favorites") {/* TODO: Add to favorites backend */},
+                MenuItem("Share") {/* TODO: Share this recipe */}
+            ),
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(50.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.utils_icon),
-                contentDescription = "Back arrow icon",
-            )
-        }
+                .padding(vertical = 12.dp)
+        )
 
         Box(
             modifier = Modifier
@@ -143,14 +128,14 @@ fun RecipeOverview(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = title,
+                    text = recipeInfo.title,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = sf_pro_display,
                     fontSize = 26.sp,
                     modifier = Modifier.padding(0.dp, 14.dp, 0.dp, 4.dp)
                 )
 
-                AnimatedTextLoop(texts = subtitles)
+                AnimatedTextLoop(texts = recipeInfo.dishTypes)
 
                 Box(
                     modifier = Modifier
@@ -169,16 +154,16 @@ fun RecipeOverview(
                                 .padding(horizontal = 20.dp, vertical = 16.dp),
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
-                            NutrientItem(value = nutrients.getValue("Energy"), label = "Energy")
-                            NutrientItem(value = nutrients.getValue("Protein"), label = "Protein")
-                            NutrientItem(value = nutrients.getValue("Carbs"), label = "Carbs")
-                            NutrientItem(value = nutrients.getValue("Fat"), label = "Fat")
+                            NutrientItem("Calories", recipeInfo.nutrition.nutrients)
+                            NutrientItem("Protein", recipeInfo.nutrition.nutrients)
+                            NutrientItem("Carbohydrates", recipeInfo.nutrition.nutrients)
+                            NutrientItem("Fat", recipeInfo.nutrition.nutrients)
                         }
                     }
                 }
 
-                IngredientsSection(initialServes = initServes)
-                IngredientsList(ingredients = ingredients)
+                IngredientsSection(initialServes = recipeInfo.servings)
+                IngredientsList(ingredients = recipeInfo.extendedIngredients)
                 BottomButtonsSection()
             }
         }
@@ -213,23 +198,27 @@ fun AnimatedTextLoop(texts: List<String>) {
 
 
 @Composable
-fun NutrientItem(value: String, label: String) {
+fun NutrientItem(label: String, nutrients: List<Nutrient>) {
+    val nutrient = nutrients.find { it.name == label }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = value,
-            fontWeight = FontWeight.Normal,
-            fontFamily = sf_pro_display,
-            fontSize = 16.sp
-        )
-        Text(
-            text = label,
-            fontWeight = FontWeight.SemiBold,
-            fontFamily = sf_pro_display,
-            fontSize = 19.sp,
-            color = Color(67, 67, 67)
-        )
+        if (nutrient != null) {
+            Text(
+                text = nutrient.amount.toInt().toString() + nutrient.unit,
+                fontWeight = FontWeight.Normal,
+                fontFamily = sf_pro_display,
+                fontSize = 16.sp
+            )
+
+            Text(
+                text = if (label == "Carbohydrates") "Carbs" else label,
+                fontWeight = FontWeight.SemiBold,
+                fontFamily = sf_pro_display,
+                fontSize = 19.sp,
+                color = Color(67, 67, 67)
+            )
+        }
     }
 }
 
@@ -312,7 +301,7 @@ fun IngredientsSection(
 }
 
 @Composable
-fun IngredientsList(ingredients: Map<String, String>) {
+fun IngredientsList(ingredients: List<ExtendedIngredient>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -325,8 +314,12 @@ fun IngredientsList(ingredients: Map<String, String>) {
                 .fillMaxWidth()
                 .padding(end = 16.dp, bottom = 10.dp) // Adjust for padding or spacing if needed
         ) {
-            items(ingredients.entries.toList()) { entry ->
-                IngredientItem(name = entry.key, quantity = entry.value)
+            items(ingredients) { ingredient ->
+                // Assuming IngredientItem has name and quantity parameters
+                IngredientItem(
+                    name = ingredient.name,
+                    quantity = "${ingredient.amount.toInt()} ${ingredient.unit}" // Display quantity and unit
+                )
             }
         }
 

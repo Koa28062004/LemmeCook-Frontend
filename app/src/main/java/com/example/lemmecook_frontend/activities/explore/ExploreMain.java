@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.api.ApiRecipeJava;
-import com.example.lemmecook_frontend.models.data.Recipe;
+import com.example.lemmecook_frontend.models.recipe.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;

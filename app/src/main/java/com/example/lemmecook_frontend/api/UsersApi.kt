@@ -4,6 +4,9 @@ import com.example.lemmecook_frontend.models.request.EmailRequest
 import com.example.lemmecook_frontend.models.data.ForgetPasswordDataModel
 import com.example.lemmecook_frontend.models.data.LoginDataModel
 import com.example.lemmecook_frontend.models.data.RegisterDataModel
+import com.example.lemmecook_frontend.models.auth.ForgetPasswordDataModel
+import com.example.lemmecook_frontend.models.auth.LoginDataModel
+import com.example.lemmecook_frontend.models.auth.RegisterDataModel
 import com.example.lemmecook_frontend.models.response.StatusResponse
 import retrofit2.Call
 import retrofit2.http.Body
