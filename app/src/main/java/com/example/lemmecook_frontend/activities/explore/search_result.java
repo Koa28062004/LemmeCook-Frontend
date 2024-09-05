@@ -17,8 +17,8 @@ import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.adapter.FilterOptionAdapter;
 import com.example.lemmecook_frontend.adapter.ViewPagerFoodAdapter;
 import com.example.lemmecook_frontend.api.ApiRecipeJava;
-import com.example.lemmecook_frontend.models.data.Recipe;
-import com.example.lemmecook_frontend.models.data.RecipeResponse;
+import com.example.lemmecook_frontend.models.recipe.Recipe;
+import com.example.lemmecook_frontend.models.recipe.RecipeResponse;
 
 import java.io.Serializable;
 import java.util.ArrayList;

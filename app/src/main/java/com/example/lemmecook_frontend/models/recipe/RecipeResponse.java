@@ -1,4 +1,4 @@
-package com.example.lemmecook_frontend.models.data;// RecipeResponse.java
+package com.example.lemmecook_frontend.models.recipe;// RecipeResponse.java
 
 import java.util.List;
 

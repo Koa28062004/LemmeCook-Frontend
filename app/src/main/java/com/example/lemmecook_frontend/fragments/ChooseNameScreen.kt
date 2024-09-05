@@ -36,7 +36,7 @@ import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
 import com.example.lemmecook_frontend.activities.NavHost.OnboardScreen
 import com.example.lemmecook_frontend.activities.NavHost.ForgetPasswordScreen
 import com.example.lemmecook_frontend.api.UsersApi
-import com.example.lemmecook_frontend.models.data.RegisterDataModel
+import com.example.lemmecook_frontend.models.auth.RegisterDataModel
 import com.example.lemmecook_frontend.models.response.StatusResponse
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
