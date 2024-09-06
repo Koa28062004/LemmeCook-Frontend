@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.fragments
 
 import ProgressComponent
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,7 +45,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import com.example.lemmecook_frontend.activities.MainActivity
 
 @Preview(showBackground = true)
 @Composable
@@ -95,6 +98,8 @@ fun RecipeCongrats(
 ) {
     var difficulty by remember { mutableIntStateOf(difficult) }
     var rating by remember { mutableIntStateOf(rate) }
+    val context = LocalContext.current
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -179,7 +184,10 @@ fun RecipeCongrats(
 
             DoneButton(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 15.dp),
-                onClick = {/* TODO: back to home */}
+                onClick = {
+                    val intent = Intent(context, MainActivity::class.java)
+                    context.startActivity(intent)
+                }
             )
         }
     }

@@ -44,5 +44,4 @@ class RecipeViewModel : ViewModel() {
             }
         }
     }
-
 }
