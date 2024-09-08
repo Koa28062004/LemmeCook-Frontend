@@ -12,7 +12,7 @@ data class ExtendedIngredient(
     val nameClean: String,
     val original: String,
     val originalName: String,
-    val amount: Double,
+    var amount: Double,
     val unit: String,
     val meta: List<String>,
     val measures: Measures

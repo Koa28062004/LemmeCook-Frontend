@@ -63,17 +63,6 @@ fun AppNavHost(
             val password = backStackEntry.arguments?.getString("password")
             ChooseNameScreenPreview(navController, email, password)
         }
-
-        // Recipe Details
-        composable(route = RecipeOverviewScreen.route) {
-            RecipeOverviewScreen(navController)
-        }
-        composable(route = RecipePrepScreen.route) {
-            RecipePrepScreen(navController)
-        }
-        composable(route = RecipeCongratsScreen.route) {
-            RecipeCongratsScreen(navController)
-        }
     }
 }
 
