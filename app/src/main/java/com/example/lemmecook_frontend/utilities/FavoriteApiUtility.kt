@@ -5,6 +5,7 @@ import android.widget.Toast
 import com.example.lemmecook_frontend.api.MealApi
 import com.example.lemmecook_frontend.models.request.FavoriteRequest
 import com.example.lemmecook_frontend.models.response.AuthResponse
+import com.example.lemmecook_frontend.models.response.FavoritesGetResponse
 import com.example.lemmecook_frontend.models.response.FavoritesPostResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -48,6 +49,31 @@ class FavoriteApiUtility {
                     }
                 )
             }
+        }
+
+        // Function to get favorite meals
+        fun getFavoriteMeals(userId: Int, context: Context, onSuccess: (List<Int>) -> Unit, onError: (String) -> Unit) {
+            val favoritesApi = ApiUtility.getApiClient().create(MealApi::class.java)
+
+            favoritesApi.getUserFavorites(userId).enqueue(object : Callback<FavoritesGetResponse> {
+                override fun onResponse(call: Call<FavoritesGetResponse>, response: Response<FavoritesGetResponse>) {
+                    if (response.isSuccessful) {
+                        val favoritesResponse = response.body()
+                        if (favoritesResponse != null && favoritesResponse.status == "success") {
+                            val favorites = favoritesResponse.favorites ?: emptyList()
+                            onSuccess(favorites)
+                        } else {
+                            onError(favoritesResponse?.message ?: "Failed to get favorites")
+                        }
+                    } else {
+                        onError("Failed to get favorites")
+                    }
+                }
+
+                override fun onFailure(call: Call<FavoritesGetResponse>, t: Throwable) {
+                    onError(t.message ?: "An unknown error occurred")
+                }
+            })
         }
     }
 }

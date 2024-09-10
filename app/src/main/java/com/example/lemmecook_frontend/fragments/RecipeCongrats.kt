@@ -37,8 +37,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.activities.MainActivity
+import com.example.lemmecook_frontend.models.recipe.RecipeViewModel
 
 @Preview(showBackground = true)
 @Composable
@@ -60,6 +62,11 @@ fun StateTestScreenForRecipeCongrats() {
 @Composable
 fun RecipeCongratsScreen(navHostController: NavHostController) {
     // fetch data from database
+    val recipeViewModel: RecipeViewModel = viewModel()
+    val recipe = recipeViewModel.recipeInformation.value
+
+
+
     RecipeCongrats(
         currentCalo = 1289,
         currentFat = 290,

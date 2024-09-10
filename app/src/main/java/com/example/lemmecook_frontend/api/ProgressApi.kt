@@ -1,7 +1,6 @@
 package com.example.lemmecook_frontend.api
 
 import com.example.lemmecook_frontend.models.health.ProgressDataModel
-import com.example.lemmecook_frontend.models.response.AuthResponse
 import com.example.lemmecook_frontend.models.response.ProgressGetResponse
 import com.example.lemmecook_frontend.models.response.ProgressPostResponse
 import retrofit2.Call

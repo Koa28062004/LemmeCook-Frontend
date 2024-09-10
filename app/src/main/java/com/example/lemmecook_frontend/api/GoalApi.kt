@@ -1,7 +1,6 @@
 package com.example.lemmecook_frontend.api
 
 import com.example.lemmecook_frontend.models.health.GoalDataModel
-import com.example.lemmecook_frontend.models.response.AuthResponse
 import com.example.lemmecook_frontend.models.response.GoalGetResponse
 import com.example.lemmecook_frontend.models.response.GoalPostResponse
 import retrofit2.Call
