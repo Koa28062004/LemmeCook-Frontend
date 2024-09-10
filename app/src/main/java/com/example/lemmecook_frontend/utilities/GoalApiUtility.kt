@@ -13,6 +13,17 @@ import retrofit2.Response
 
 class GoalApiUtility {
     companion object {
+        // Function to get default goal
+        fun getDefaultGoal(): GoalDataModel {
+            return GoalDataModel(
+                user_id = UserSession.userId?.toInt() ?: -1,
+                calories = 1000f,
+                fat = 1000f,
+                protein = 1000f,
+                carb = 1000f
+            )
+        }
+
         // Function to set a goal
         fun setGoal(goal: GoalDataModel, context: Context) {
             val goalApi = ApiUtility.getApiClient().create(GoalApi::class.java)
@@ -41,13 +52,7 @@ class GoalApiUtility {
                     if (response.isSuccessful) {
                         val goalResponse = response.body()
                         if (goalResponse != null && goalResponse.status == "success") {
-                            val goal = goalResponse.goal ?: GoalDataModel(
-                                user_id = UserSession.userId?.toInt() ?: -1,
-                                calories = 1000f,
-                                fat = 1000f,
-                                protein = 1000f,
-                                carb = 1000f
-                            )
+                            val goal = goalResponse.goal ?: getDefaultGoal()
                             onSuccess(goal)
                         } else {
                             onError(goalResponse?.message ?: "Failed to get goals")

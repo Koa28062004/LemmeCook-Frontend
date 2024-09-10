@@ -13,6 +13,17 @@ import retrofit2.Response
 
 class ProgressApiUtility {
     companion object {
+        // Function to get default progress
+        fun getDefaultProgress(date: String): ProgressDataModel {
+            return ProgressDataModel(
+                user_id = UserSession.userId?.toInt() ?: -1,
+                date = date,
+                calories = 100f,
+                fat = 100f,
+                protein = 100f,
+                carb = 100f
+            )
+        }
         // Function to update or set today's progress
         fun setProgress(progress: ProgressDataModel, context: Context) {
             val progressApi = ApiUtility.getApiClient().create(ProgressApi::class.java)
@@ -41,14 +52,7 @@ class ProgressApiUtility {
                     if (response.isSuccessful) {
                         val progressResponse = response.body()
                         if (progressResponse != null && progressResponse.status == "success") {
-                            val progress = progressResponse.progress ?: ProgressDataModel(
-                                user_id = UserSession.userId?.toInt() ?: -1,
-                                date = date,
-                                calories = 100f,
-                                fat = 100f,
-                                protein = 100f,
-                                carb = 100f
-                            )
+                            val progress = progressResponse.progress ?: getDefaultProgress(date)
                             onSuccess(progress)
                         } else {
                             onError(progressResponse?.message ?: "Failed to retrieve progress")

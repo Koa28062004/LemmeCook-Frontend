@@ -52,7 +52,7 @@ import com.example.lemmecook_frontend.activities.explore.ExploreMain
 import com.example.lemmecook_frontend.models.recipe.ExtendedIngredient
 import com.example.lemmecook_frontend.models.recipe.Nutrient
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
-import com.example.lemmecook_frontend.models.recipe.RecipeViewModel
+import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
 import com.example.lemmecook_frontend.models.recipe.SampleData
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
