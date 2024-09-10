@@ -28,7 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,7 +54,9 @@ import com.example.lemmecook_frontend.models.recipe.Nutrient
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import com.example.lemmecook_frontend.models.recipe.RecipeViewModel
 import com.example.lemmecook_frontend.models.recipe.SampleData
+import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
+import com.example.lemmecook_frontend.utilities.FavoriteApiUtility
 
 @Preview(showBackground = true)
 @Composable
@@ -125,7 +126,11 @@ fun RecipeOverview(
 
         ThreeDotMenu(
             buttonItems = listOf(
-                MenuItem("Add to Favorites") {/* TODO: Add to favorites backend */},
+                MenuItem("Add to Favorites", FavoriteApiUtility.addToFavorites(
+                    userId = UserSession.userId?.toInt() ?: -1,
+                    mealId = recipeInfo.id,
+                    context = context
+                )),
                 MenuItem("Share") {/* TODO: Share this recipe */}
             ),
             modifier = Modifier

@@ -38,17 +38,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.lemmecook_frontend.activities.NavHost.RecipeCongratsScreen
 import com.example.lemmecook_frontend.activities.NavHost.RecipeOverviewScreen
-import com.example.lemmecook_frontend.activities.NavHost.RecipePrepScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
-import com.example.lemmecook_frontend.models.recipe.AnalyzedInstruction
 import com.example.lemmecook_frontend.models.recipe.ExtendedIngredient
 import com.example.lemmecook_frontend.models.recipe.InstructionStep
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import com.example.lemmecook_frontend.models.recipe.SampleData
+import com.example.lemmecook_frontend.singleton.UserSession
+import com.example.lemmecook_frontend.utilities.FavoriteApiUtility
 
 @Preview(showBackground = true)
 @Composable
@@ -90,7 +91,11 @@ fun RecipePrep(
 
         ThreeDotMenu(
             buttonItems = listOf(
-                MenuItem("Add to Favorites") {/* TODO: Add to favorites backend */},
+                MenuItem("Add to Favorites", FavoriteApiUtility.addToFavorites(
+                    userId = UserSession.userId?.toInt() ?: -1,
+                    mealId = recipeInfo.id,
+                    context = LocalContext.current
+                )),
                 MenuItem("Share") {/* TODO: Share this recipe */},
                 MenuItem("Quit cooking") {
                     navController.navigateTo(RecipeOverviewScreen.route)

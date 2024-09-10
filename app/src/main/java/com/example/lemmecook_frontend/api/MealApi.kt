@@ -5,7 +5,9 @@ import com.example.lemmecook_frontend.models.health.DietDataModel
 import com.example.lemmecook_frontend.models.request.AllergiesRequest
 import com.example.lemmecook_frontend.models.request.DietsRequest
 import com.example.lemmecook_frontend.models.request.FavoriteRequest
-import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.models.response.AuthResponse
+import com.example.lemmecook_frontend.models.response.FavoritesGetResponse
+import com.example.lemmecook_frontend.models.response.FavoritesPostResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -22,20 +24,20 @@ interface MealApi {
     @POST("meal/add_user_allergies")
     fun addUserAllergies(
         @Body allergiesRequest: AllergiesRequest
-    ): Call<StatusResponse>
+    ): Call<AuthResponse>
 
     @POST("meal/add_user_diets")
     fun addUserDiets(
         @Body dietsRequest: DietsRequest
-    ): Call<StatusResponse>
+    ): Call<AuthResponse>
 
     @GET("meal/favorites_view")
     fun getUserFavorites(
         @Query("user_id") userId: Int
-    ): Call<Map<String, List<Int>>>
+    ): Call<FavoritesGetResponse>
 
     @POST("meal/favorites_view")
     fun addUserFavorites(
         @Body favoriteRequest: FavoriteRequest
-    ): Call<StatusResponse>
+    ): Call<FavoritesPostResponse>
 }
