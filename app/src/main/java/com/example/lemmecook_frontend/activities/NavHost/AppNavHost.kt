@@ -6,22 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.lemmecook_frontend.activities.plan.TestScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
-import androidx.navigation.navArgument
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
+import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
 import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 import com.example.lemmecook_frontend.fragments.SignUpScreenPreview
 import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
 import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
-import com.example.lemmecook_frontend.fragments.LandingScreenPreview
-import com.example.lemmecook_frontend.fragments.RecipeCongratsScreen
-import com.example.lemmecook_frontend.fragments.RecipeOverviewScreen
-import com.example.lemmecook_frontend.fragments.RecipePrepScreen
-import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -63,6 +58,11 @@ fun AppNavHost(
             val password = backStackEntry.arguments?.getString("password")
             ChooseNameScreenPreview(navController, email, password)
         }
+
+        //Test screen to be replaced
+        composable(route = TestScreen.route) {
+            TestScreen()
+        }
     }
 }
 
@@ -97,11 +97,12 @@ fun NavHostController.navigateSingleTopTo(route: String) =
 val bottomBarTabs = BottomBarTab.entries.toTypedArray()
 private val bottomBarRoutes = bottomBarTabs.map { it.route }
 
+// Screens with tab row
 enum class BottomBarTab(
     val route: String
 ) {
     HOME(
-        Home.route
+        TestScreen.route
     ),
     BOOKING(
         Booking.route
