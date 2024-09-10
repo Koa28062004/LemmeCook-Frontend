@@ -25,7 +25,7 @@ import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.google.accompanist.flowlayout.FlowRow
 import com.example.lemmecook_frontend.activities.NavHost.Step2Screen
 import com.example.lemmecook_frontend.api.MealApi
-import com.example.lemmecook_frontend.models.data.AllergyDataModel
+import com.example.lemmecook_frontend.models.health.AllergyDataModel
 import com.example.lemmecook_frontend.models.request.AllergiesRequest
 import com.example.lemmecook_frontend.models.response.StatusResponse
 import com.example.lemmecook_frontend.singleton.UserSession

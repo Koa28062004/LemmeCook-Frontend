@@ -1,5 +1,6 @@
 package com.example.lemmecook_frontend.fragments
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,23 +36,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.lemmecook_frontend.R
-import com.example.lemmecook_frontend.activities.NavHost.RecipeOverviewScreen
+import com.example.lemmecook_frontend.activities.NavHost.RecipePrepScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.activities.explore.ExploreMain
 import com.example.lemmecook_frontend.models.recipe.ExtendedIngredient
 import com.example.lemmecook_frontend.models.recipe.Nutrient
-import com.example.lemmecook_frontend.models.recipe.Nutrition
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
+import com.example.lemmecook_frontend.models.recipe.RecipeViewModel
 import com.example.lemmecook_frontend.models.recipe.SampleData
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 
@@ -59,13 +62,16 @@ import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 fun StateTestScreenForRecipeOverview() {
     val recipe = SampleData.sampleRecipeInformation
     val navHostController = rememberNavController()
-    RecipeOverview(navHostController ,recipe)
+    RecipeOverview(navHostController, recipe)
 }
 
 @Composable
 fun RecipeOverviewScreen(navHostController: NavHostController) {
-    val recipe = SampleData.sampleRecipeInformation
-    RecipeOverview(navController = navHostController, recipeInfo = recipe)
+    val recipeViewModel: RecipeViewModel = viewModel()
+    val recipe = recipeViewModel.recipeInformation.value
+    if (recipe != null) {
+        RecipeOverview(navController = navHostController, recipeInfo = recipe)
+    }
 }
 
 @Composable
@@ -73,6 +79,16 @@ fun RecipeOverview(
         navController: NavHostController,
         recipeInfo: RecipeInformation,
 ) {
+    val context = LocalContext.current
+    val ingredientsFor1Portion = getIngredientFor1Portion(
+        recipeInfo.extendedIngredients,
+        recipeInfo.servings
+    )
+    val ingredientsOnDisplay = recipeInfo.extendedIngredients
+    val serves = remember { mutableIntStateOf(recipeInfo.servings) }
+
+    val recipeViewModel: RecipeViewModel = viewModel()
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -91,7 +107,10 @@ fun RecipeOverview(
         )
 
         IconButton(
-            onClick = {  },
+            onClick = {
+                val intent = Intent(context, ExploreMain::class.java)
+                context.startActivity(intent)
+            },
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp)
@@ -162,9 +181,31 @@ fun RecipeOverview(
                     }
                 }
 
-                IngredientsSection(initialServes = recipeInfo.servings)
-                IngredientsList(ingredients = recipeInfo.extendedIngredients)
-                BottomButtonsSection()
+                IngredientsSection(
+                    serves = serves,
+                    ingredientsOnDisplay = ingredientsOnDisplay,
+                    ingredientsPer1Serving = ingredientsFor1Portion
+                )
+                IngredientsList(ingredients = ingredientsOnDisplay)
+                BottomButtonsSection(
+                    onStartCookingClick = {
+                        // update servings and ingredient amounts
+                        recipeInfo.servings = serves.intValue
+                        recipeInfo.extendedIngredients = ingredientsOnDisplay
+                        recipeViewModel.setRecipeInformation(recipeInfo)
+
+                        // navigate to RecipePrepScreen
+                        navController.navigateTo(RecipePrepScreen.route)
+                    },
+                    onScheduleClick = {
+                        // update servings and ingredient amounts
+                        recipeInfo.servings = serves.intValue
+                        recipeInfo.extendedIngredients = ingredientsOnDisplay
+                        recipeViewModel.setRecipeInformation(recipeInfo)
+
+                        // TODO: navigate to Schedule
+                    }
+                )
             }
         }
     }
@@ -173,7 +214,7 @@ fun RecipeOverview(
 @Composable
 fun AnimatedTextLoop(texts: List<String>) {
     // Remember the current index and the text state
-    var currentIndex by remember { mutableStateOf(0) }
+    var currentIndex by remember { mutableIntStateOf(0) }
 
     // LaunchedEffect to loop through the texts
     LaunchedEffect(Unit) {
@@ -224,13 +265,11 @@ fun NutrientItem(label: String, nutrients: List<Nutrient>) {
 
 @Composable
 fun IngredientsSection(
-    initialServes: Int = 1,
-    onIncrement: () -> Unit = {},
-    onDecrement: () -> Unit = {}
+    serves: MutableIntState,
+    ingredientsOnDisplay: List<ExtendedIngredient>,
+    ingredientsPer1Serving: List<ExtendedIngredient>
 ) {
     // Initialize and remember the serves state
-    val serves = remember { mutableIntStateOf(initialServes) }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -261,15 +300,17 @@ fun IngredientsSection(
             )
         }
 
-        // Increment and Decrement Buttons as Text
+        // Increment and Decrement Buttons
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextButton(
                 onClick = {
                     if (serves.intValue > 1) {
-                        serves.intValue -= 1
-                        onDecrement() // Call the onDecrement function
+                        serves.intValue
+                        for (i in ingredientsPer1Serving.indices) {
+                            ingredientsOnDisplay[i].amount -= ingredientsPer1Serving[i].amount
+                        }
                     }
                 },
                 modifier = Modifier
@@ -285,7 +326,9 @@ fun IngredientsSection(
             TextButton(
                 onClick = {
                     serves.intValue += 1
-                    onIncrement() // Call the onIncrement function
+                    for (i in ingredientsPer1Serving.indices) {
+                        ingredientsOnDisplay[i].amount += ingredientsPer1Serving[i].amount
+                    }
                 },
                 modifier = Modifier
                     .size(30.dp)
@@ -318,7 +361,7 @@ fun IngredientsList(ingredients: List<ExtendedIngredient>) {
                 // Assuming IngredientItem has name and quantity parameters
                 IngredientItem(
                     name = ingredient.name,
-                    quantity = "${ingredient.amount.toInt()} ${ingredient.unit}" // Display quantity and unit
+                    quantity = "${if (ingredient.amount % 1.0 == 0.0) ingredient.amount.toInt() else String.format("%.1f", ingredient.amount)} ${ingredient.unit}" // Display quantity and unit
                 )
             }
         }
@@ -404,4 +447,14 @@ fun BottomButtonsSection(
             )
         }
     }
+}
+
+fun getIngredientFor1Portion(
+    ingredients: List<ExtendedIngredient>,
+    initialServes: Int
+): List<ExtendedIngredient> {
+    for (ingredient in ingredients) {
+        ingredient.amount /= initialServes
+    }
+    return ingredients
 }

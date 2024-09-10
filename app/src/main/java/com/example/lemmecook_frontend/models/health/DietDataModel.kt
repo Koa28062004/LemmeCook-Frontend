@@ -1,4 +1,4 @@
-package com.example.lemmecook_frontend.models.data
+package com.example.lemmecook_frontend.models.health
 
 import com.google.gson.annotations.SerializedName
 

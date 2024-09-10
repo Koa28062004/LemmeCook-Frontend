@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,9 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
+import com.example.lemmecook_frontend.activities.recipe.RecipeActivity;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
+import com.example.lemmecook_frontend.models.recipe.RecipeViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +35,7 @@ public class recent_search extends Fragment {
     List<Recipe> recentSearchedRecipe = new ArrayList<>();
     private LinearLayout ll1, ll2, ll3, ll4;
     private List<LinearLayout> llList = new ArrayList<>();
+    private RecipeViewModel recipeViewModel;
 
     public recent_search() {
         // Required empty public constructor
@@ -47,6 +51,7 @@ public class recent_search extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
     }
 
     @Override
@@ -88,9 +93,12 @@ public class recent_search extends Fragment {
                     removeDuplicates(recentSearchedRecipe);
                     updateRecentSearch();
 
-                    // NGO THIEN BAO
-                    // recipeChosenByUser is the recipe chosen by user
-                    // ...
+                    // fetch recipe info and store it in RecipeViewModel
+                    recipeViewModel.fetchRecipeFromAPI(recipeChosenByUser.getId());
+
+                    // navigate to RecipeOverview
+                    Intent intent = new Intent(getContext(), RecipeActivity.class);
+                    startActivity(intent);
                 }
             });
         }
