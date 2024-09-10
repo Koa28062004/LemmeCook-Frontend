@@ -24,10 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.lemmecook_frontend.activities.plan.ScheduleViewModel
 
 @Composable
 fun TestScreen() {
