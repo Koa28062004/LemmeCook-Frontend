@@ -66,8 +66,6 @@ fun AppNavHost(
             val password = backStackEntry.arguments?.getString("password")
             ChooseNameScreenPreview(navController, email, password)
         }
-<<<<<<< HEAD
-
         // Recipe Details
         composable(route = RecipeOverviewScreen.route) {
             RecipeOverviewScreen(navController)
@@ -82,8 +80,6 @@ fun AppNavHost(
             val context = LocalContext.current
             context.startActivity(Intent(context, ExploreMain::class.java))
         }
-=======
->>>>>>> 4489e2bd78810553904e2ec59a55e326f00ff20f
     }
 }
 
