@@ -5,7 +5,6 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gr_text">#BCC1CD</color>
     <color name="bg" >#F5F5F5</color>
     <color name="pastelGreen">#B7DFDB</color>
     <color name="teal_700">#089083</color>
@@ -18,4 +17,5 @@
     <color name="button_gg_fb">#D7D7D7</color>
     <color name="bg_green">#55915E</color>
     <color name="grey">#F2F2F2</color>
+    <color name="gr_text">#88AB8E</color>
 </resources>
