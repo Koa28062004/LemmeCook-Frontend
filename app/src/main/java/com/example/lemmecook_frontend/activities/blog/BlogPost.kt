@@ -1,10 +1,15 @@
 package com.example.lemmecook_frontend.activities.blog
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class BlogPost(
     val title: String,
-    val author: String,
-    val date: Long,
-    val imageUrl: String,
-    val content: String,
-    val link: String
+    val thumbnail: String,
+    val body: String
+)
+
+@Serializable
+data class RssFeed(
+    val items: List<BlogPost>
 )
