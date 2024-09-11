@@ -56,6 +56,7 @@ import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
 import com.example.lemmecook_frontend.models.recipe.SampleData
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
+import com.example.lemmecook_frontend.utilities.DateTimeUtility
 import com.example.lemmecook_frontend.utilities.FavoriteApiUtility
 
 @Preview(showBackground = true)
@@ -207,6 +208,12 @@ fun RecipeOverview(
                         recipeInfo.servings = serves.intValue
                         recipeInfo.extendedIngredients = ingredientsOnDisplay
                         recipeViewModel.setRecipeInformation(recipeInfo)
+
+                        // Pick a date time to cook
+                        DateTimeUtility.showDateTimePicker(
+                            context = context,
+                            onDateTimePicked = {/* TODO: POST new schedule to backend */}
+                        )
 
                         // TODO: navigate to Schedule
                     }
