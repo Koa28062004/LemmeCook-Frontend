@@ -36,10 +36,25 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import androidx.activity.compose.rememberLauncherForActivityResult
 
 @Composable
 fun LandingScreen(navController: NavHostController) {
     val context = LocalContext.current
+
+    // Set up Google SignIn options
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .build()
+
+    // Build GoogleSignInClient with the options
+    val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(context, gso)
+
+    // Launcher for Google Sign-In
+    val googleSignInLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
+            handleSignInResult(result.data, navController)
+        }
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -103,7 +118,10 @@ fun LandingScreen(navController: NavHostController) {
             // Google Sign In Button
             TextButton(
                 onClick = {
-
+                    googleSignInClient.signOut().addOnCompleteListener {
+                        val signInIntent = googleSignInClient.signInIntent
+                        googleSignInLauncher.launch(signInIntent)
+                    }
                 },
                 modifier = Modifier
                     .height(60.dp)
@@ -174,6 +192,24 @@ fun LandingScreen(navController: NavHostController) {
                     .clickable { navController.navigateTo(SignUpScreen.route) }
             )
         }
+    }
+}
+
+fun handleSignInResult(data: Intent?, navController: NavHostController) {
+    val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+    try {
+        val account = task.getResult(ApiException::class.java)
+        // Google Sign-In was successful
+        account?.let {
+            val email = it.email
+            val displayName = it.displayName
+            // TODO: Proceed with the authenticated account (send to your server, etc.)
+
+            navController.navigateTo(SignUpScreen.route)
+        }
+    } catch (e: ApiException) {
+        // Handle the error
+        e.printStackTrace()
     }
 }
 
