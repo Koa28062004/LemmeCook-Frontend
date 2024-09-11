@@ -40,9 +40,8 @@ import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.api.UsersApi
-import com.example.lemmecook_frontend.models.auth.RegisterDataModel
 import com.example.lemmecook_frontend.models.request.EmailRequest
-import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.models.response.AuthResponse
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import retrofit2.Call
 import retrofit2.Callback
@@ -252,8 +251,8 @@ fun signUpAction(context: Context, navController: NavHostController, textEmail: 
                 textEmail = textEmail
             )
 
-            usersApi.userCheckEmail(emailRequest).enqueue(object : Callback<StatusResponse> {
-                override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+            usersApi.userCheckEmail(emailRequest).enqueue(object : Callback<AuthResponse> {
+                override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
                     if (response.isSuccessful) {
                         val statusResponse = response.body()
                         if (statusResponse?.status == "success") {
@@ -267,7 +266,7 @@ fun signUpAction(context: Context, navController: NavHostController, textEmail: 
                     }
                 }
 
-                override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+                override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
                     Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
                 }
             })

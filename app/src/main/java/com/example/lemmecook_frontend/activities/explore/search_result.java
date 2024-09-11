@@ -99,7 +99,8 @@ public class search_result extends Fragment {
                     for (Recipe r : recipes) {
                         Log.d("Search recipe", r.getTitle());
                     }
-                    adapterViewPagerFood = new ViewPagerFoodAdapter(recipes);
+                    adapterViewPagerFood = new ViewPagerFoodAdapter(
+                            search_result.this, getContext(),  recipes );
                     viewPagerFood.setAdapter(adapterViewPagerFood);
                     tvAnnounce.setText(recipes.size() + " recipes based on your preferences");
                 } else {

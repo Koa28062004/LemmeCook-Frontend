@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.adapter;
 
-import android.util.Log;
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -16,17 +19,22 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
+import com.example.lemmecook_frontend.activities.recipe.RecipeActivity;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
+import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdapter.ViewHolder> {
     private List<List<Recipe>> chunkedItems;
+    private RecipeViewModel recipeViewModel;
+    private Context context;
 
-
-    public ViewPagerFoodAdapter(List<Recipe> items) {
+    public ViewPagerFoodAdapter(Fragment hostFragment, Context context, List<Recipe> items) {
         this.chunkedItems = chunkItems(items, 4);
+        this.context = context;
+        recipeViewModel = new ViewModelProvider(hostFragment).get(RecipeViewModel.class);
     }
 
     private List<List<Recipe>> chunkItems(List<Recipe> items, int chunkSize) {
@@ -58,12 +66,14 @@ public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdap
             l.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // fetch recipe info and store it in RecipeViewModel
                     int index = holder.llList.indexOf(l);
                     Recipe recipeChosenByUser = chunkedItems.get(position).get(index);
+                    recipeViewModel.fetchRecipeFromAPI(recipeChosenByUser.getId());
 
-                    // NGO THIEN BAO
-                    // recipeChosenByUser is the recipe chosen by user
-                    // ...
+                    // navigate to RecipeOverview
+                    Intent intent = new Intent(context, RecipeActivity.class);
+                    context.startActivity(intent);
                 }
             });
         }
