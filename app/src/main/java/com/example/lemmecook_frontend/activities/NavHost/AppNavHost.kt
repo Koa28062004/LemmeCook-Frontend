@@ -16,6 +16,9 @@ import com.example.lemmecook_frontend.activities.explore.ExploreMain
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
+import com.example.lemmecook_frontend.fragments.RecipeCongratsScreen
+import com.example.lemmecook_frontend.fragments.RecipeOverviewScreen
+import com.example.lemmecook_frontend.fragments.RecipePrepScreen
 import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 import com.example.lemmecook_frontend.fragments.SignUpScreenPreview
 import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
@@ -62,7 +65,7 @@ fun AppNavHost(
             ChooseNameScreenPreview(navController, email, password)
         }
 
-        composable(route = ScheduleScreen.route) {
+        composable(route = Schedule.route) {
             ScheduleScreen()
         }
         // Recipe Details
@@ -117,17 +120,15 @@ private val bottomBarRoutes = bottomBarTabs.map { it.route }
 enum class BottomBarTab(
     val route: String
 ) {
-    HOME(
-        ScheduleScreen.route
+//    Blog, ExploreScreen, ScheduleScreen
+    BLOG(
+        Blog.route
     ),
-    BOOKING(
-        Booking.route
+    EXPLORE(
+        ExploreScreen.route
     ),
-    NOTIFICATION(
-        Notification.route
-    ),
-    ACCOUNT(
-        Account.route
+    SCHEDULE(
+        Schedule.route
     )
 }
 

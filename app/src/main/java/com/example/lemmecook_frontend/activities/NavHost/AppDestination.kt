@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed interface AppDestination {
@@ -89,25 +90,20 @@ data object Account : AppDestination {
     override val route = "Account"
 }
 
-data object ComingSoon : AppDestination {
-    override val icon = Icons.Outlined.ConfirmationNumber
-    override val route = "ComingSoon"
-}
-
 data object ExploreScreen : AppDestination {
     override val icon = Icons.Outlined.Explore
     override val route = "ExploreScreen"
 }
 
-data object ScheduleScreen : AppDestination {
+data object Schedule : AppDestination {
+    override val icon = Icons.Outlined.Schedule
+    override val route = "Schedule"
+}
+
+data object Blog : AppDestination {
     override val icon = Icons.Outlined.Home
-    override val route = "ScheduleScreen"
-}
-
-data object ExploreScreen : AppDestination {
-    override val icon = Icons.Outlined.Explore
-    override val route = "ExploreScreen"
+    override val route = "Blog"
 }
 
 // Screens to be displayed in the top TabRow
-val AppTabRowScreens = listOf(Home, Booking, Notification, Account)
+val AppTabRowScreens = listOf(Blog, ExploreScreen, Schedule)
