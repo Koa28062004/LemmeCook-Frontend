@@ -93,10 +93,10 @@ data object ComingSoon : AppDestination {
     override val route = "ComingSoon"
 }
 
-data object TestScreen : AppDestination {
+data object ScheduleScreen : AppDestination {
     override val icon = Icons.Outlined.Home
-    override val route = "TestScreen"
+    override val route = "ScheduleScreen"
 }
 
-// Screens to be displayed in the top BookingTabRow
+// Screens to be displayed in the top TabRow
 val AppTabRowScreens = listOf(Home, Booking, Notification, Account)

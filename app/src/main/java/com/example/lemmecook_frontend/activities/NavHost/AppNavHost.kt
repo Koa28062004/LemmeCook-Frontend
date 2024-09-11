@@ -8,7 +8,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.lemmecook_frontend.activities.plan.TestScreen
+import com.example.lemmecook_frontend.activities.plan.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
@@ -59,9 +59,8 @@ fun AppNavHost(
             ChooseNameScreenPreview(navController, email, password)
         }
 
-        //Test screen to be replaced
-        composable(route = TestScreen.route) {
-            TestScreen()
+        composable(route = ScheduleScreen.route) {
+            ScheduleScreen()
         }
     }
 }
@@ -102,7 +101,7 @@ enum class BottomBarTab(
     val route: String
 ) {
     HOME(
-        TestScreen.route
+        ScheduleScreen.route
     ),
     BOOKING(
         Booking.route

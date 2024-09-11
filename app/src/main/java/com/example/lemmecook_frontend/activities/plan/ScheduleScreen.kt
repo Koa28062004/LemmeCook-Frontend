@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -23,7 +25,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,11 +46,6 @@ import com.example.lemmecook_frontend.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@Composable
-fun TestScreen() {
-    Text("Test Screen")
-}
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleScreen(
@@ -65,11 +61,11 @@ fun ScheduleScreen(
             verticalArrangement = Arrangement.Top
         )
         {
+            Spacer(modifier = Modifier.height(16.dp))
             TodayDate()
 
             CalendarTabs()
 
-            HorizontalDivider(color = Color.LightGray)
             Spacer(modifier = Modifier.height(16.dp))
 
             ButtonToDisplayMealOrChecklist(
@@ -151,23 +147,15 @@ fun ChecklistItemRow(item: ChecklistItem, onCheckedChange: (Boolean) -> Unit) {
 @Composable
 fun ButtonToDisplayMealOrChecklist(showMealSchedule: Boolean, onToggleView: () -> Unit) {
     Surface(color = Color.White) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth() // Make buttons occupy full width
-        ) {
+        if (showMealSchedule) {
+            CustomButton(
+                text = "View Checklist of Ingredients",
+                onClick = onToggleView
+            )
+        } else {
             CustomButton(
                 text = "View Meal Schedule",
-                onClick = onToggleView, // Toggle view on click
-                isSelected = showMealSchedule // Highlight the active button
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            CustomButton(
-                text = "View Checklist",
-                onClick = onToggleView,
-                isSelected = !showMealSchedule // Highlight the active button
+                onClick = onToggleView
             )
         }
     }
@@ -176,18 +164,17 @@ fun ButtonToDisplayMealOrChecklist(showMealSchedule: Boolean, onToggleView: () -
 @Composable
 private fun CustomButton(
     text: String,
-    onClick: () -> Unit,
-    isSelected: Boolean
+    onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             contentColor = colorResource(id = R.color.bg_green),
-            containerColor = if (isSelected) colorResource(id = R.color.grey) else Color.Transparent
+            containerColor = colorResource(id = R.color.grey)
         ),
         modifier = Modifier
             .fillMaxWidth(1f)
-            .padding(8.dp)
+            .padding(start = 16.dp, end = 16.dp)
     ) {
         Text(text)
     }
@@ -208,7 +195,7 @@ fun TodayDate() {
     ) {
         Text(
             text = today.format(dayOfMonthFormatter),
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.displayMedium,
             color = Color.Black
         )
 
@@ -233,7 +220,6 @@ fun TodayDate() {
 
         }
     }
-    HorizontalDivider(color = Color.LightGray)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -268,11 +254,12 @@ fun CalendarTab(date: LocalDate, onDateClick: (LocalDate) -> Unit) {
             isSelected = !isSelected
         },
         modifier = Modifier
-            .width(IntrinsicSize.Min),
+            .wrapContentWidth(),
         colors = ButtonDefaults.buttonColors(containerColor = if (isSelected) colorResource(id = R.color.bg_green) else Color.Transparent)
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.wrapContentWidth()
         ) {
             val dayOfWeek = date.format(DateTimeFormatter.ofPattern("EEE"))
             val dayOfMonth = date.dayOfMonth
@@ -282,7 +269,7 @@ fun CalendarTab(date: LocalDate, onDateClick: (LocalDate) -> Unit) {
                 color = if (isSelected) Color.White else colorResource(id = R.color.gr_text)
             )
             Text(
-                text = dayOfMonth.toString(), style = MaterialTheme.typography.bodyMedium,
+                text = dayOfMonth.toString(), style = MaterialTheme.typography.bodyLarge,
                 color = if (isSelected) Color.White else Color.Black
             )
         }
@@ -308,12 +295,15 @@ fun MealCard(timeSlot: TimeSlot) {
     )
     {
         //Hour
-        Text(
-            text = timeSlot.time,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Black,
-            modifier = Modifier.padding(8.dp)
-        )
+        Box(modifier = Modifier.padding(8.dp)
+            .width(80.dp)) {
+            Text(
+                text = timeSlot.time,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -335,7 +325,7 @@ fun MealCard(timeSlot: TimeSlot) {
                     Column {
                         Text(
                             text = timeSlot.meal.name,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = Color.White,
                         )
                         if (timeSlot.meal.description != null) {
@@ -349,7 +339,7 @@ fun MealCard(timeSlot: TimeSlot) {
                 } else {
                     Text(
                         text = "No meal scheduled",
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = Color.White,
                     )
                 }
