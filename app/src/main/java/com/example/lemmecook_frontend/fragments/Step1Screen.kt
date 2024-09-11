@@ -25,9 +25,9 @@ import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.google.accompanist.flowlayout.FlowRow
 import com.example.lemmecook_frontend.activities.NavHost.Step2Screen
 import com.example.lemmecook_frontend.api.MealApi
-import com.example.lemmecook_frontend.models.data.AllergyDataModel
+import com.example.lemmecook_frontend.models.health.AllergyDataModel
 import com.example.lemmecook_frontend.models.request.AllergiesRequest
-import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.models.response.AuthResponse
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import retrofit2.Call
@@ -189,8 +189,8 @@ fun addAllergiesToUser(context: Context, userId: String?, selectedAllergies: Set
 
     Log.d("Step1Screen", "Sending request body: $allergiesData")
 
-    mealApi.addUserAllergies(allergiesData).enqueue(object : Callback<StatusResponse> {
-        override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+    mealApi.addUserAllergies(allergiesData).enqueue(object : Callback<AuthResponse> {
+        override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
             if (response.isSuccessful) {
                 val statusResponse = response.body()
                 if (statusResponse?.status == "success") {
@@ -203,7 +203,7 @@ fun addAllergiesToUser(context: Context, userId: String?, selectedAllergies: Set
             }
         }
 
-        override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+        override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
             Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
         }
     })

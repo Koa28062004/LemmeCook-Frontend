@@ -3,12 +3,10 @@ package com.example.lemmecook_frontend.fragments
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
@@ -17,17 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.api.MealApi
-import com.example.lemmecook_frontend.models.data.AllergyDataModel
-import com.example.lemmecook_frontend.models.data.DietDataModel
-import com.example.lemmecook_frontend.models.request.AllergiesRequest
+import com.example.lemmecook_frontend.models.health.DietDataModel
 import com.example.lemmecook_frontend.models.request.DietsRequest
-import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.models.response.AuthResponse
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import com.google.accompanist.flowlayout.FlowRow
@@ -188,8 +181,8 @@ fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>
 
     Log.d("Step2Screen", "Sending request body: $dietsData")
 
-    mealApi.addUserDiets(dietsData).enqueue(object : Callback<StatusResponse> {
-        override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+    mealApi.addUserDiets(dietsData).enqueue(object : Callback<AuthResponse> {
+        override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
             if (response.isSuccessful) {
                 val statusResponse = response.body()
                 if (statusResponse?.status == "success") {
@@ -202,7 +195,7 @@ fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>
             }
         }
 
-        override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+        override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
             Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
         }
     })

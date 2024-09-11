@@ -20,11 +20,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.activities.recipe.RecipeActivity;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
-import com.example.lemmecook_frontend.models.recipe.RecipeViewModel;
+import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

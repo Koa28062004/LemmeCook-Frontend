@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,12 +31,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
-import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
 import com.example.lemmecook_frontend.activities.NavHost.OnboardScreen
-import com.example.lemmecook_frontend.activities.NavHost.ForgetPasswordScreen
 import com.example.lemmecook_frontend.api.UsersApi
 import com.example.lemmecook_frontend.models.auth.RegisterDataModel
-import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.models.response.AuthResponse
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import retrofit2.Call
@@ -173,8 +170,8 @@ fun ChooseNameAction(navController: NavHostController, context: Context, usernam
             password = password
         )
 
-        usersApi.userRegister(registerData).enqueue(object : Callback<StatusResponse> {
-            override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+        usersApi.userRegister(registerData).enqueue(object : Callback<AuthResponse> {
+            override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
                 if (response.isSuccessful) {
                     val statusResponse = response.body()
                     if (statusResponse?.status == "success") {
@@ -190,7 +187,7 @@ fun ChooseNameAction(navController: NavHostController, context: Context, usernam
                 }
             }
 
-            override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
                 Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
             }
         })
