@@ -1,16 +1,13 @@
-package com.example.lemmecook_frontend.models.recipe
+package com.example.lemmecook_frontend.models.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lemmecook_frontend.api.ApiRecipeJava
 import com.example.lemmecook_frontend.api.RecipeService
+import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

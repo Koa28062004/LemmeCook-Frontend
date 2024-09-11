@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.example.lemmecook_frontend.api.MealApi
 import com.example.lemmecook_frontend.models.health.DietDataModel
 import com.example.lemmecook_frontend.models.request.DietsRequest
-import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.models.response.AuthResponse
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import com.google.accompanist.flowlayout.FlowRow
@@ -181,8 +181,8 @@ fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>
 
     Log.d("Step2Screen", "Sending request body: $dietsData")
 
-    mealApi.addUserDiets(dietsData).enqueue(object : Callback<StatusResponse> {
-        override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+    mealApi.addUserDiets(dietsData).enqueue(object : Callback<AuthResponse> {
+        override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
             if (response.isSuccessful) {
                 val statusResponse = response.body()
                 if (statusResponse?.status == "success") {
@@ -195,7 +195,7 @@ fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>
             }
         }
 
-        override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+        override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
             Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
         }
     })

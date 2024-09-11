@@ -1,7 +1,8 @@
 package com.example.lemmecook_frontend.api
 
 import com.example.lemmecook_frontend.models.health.GoalDataModel
-import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.models.response.GoalGetResponse
+import com.example.lemmecook_frontend.models.response.GoalPostResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -12,10 +13,10 @@ interface GoalApi {
     @GET("progress/goal")
     fun getUserGoals(
         @Query("user_id") userId: Int
-    ): Call<Map<String, GoalDataModel>>
+    ): Call<GoalGetResponse>
 
     @POST("progress/goal")
     fun updateUserGoaL(
         @Body goalRequest: GoalDataModel
-    ): Call<StatusResponse>
+    ): Call<GoalPostResponse>
 }

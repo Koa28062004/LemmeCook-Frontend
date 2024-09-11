@@ -2,7 +2,6 @@ package com.example.lemmecook_frontend.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.activities.recipe.RecipeActivity;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
-import com.example.lemmecook_frontend.models.recipe.RecipeViewModel;
+import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

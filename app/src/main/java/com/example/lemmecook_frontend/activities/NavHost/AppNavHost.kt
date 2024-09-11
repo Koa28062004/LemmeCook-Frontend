@@ -1,15 +1,18 @@
 package com.example.lemmecook_frontend.activities.NavHost
 
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.lemmecook_frontend.activities.plan.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
+import com.example.lemmecook_frontend.activities.explore.ExploreMain
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
@@ -61,6 +64,20 @@ fun AppNavHost(
 
         composable(route = ScheduleScreen.route) {
             ScheduleScreen()
+        }
+        // Recipe Details
+        composable(route = RecipeOverviewScreen.route) {
+            RecipeOverviewScreen(navController)
+        }
+        composable(route = RecipePrepScreen.route) {
+            RecipePrepScreen(navController)
+        }
+        composable(route = RecipeCongratsScreen.route) {
+            RecipeCongratsScreen(navController)
+        }
+        composable(route = ExploreScreen.route) {
+            val context = LocalContext.current
+            context.startActivity(Intent(context, ExploreMain::class.java))
         }
     }
 }
