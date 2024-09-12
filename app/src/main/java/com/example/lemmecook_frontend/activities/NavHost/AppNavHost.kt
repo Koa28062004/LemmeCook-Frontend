@@ -14,6 +14,7 @@ import com.example.lemmecook_frontend.activities.blog.BlogScreen
 import com.example.lemmecook_frontend.activities.schedule.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.activities.explore.ExploreMain
+import com.example.lemmecook_frontend.activities.settings.Settings
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
@@ -70,10 +71,6 @@ fun AppNavHost(
             ScheduleScreen()
         }
 
-        composable(route = Blog.route) {
-            BlogScreen()
-        }
-
         // Recipe Details
         composable(route = RecipeOverviewScreen.route) {
             RecipeOverviewScreen(navController)
@@ -90,6 +87,11 @@ fun AppNavHost(
         }
         composable(route = Blog.route) {
             BlogScreen()
+        }
+
+        composable(route = SettingsScreen.route) {
+            val context = LocalContext.current
+            context.startActivity(Intent(context, Settings::class.java))
         }
     }
 }
@@ -129,7 +131,6 @@ private val bottomBarRoutes = bottomBarTabs.map { it.route }
 enum class BottomBarTab(
     val route: String
 ) {
-//    Blog, ExploreScreen, ScheduleScreen
     BLOG(
         Blog.route
     ),
@@ -138,6 +139,9 @@ enum class BottomBarTab(
     ),
     SCHEDULE(
         Schedule.route
+    ),
+    SETTINGS(
+        SettingsScreen.route
     )
 }
 
