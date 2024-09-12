@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -34,6 +35,7 @@ public class ExploreMain extends AppCompatActivity {
     private PopularRecipeAdapter adapterPopularRecipes, adapterRecommendedRecipes, adapterVeganRecipes;
     private List<Recipe> recentSearchedRecipe;
     private TextView tvSearch;
+    private ImageButton imgButtonBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,14 @@ public class ExploreMain extends AppCompatActivity {
                 Intent intent = new Intent(ExploreMain.this, ExploreSearch.class);
                 recentSearchedRecipe = popularRecipes;
                 startActivity(intent);
+            }
+        });
+
+        imgButtonBack = findViewById(R.id.imageButtonBack);
+        imgButtonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
