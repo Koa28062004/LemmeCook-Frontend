@@ -10,6 +10,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.lemmecook_frontend.activities.blog.BlogScreen
 import com.example.lemmecook_frontend.activities.plan.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.activities.explore.ExploreMain
@@ -81,6 +82,9 @@ fun AppNavHost(
         composable(route = ExploreScreen.route) {
             val context = LocalContext.current
             context.startActivity(Intent(context, ExploreMain::class.java))
+        }
+        composable(route = Blog.route) {
+            BlogScreen()
         }
     }
 }

@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
+import com.example.lemmecook_frontend.activities.NavHost.Blog
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
 import com.example.lemmecook_frontend.activities.NavHost.ForgetPasswordScreen
@@ -167,7 +168,7 @@ fun SignInScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
-                onClick = { SignInAction(context, textEmail, textPassword) },
+                onClick = { SignInAction(context, textEmail, textPassword, navController) },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
@@ -208,7 +209,7 @@ fun SignInScreen(navController: NavHostController) {
     }
 }
 
-fun SignInAction(context: Context, textEmail: String, textPassword: String) {
+fun SignInAction(context: Context, textEmail: String, textPassword: String, navController: NavHostController) {
     if (validateInputs(context, textEmail, textPassword)) {
         val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
         val loginData = LoginDataModel(
@@ -223,6 +224,7 @@ fun SignInAction(context: Context, textEmail: String, textPassword: String) {
                     if (statusResponse?.status == "success") {
                         Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                         UserSession.userId = statusResponse.userId
+                        navController.navigateTo(Blog.route)
                     } else {
                         Toast.makeText(context, "1 - Login failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
                     }
