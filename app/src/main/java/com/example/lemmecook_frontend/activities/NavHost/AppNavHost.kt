@@ -10,6 +10,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.lemmecook_frontend.activities.blog.BlogScreen
 import com.example.lemmecook_frontend.activities.schedule.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.activities.explore.ExploreMain
@@ -68,6 +69,11 @@ fun AppNavHost(
         composable(route = Schedule.route) {
             ScheduleScreen()
         }
+
+        composable(route = Blog.route) {
+            BlogScreen()
+        }
+
         // Recipe Details
         composable(route = RecipeOverviewScreen.route) {
             RecipeOverviewScreen(navController)

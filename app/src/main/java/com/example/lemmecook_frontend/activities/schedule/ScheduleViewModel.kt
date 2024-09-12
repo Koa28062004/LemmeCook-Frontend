@@ -1,9 +1,9 @@
 package com.example.lemmecook_frontend.activities.schedule
 
+import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
 
 data class Meal(val name: String, val description: String? = null, val ingredients: List<String> = emptyList())
 data class TimeSlot(val time: String, val meal: Meal? = null)
@@ -24,10 +24,6 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
     private val _checklistItems = MutableStateFlow<List<ChecklistItem>>(emptyList())
     val checklistItems: StateFlow<List<ChecklistItem>> = _checklistItems.asStateFlow()
 
-    init {
-        updateSchedule(schedule)
-    }
-
     private fun updateSchedule(newSchedule: List<TimeSlot>) {
         _checklistItems.value = newSchedule
             .filter { it.meal != null }
@@ -43,4 +39,18 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
             if (it.id == item.id) item else it
         }
     }
+
+
+    private fun updateChecklist(newIngredients: List<String>) {
+        _checklistItems.value = newIngredients
+            .distinct()
+            .mapIndexed { index, ingredient ->
+                ChecklistItem(id = index + 1, text = ingredient)
+            }
+    }
+
+    init {
+        updateSchedule(schedule)
+    }
+
 }

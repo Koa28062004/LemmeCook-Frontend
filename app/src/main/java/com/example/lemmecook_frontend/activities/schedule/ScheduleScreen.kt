@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,15 +44,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.lemmecook_frontend.R
+import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleScreen(
+//    recipeViewModel: RecipeViewModel,
     viewModel: ScheduleViewModel = viewModel()
 ) {
     var showMealSchedule by remember { mutableStateOf(true) }
+
+//    LaunchedEffect(Unit) {
+//        recipeViewModel.setRecipeInfoListener(viewModel)
+//    }
 
     Surface(color = Color.White)
     {
