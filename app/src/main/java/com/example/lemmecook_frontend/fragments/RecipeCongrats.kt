@@ -4,9 +4,7 @@ import ProgressComponent
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,10 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,25 +30,31 @@ import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.example.lemmecook_frontend.activities.MainActivity
+import com.example.lemmecook_frontend.models.health.ProgressDataModel
+import com.example.lemmecook_frontend.models.viewmodels.GoalViewModel
+import com.example.lemmecook_frontend.models.viewmodels.ProgressViewModel
+import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
+import com.example.lemmecook_frontend.singleton.UserSession
+import com.example.lemmecook_frontend.utilities.DateTimeUtility
+import com.example.lemmecook_frontend.utilities.FavoriteApiUtility
+import com.example.lemmecook_frontend.utilities.GoalApiUtility
 
 @Preview(showBackground = true)
 @Composable
 fun StateTestScreenForRecipeCongrats() {
     RecipeCongrats(
+        recipeId = -1,
         currentCalo = 1289,
         currentFat = 290,
         currentPro = 580,
@@ -68,15 +70,50 @@ fun StateTestScreenForRecipeCongrats() {
 
 @Composable
 fun RecipeCongratsScreen(navHostController: NavHostController) {
-    // fetch data from database
+    val context = LocalContext.current
+    val userId = UserSession.userId?.toInt() ?: -1
+
+    // Get recipe to get img src
+    val recipeViewModel: RecipeViewModel = viewModel()
+    val recipe = recipeViewModel.recipeInformation.value
+
+    // Get goal from goal view model
+    val goalViewModel: GoalViewModel = viewModel()
+    val goal = goalViewModel.goal.value
+    val defaultGoal = GoalApiUtility.getDefaultGoal()
+
+    // Get progress from progress view model
+    val progressViewModel: ProgressViewModel = viewModel()
+    val currentProgress = progressViewModel.progress.value
+
+    // Update current progress
+    val mealCalo = recipe?.nutrition?.nutrients?.find { it.name == "Calories" }
+    val mealFat = recipe?.nutrition?.nutrients?.find { it.name == "Fat" }
+    val mealPro = recipe?.nutrition?.nutrients?.find { it.name == "Protein" }
+    val mealCarb = recipe?.nutrition?.nutrients?.find { it.name == "Carbohydrates" }
+
+    val updatedProgress = ProgressDataModel (
+        user_id = userId,
+        date = DateTimeUtility.getCurrentDateAsString(),
+        calories = currentProgress?.calories!! + mealCalo?.amount?.toFloat()!!,
+        fat = currentProgress.fat + mealFat?.amount?.toFloat()!!,
+        protein = currentProgress.protein + mealPro?.amount?.toFloat()!!,
+        carb = currentProgress.carb + mealCarb?.amount?.toFloat()!!
+    )
+
+    progressViewModel.updateProgress(updatedProgress, context)
+
+    // Screen display
     RecipeCongrats(
-        currentCalo = 1289,
-        currentFat = 290,
-        currentPro = 580,
-        currentCarb = 850,
-        goalFat = 1000,
-        goalPro = 1000,
-        goalCarb = 1000,
+        recipeId = recipe.id,
+        imgUrl = recipe.image,
+        currentCalo = updatedProgress.calories.toInt(),
+        currentFat = updatedProgress.fat.toInt(),
+        currentPro = updatedProgress.protein.toInt(),
+        currentCarb = updatedProgress.carb.toInt(),
+        goalFat = goal?.fat?.toInt() ?: defaultGoal.fat.toInt(),
+        goalPro = goal?.protein?.toInt() ?: defaultGoal.protein.toInt(),
+        goalCarb = goal?.carb?.toInt() ?: defaultGoal.carb.toInt(),
         allowChange = false,
         difficult = 5,
         rate = 5
@@ -85,6 +122,8 @@ fun RecipeCongratsScreen(navHostController: NavHostController) {
 
 @Composable
 fun RecipeCongrats(
+    recipeId: Int,
+    imgUrl: String = "",
     currentCalo: Int,
     currentFat: Int,
     currentPro: Int,
@@ -105,7 +144,11 @@ fun RecipeCongrats(
         contentAlignment = Alignment.TopCenter
     ) {
         Image(
-            painter = painterResource(id = R.drawable.recipe_demo_img1),
+            painter = rememberAsyncImagePainter(
+                model = imgUrl,
+                placeholder = painterResource(id = R.drawable.recipe_demo_img1),
+                error = painterResource(id = R.drawable.recipe_demo_img1)
+            ),
             contentDescription = "Recipe overview image",
             modifier = Modifier
                 .fillMaxWidth()
@@ -115,7 +158,11 @@ fun RecipeCongrats(
 
         ThreeDotMenu(
             buttonItems = listOf(
-                MenuItem("Add to Favorites") {/* TODO: Add to favorites backend */},
+                MenuItem("Add to Favorites", FavoriteApiUtility.addToFavorites(
+                    userId = UserSession.userId?.toInt() ?: -1,
+                    mealId = recipeId,
+                    context = context
+                )),
                 MenuItem("Share") {/* TODO: Share this recipe */}
             ),
             modifier = Modifier

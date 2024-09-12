@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lemmecook_frontend.BuildConfig;
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.api.ApiRecipeJava;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
@@ -26,7 +27,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ExploreMain extends AppCompatActivity {
-    private String apiKey = "72c52e0281ea48a1bb1c9ce506e067a4";
+    private final String apiKey = BuildConfig.SPOON_API_KEY;
     private int number = 5;
     private List<Recipe> popularRecipes, recommendedRecipes, veganRecipes;
     private RecyclerView rvPopularRecipes, rvRecommendedRecipes, rvVeganRecipes;

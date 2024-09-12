@@ -9,12 +9,18 @@ android {
     namespace = "com.example.lemmecook_frontend"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.example.lemmecook_frontend"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        val spoonApiKey: String = project.properties["SPOON_API_KEY"] as String
+        buildConfigField("String", "SPOON_API_KEY", spoonApiKey)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

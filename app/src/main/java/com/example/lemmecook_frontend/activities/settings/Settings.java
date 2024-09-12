@@ -7,11 +7,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.adapter.FavoriteRecipeAdapter;
+import com.example.lemmecook_frontend.fragments.ProgressFragment;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
 
 import java.util.ArrayList;
@@ -38,6 +41,11 @@ public class Settings extends AppCompatActivity {
         favoriteRecipes = getFavoriteRecipes(); // Method to retrieve your list of recipes
         adapter = new FavoriteRecipeAdapter(this, favoriteRecipes);
         rvFavorite.setAdapter(adapter);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.view2, new ProgressFragment());
+        fragmentTransaction.commit();
     }
 
     private List<Recipe> getFavoriteRecipes() {
