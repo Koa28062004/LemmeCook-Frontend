@@ -58,4 +58,20 @@ public class Settings extends AppCompatActivity {
         // Add more recipes
         return recipes;
     }
+
+    private void changeUsername(int userId, String newUsername) {
+        // ...
+    }
+
+    private void changePassword(int userId, String oldPassword, String newPassword) {
+        // ...
+    }
+
+    private void changeFullName(int userId, String newFullName) {
+        // ...
+    }
+
+    private void changeAvatar(int userId, String newAvatar) {
+        // ...
+    }
 }
