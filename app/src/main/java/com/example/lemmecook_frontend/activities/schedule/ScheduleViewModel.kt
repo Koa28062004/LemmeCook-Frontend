@@ -1,4 +1,4 @@
-package com.example.lemmecook_frontend.activities.plan
+package com.example.lemmecook_frontend.activities.schedule
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +28,7 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
         updateSchedule(schedule)
     }
 
-    fun updateSchedule(newSchedule: List<TimeSlot>) {
+    private fun updateSchedule(newSchedule: List<TimeSlot>) {
         _checklistItems.value = newSchedule
             .filter { it.meal != null }
             .flatMap { it.meal!!.ingredients }

@@ -1,4 +1,4 @@
-package com.example.lemmecook_frontend.activities.plan
+package com.example.lemmecook_frontend.activities.schedule
 
 import android.annotation.SuppressLint
 import android.os.Build
