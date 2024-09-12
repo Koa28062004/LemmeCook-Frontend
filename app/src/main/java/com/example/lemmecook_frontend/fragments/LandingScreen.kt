@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
+import com.example.lemmecook_frontend.activities.NavHost.Blog
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 import com.example.lemmecook_frontend.activities.NavHost.SignUpScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
@@ -230,7 +231,7 @@ fun GoogleSignInResult(data: Intent?, navController: NavHostController, context:
                         if (statusResponse?.status == "success") {
                             Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                             UserSession.userId = statusResponse.userId
-//                            navController.navigateTo(SignUpScreen.route)
+                            navController.navigateTo(Blog.route)
                         } else if (statusResponse?.status == "Sign up") {
                             Toast.makeText(context, "Sign Up!", Toast.LENGTH_SHORT).show()
                             navController.navigate("choose_name/$email/$textPassword")

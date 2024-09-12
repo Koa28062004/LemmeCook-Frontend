@@ -88,6 +88,9 @@ fun AppNavHost(
             val context = LocalContext.current
             context.startActivity(Intent(context, ExploreMain::class.java))
         }
+        composable(route = Blog.route) {
+            BlogScreen()
+        }
     }
 }
 
