@@ -17,6 +17,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.lemmecook_frontend.activities.NavHost.Blog
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.api.MealApi
 import com.example.lemmecook_frontend.models.health.DietDataModel
 import com.example.lemmecook_frontend.models.request.DietsRequest
@@ -29,7 +32,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
-fun Step2Screen() {
+fun Step2Screen(navController: NavHostController) {
     var selectedChips by remember { mutableStateOf(setOf<String>()) }
     val diets = remember { mutableStateOf<List<DietDataModel>>(emptyList()) }
     val context = LocalContext.current
@@ -125,7 +128,7 @@ fun Step2Screen() {
                 onClick = {
                     val userId = UserSession.userId
                     Log.d("Step2Screen", "Selected Chips: $selectedChips")
-                    addDietsToUser(context, userId, selectedChips)
+                    addDietsToUser(context, userId, selectedChips, navController)
                 },
                 modifier = Modifier
                     .weight(1f)
@@ -170,7 +173,7 @@ fun getDietsData(context: Context, diets: MutableState<List<DietDataModel>>) {
     })
 }
 
-fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>) {
+fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>, navController: NavHostController) {
     if (userId == null) {
         Toast.makeText(context, "User ID is missing", Toast.LENGTH_LONG).show()
         return
@@ -187,6 +190,7 @@ fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>
                 val statusResponse = response.body()
                 if (statusResponse?.status == "success") {
                     Toast.makeText(context, "Diets added successfully!", Toast.LENGTH_SHORT).show()
+                    navController.navigateTo(Blog.route)
                 } else {
                     Toast.makeText(context, "Failed to add diets: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
                 }
@@ -204,6 +208,6 @@ fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>
 
 //@Preview(showBackground = true)
 @Composable
-fun Step2ScreenPreview() {
-    Step2Screen()
+fun Step2ScreenPreview(navController: NavHostController) {
+    Step2Screen(navController)
 }

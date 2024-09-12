@@ -53,7 +53,7 @@ fun AppNavHost(
             Step1ScreenPreview(navController)
         }
         composable(route = Step2Screen.route) {
-            Step2ScreenPreview()
+            Step2ScreenPreview(navController)
         }
         composable(route = ForgetPasswordScreen.route) {
             ForgetPasswordScreenPreview(navController)
