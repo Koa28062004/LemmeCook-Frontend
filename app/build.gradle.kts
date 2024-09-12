@@ -9,12 +9,18 @@ android {
     namespace = "com.example.lemmecook_frontend"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.example.lemmecook_frontend"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        val spoonApiKey: String = project.properties["SPOON_API_KEY"] as String
+        buildConfigField("String", "SPOON_API_KEY", spoonApiKey)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -111,7 +117,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-flowlayout:0.28.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
 
-    implementation("com.google.android.gms:play-services-auth:20.5.0")
+    // Google Authentication
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
 
     // Preferences DataStore (SharedPreferences like APIs)
     implementation("androidx.datastore:datastore-preferences:1.1.1")

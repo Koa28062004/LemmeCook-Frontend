@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lemmecook_frontend.activities.schedule.RecipeInfoListener
+import com.example.lemmecook_frontend.BuildConfig
 import com.example.lemmecook_frontend.api.RecipeService
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 //import com.example.lemmecook_frontend.BuildConfig
@@ -15,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class RecipeViewModel : ViewModel() {
-    private val apiKey = "72c52e0281ea48a1bb1c9ce506e067a4"
+    private val apiKey = BuildConfig.SPOON_API_KEY
     private val _recipeInformation = MutableLiveData<RecipeInformation>()
     val recipeInformation: LiveData<RecipeInformation> = _recipeInformation
 
