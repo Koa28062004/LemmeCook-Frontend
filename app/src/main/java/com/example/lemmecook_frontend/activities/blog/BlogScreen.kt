@@ -1,5 +1,6 @@
 package com.example.lemmecook_frontend.activities.blog
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +22,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,9 +37,13 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.serialization.json.Json
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.w3c.dom.Element
+import org.xml.sax.InputSource
+import java.io.StringReader
+import javax.xml.parsers.DocumentBuilderFactory
 
 @Composable
 fun BlogScreen() {
@@ -53,7 +57,8 @@ fun BlogScreen() {
             rssUrl = "https://www.androidauthority.com/feed",
             blogPosts = blogPosts,
             isLoading = isLoading,
-            error = error)
+            error = error
+        )
     }
 
     Surface(color = Color.White) {
@@ -157,7 +162,7 @@ fun fetchAndDisplayBlogPosts(
             if (response.isSuccessful) {
                 val body = response.body?.string()
                 if (body != null) {
-                    val rssFeed = Json.decodeFromString<RssFeed>(body)
+                    val rssFeed = parseRssFeed(body)
                     blogPosts.addAll(rssFeed.items)
                 }
             } else {
@@ -187,6 +192,35 @@ fun CustomFontText(
     )
 }
 
+@SuppressLint("NewApi")
+fun parseRssFeed(rssXml: String): RssFeed {
+    val rssItems = mutableListOf<BlogPost>()
+    val factory = DocumentBuilderFactory.newInstance()
+    val builder = factory.newDocumentBuilder()
+    val document = builder.parse(InputSource(StringReader(rssXml)))
+    val items = document.getElementsByTagName("item")
+
+    for (i in 0 until items.length) {
+        val item = items.item(i) as Element
+
+        val title = item.getElementsByTagName("title").item(0).textContent
+        val body = item.getElementsByTagName("description").item(0).textContent
+
+        var thumbnail: String? = null
+        val mediaContents = item.getElementsByTagName("media:content")
+        for (j in 0 until mediaContents.length) {
+            val mediaContent = mediaContents.item(j) as Element
+            if (mediaContent.hasAttribute("url")) {
+                thumbnail = mediaContent.getAttribute("url")
+                break
+            }
+        }
+
+        rssItems.add(BlogPost(title, body, thumbnail ?: ""))
+    }
+
+    return RssFeed(rssItems)
+}
 
 @Preview(showBackground = true)
 @Composable
