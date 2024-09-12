@@ -1,6 +1,5 @@
 package com.example.lemmecook_frontend.activities
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
@@ -32,17 +31,14 @@ import com.example.lemmecook_frontend.activities.NavHost.shouldShowBottomBar
 import com.example.lemmecook_frontend.fragments.AppTabRow
 import com.example.lemmecook_frontend.ui.theme.LemmeCookFrontendTheme
 
-
 class MainActivity : ComponentActivity() {
     private lateinit var sharedPreferences: SharedPreferences
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-
-        super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
 
         Coil.setImageLoader {
             ImageLoader.Builder(this)
@@ -75,8 +71,7 @@ fun LemmeCookFrontendApp() {
         val currentScreen = AppTabRowScreens.find { it.route == currentDestination?.route } ?: previousScreen
         Scaffold(
             bottomBar = {
-                if (shouldShowBottomBar(currentDestination?.route.toString()))
-                {
+                if (shouldShowBottomBar(currentDestination?.route.toString())) {
                     AppTabRow(
                         allScreens = AppTabRowScreens,
                         onTabSelected = { newScreen -> navController.navigateSingleTopTo(newScreen.route) },
@@ -84,8 +79,7 @@ fun LemmeCookFrontendApp() {
                     )
                 }
             }
-        ) {
-                innerPadding ->
+        ) { innerPadding ->
             AppNavHost(
                 navController = navController,
                 modifier = Modifier.padding(innerPadding)
@@ -93,7 +87,6 @@ fun LemmeCookFrontendApp() {
         }
     }
 }
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview
