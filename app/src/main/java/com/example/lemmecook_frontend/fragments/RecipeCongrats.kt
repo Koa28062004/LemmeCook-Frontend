@@ -40,7 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.example.lemmecook_frontend.activities.MainActivity
+import com.example.lemmecook_frontend.activities.NavHost.ExploreScreen
 import com.example.lemmecook_frontend.models.health.ProgressDataModel
 import com.example.lemmecook_frontend.models.viewmodels.GoalViewModel
 import com.example.lemmecook_frontend.models.viewmodels.ProgressViewModel
@@ -232,7 +232,7 @@ fun RecipeCongrats(
             DoneButton(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 15.dp),
                 onClick = {
-                    val intent = Intent(context, MainActivity::class.java)
+                    val intent = Intent(context, ExploreScreen::class.java)
                     context.startActivity(intent)
                 }
             )
