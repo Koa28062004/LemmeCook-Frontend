@@ -115,5 +115,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-flowlayout:0.28.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
 
-    implementation("com.google.android.gms:play-services-auth:20.5.0")
+    // Google Authentication
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
 }

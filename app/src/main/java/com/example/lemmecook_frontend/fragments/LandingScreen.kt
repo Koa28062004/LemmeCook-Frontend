@@ -1,6 +1,11 @@
 package com.example.lemmecook_frontend.fragments
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,7 +14,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,25 +31,51 @@ import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 import com.example.lemmecook_frontend.activities.NavHost.SignUpScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
-import android.content.Intent
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
+import com.example.lemmecook_frontend.api.UsersApi
+import com.example.lemmecook_frontend.models.auth.LoginDataModel
+import com.example.lemmecook_frontend.models.request.EmailRequest
+import com.example.lemmecook_frontend.models.response.StatusResponse
+import com.example.lemmecook_frontend.singleton.UserSession
+import com.example.lemmecook_frontend.utilities.ApiUtility
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Composable
 fun LandingScreen(navController: NavHostController) {
     val context = LocalContext.current
+    val activity = context as Activity
 
+    // Set up Google SignIn options
+    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .build()
+
+    // Build GoogleSignInClient with the options
+    val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(context, gso)
+
+    // Launcher for Google Sign-In
+    val googleSignInLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        GoogleSignInResult(result.data, navController, context)
+    }
+
+    // Handle Google Sign-In button click
+    fun handleGoogleSignIn() {
+        googleSignInClient.signOut().addOnCompleteListener {
+            val signInIntent = googleSignInClient.signInIntent
+            googleSignInLauncher.launch(signInIntent)
+        }
+    }
+
+    // Composable UI code remains the same
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)) {
-
         // Top Image
         Image(
             painter = painterResource(id = R.drawable.landing_image),
@@ -102,9 +133,7 @@ fun LandingScreen(navController: NavHostController) {
 
             // Google Sign In Button
             TextButton(
-                onClick = {
-
-                },
+                onClick = { handleGoogleSignIn() },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
@@ -123,7 +152,8 @@ fun LandingScreen(navController: NavHostController) {
                         text = "Continue with Google",
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp)
+                        fontSize = 18.sp
+                    )
                 }
             }
 
@@ -131,7 +161,7 @@ fun LandingScreen(navController: NavHostController) {
 
             // Facebook Sign In Button
             TextButton(
-                onClick = { /*TODO: Handle sign in with Facebook*/ },
+                onClick = { },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
@@ -150,7 +180,8 @@ fun LandingScreen(navController: NavHostController) {
                         text = "Continue with Facebook",
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp)
+                        fontSize = 18.sp
+                    )
                 }
             }
 
@@ -174,6 +205,49 @@ fun LandingScreen(navController: NavHostController) {
                     .clickable { navController.navigateTo(SignUpScreen.route) }
             )
         }
+    }
+}
+
+fun GoogleSignInResult(data: Intent?, navController: NavHostController, context: Context) {
+    val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+    try {
+        val account = task.getResult(ApiException::class.java)
+        // Google Sign-In was successful
+        account?.let {
+            // make email not null
+            val email = it.email ?: "default@example.com"
+            val textPassword = "123"
+
+            val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
+            val emailRequest = EmailRequest(
+                textEmail = email
+            )
+
+            usersApi.googleCheckUserExist(emailRequest).enqueue(object : Callback<StatusResponse> {
+                override fun onResponse(call: Call<StatusResponse>, response: Response<StatusResponse>) {
+                    if (response.isSuccessful) {
+                        val statusResponse = response.body()
+                        if (statusResponse?.status == "success") {
+                            Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                            UserSession.userId = statusResponse.userId
+//                            navController.navigateTo(SignUpScreen.route)
+                        } else if (statusResponse?.status == "Sign up") {
+                            Toast.makeText(context, "Sign Up!", Toast.LENGTH_SHORT).show()
+                            navController.navigate("choose_name/$email/$textPassword")
+                        }
+                    } else {
+                        Toast.makeText(context, "Login failed: ${response.message()}", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<StatusResponse>, t: Throwable) {
+                    Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+                }
+            })
+        }
+    } catch (e: ApiException) {
+        // Handle the error
+        e.printStackTrace()
     }
 }
 
