@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.lemmecook_frontend.BuildConfig;
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.adapter.FilterOptionAdapter;
 import com.example.lemmecook_frontend.adapter.ViewPagerFoodAdapter;
@@ -36,7 +37,7 @@ public class search_result extends Fragment {
     private ViewPager2 viewPagerFood;
     private List<Recipe> recipes = new ArrayList<>();
     private TextView tvAnnounce;
-    private String apiKey = "72c52e0281ea48a1bb1c9ce506e067a4";
+    private String apiKey = BuildConfig.SPOON_API_KEY;
     private int number = 5;
     private ViewPagerFoodAdapter adapterViewPagerFood;
     private String query;
