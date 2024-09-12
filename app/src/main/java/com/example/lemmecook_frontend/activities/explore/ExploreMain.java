@@ -158,4 +158,12 @@ public class ExploreMain extends AppCompatActivity {
             }
         });
     }
+
+    private String getName(String userId) {
+        return "";
+    }
+
+    private String getAvatarLink(String userId) {
+        return "";
+    }
 }
