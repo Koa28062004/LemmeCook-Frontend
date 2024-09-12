@@ -29,10 +29,10 @@ interface UsersApi {
     @POST("users/check_email")
     fun userCheckEmail(
         @Body checkEmailData : EmailRequest
-    ): Call<StatusResponse>
+    ): Call<AuthResponse>
 
     @POST("users/google_check_user_exist")
     fun googleCheckUserExist(
         @Body checkEmailData : EmailRequest
-    ): Call<StatusResponse>
+    ): Call<AuthResponse>
 }
