@@ -171,20 +171,6 @@ fun fetchAndDisplayBlogPosts(
     }
 }
 
-//@Composable
-//fun BlogScreen() {
-//    Surface(color = Color.White) {
-//        Column(
-//            modifier = Modifier.fillMaxSize(),
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center
-//        ) {
-//            CustomFontText(text = "News Blog", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-//        }
-//
-//    }
-//}
-
 @Composable
 fun CustomFontText(
     text: String,
