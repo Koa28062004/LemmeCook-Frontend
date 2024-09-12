@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.lemmecook_frontend.activities.schedule.RecipeInfoListener
 import com.example.lemmecook_frontend.api.RecipeService
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
+//import com.example.lemmecook_frontend.BuildConfig
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,9 +19,9 @@ class RecipeViewModel : ViewModel() {
     private val _recipeInformation = MutableLiveData<RecipeInformation>()
     val recipeInformation: LiveData<RecipeInformation> = _recipeInformation
 
-    fun setRecipeInformation(recipe: RecipeInformation) {
-        _recipeInformation.value = recipe
-    }
+//    fun setRecipeInformation(recipe: RecipeInformation) {
+//        _recipeInformation.value = recipe
+//    }
 
     fun fetchRecipeFromAPI(recipeID: Int) {
         viewModelScope.launch {
@@ -40,5 +42,18 @@ class RecipeViewModel : ViewModel() {
                 Log.e("RecipeViewModel", "Error fetching recipe information: ${e.message}")
             }
         }
+    }
+
+
+    // Listener for recipe information updates
+    private var recipeInfoListener: RecipeInfoListener? = null
+
+    fun setRecipeInfoListener(listener: RecipeInfoListener) {
+        recipeInfoListener = listener
+    }
+
+    fun setRecipeInformation(recipe: RecipeInformation) {
+        _recipeInformation.value = recipe
+        recipeInfoListener?.onRecipeInformationUpdated(recipe)
     }
 }
