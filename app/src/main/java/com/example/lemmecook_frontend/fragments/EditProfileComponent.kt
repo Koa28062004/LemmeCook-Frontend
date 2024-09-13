@@ -58,9 +58,3 @@ fun onEditProfile(navController: NavHostController) {
     // Use the navController to navigate to the edit profile screen
     navController.navigate("edit_profile_screen") // Replace with the actual route of your destination
 }
-
-// Function to handle Log Out navigation
-fun onLogOut(navController: NavHostController) {
-    // Use the navController to navigate to the log out or desired screen
-    navController.navigate("login_screen") // Replace with the actual route of your destination
-}
