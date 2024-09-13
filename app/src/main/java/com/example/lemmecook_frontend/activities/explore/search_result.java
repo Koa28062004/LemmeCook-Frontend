@@ -38,7 +38,7 @@ public class search_result extends Fragment {
     private List<Recipe> recipes = new ArrayList<>();
     private TextView tvAnnounce;
     private String apiKey = BuildConfig.SPOON_API_KEY;
-    private int number = 5;
+    private int number = 1;
     private ViewPagerFoodAdapter adapterViewPagerFood;
     private String query;
     public search_result() {

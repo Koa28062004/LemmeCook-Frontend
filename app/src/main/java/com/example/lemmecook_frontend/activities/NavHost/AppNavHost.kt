@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -24,16 +25,19 @@ import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 import com.example.lemmecook_frontend.fragments.SignUpScreenPreview
 import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
 import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
+import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
+    startDestination: String = LandingScreen.route,
+    recipeId: Int = -1,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = LandingScreen.route,
+        startDestination = startDestination,
         modifier = modifier
     ) {
         // Authentication & Onboarding
@@ -71,7 +75,7 @@ fun AppNavHost(
         }
         // Recipe Details
         composable(route = RecipeOverviewScreen.route) {
-            RecipeOverviewScreen(navController)
+            RecipeOverviewScreen(navController, recipeId)
         }
         composable(route = RecipePrepScreen.route) {
             RecipePrepScreen(navController)

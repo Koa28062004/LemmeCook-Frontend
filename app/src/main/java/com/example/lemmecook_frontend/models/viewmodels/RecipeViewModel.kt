@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.lemmecook_frontend.BuildConfig
 import com.example.lemmecook_frontend.api.RecipeService
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
+import com.example.lemmecook_frontend.models.recipe.SampleData
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,6 +26,8 @@ class RecipeViewModel : ViewModel() {
     fun fetchRecipeFromAPI(recipeID: Int) {
         viewModelScope.launch {
             try {
+                Log.d("d", "fetching info recipe id: ${recipeID}")
+
                 val retrofit = Retrofit.Builder()
                     .baseUrl("https://api.spoonacular.com/")
                     .addConverterFactory(GsonConverterFactory.create())
@@ -33,12 +36,15 @@ class RecipeViewModel : ViewModel() {
                 val api: RecipeService = retrofit.create(RecipeService::class.java)
 
                 // Fetch the recipe information
-                val recipeInfo = api.getRecipeInformation(apiKey, recipeID)
-                _recipeInformation.postValue(recipeInfo)
+                val recipeInfo = api.getRecipeInformation(recipeID, apiKey)
+//                _recipeInformation.value = recipeInfo
+
+                Log.d("d", "fetching info recipe title: ${_recipeInformation.value?.title}")
 
             } catch (e: Exception) {
                 // Handle any errors
                 Log.e("RecipeViewModel", "Error fetching recipe information: ${e.message}")
+                _recipeInformation.value = SampleData.sampleRecipeInformation
             }
         }
     }

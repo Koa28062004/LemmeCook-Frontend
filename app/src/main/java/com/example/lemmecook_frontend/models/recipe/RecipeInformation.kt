@@ -38,7 +38,7 @@ data class RecipeInformation(
     val diets: List<String>,
     val occasions: List<String>,
     val instructions: String?,
-    val analyzedInstructions: AnalyzedInstruction,
+    val analyzedInstructions: List<AnalyzedInstruction>,
     val originalId: Int?,
     val spoonacularScore: Double,
     val spoonacularSourceUrl: String
@@ -283,7 +283,7 @@ object SampleData {
         diets = listOf("Vegetarian"),
         occasions = listOf("Lunch"),
         instructions = "Mix all ingredients together and serve.",
-        analyzedInstructions = AnalyzedInstruction(
+        analyzedInstructions = listOf(AnalyzedInstruction(
             name = "",
             steps = listOf(
                 InstructionStep(
@@ -331,7 +331,7 @@ object SampleData {
                     )
                 )
             )
-        ),
+        )),
         originalId = null,
         spoonacularScore = 95.0,
         spoonacularSourceUrl = "https://example.com/spoonacular"
