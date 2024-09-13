@@ -74,7 +74,7 @@ fun RecipePrep(
 ) {
     // Manage the current step state
     var currentStep by remember { mutableIntStateOf(1) }
-    val totalStep = recipeInfo.analyzedInstructions.steps.size
+    val totalStep = recipeInfo.analyzedInstructions[0].steps.size
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -123,7 +123,7 @@ fun RecipePrep(
                 PrepStep(stepNumber = 1)
                 RecipeSteps(stepsCount = totalStep, currentStep = currentStep)
                 StepContent(
-                    instructionStep = recipeInfo.analyzedInstructions.steps[currentStep - 1],
+                    instructionStep = recipeInfo.analyzedInstructions[0].steps[currentStep - 1],
                     extendedIngredient = recipeInfo.extendedIngredients
                 )
             }

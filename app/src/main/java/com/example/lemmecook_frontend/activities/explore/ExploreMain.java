@@ -29,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ExploreMain extends AppCompatActivity {
     private final String apiKey = BuildConfig.SPOON_API_KEY;
-    private int number = 5;
+    private int number = 1;
     private List<Recipe> popularRecipes, recommendedRecipes, veganRecipes;
     private RecyclerView rvPopularRecipes, rvRecommendedRecipes, rvVeganRecipes;
     private PopularRecipeAdapter adapterPopularRecipes, adapterRecommendedRecipes, adapterVeganRecipes;

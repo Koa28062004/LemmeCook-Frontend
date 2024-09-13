@@ -18,7 +18,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
-import com.example.lemmecook_frontend.activities.recipe.RecipeActivity;
+import com.example.lemmecook_frontend.activities.MainActivity;
+import com.example.lemmecook_frontend.activities.NavHost.RecipeOverviewScreen;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
 import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel;
 
@@ -92,11 +93,16 @@ public class recent_search extends Fragment {
                     removeDuplicates(recentSearchedRecipe);
                     updateRecentSearch();
 
-                    // fetch recipe info and store it in RecipeViewModel
-                    recipeViewModel.fetchRecipeFromAPI(recipeChosenByUser.getId());
+//                    // fetch recipe info and store it in RecipeViewModel
+//                    recipeViewModel.fetchRecipeFromAPI(recipeChosenByUser.getId());
+//
+//                    // navigate to RecipeOverview
+//                    Intent intent = new Intent(getContext(), RecipeActivity.class);
+//                    startActivity(intent);
 
-                    // navigate to RecipeOverview
-                    Intent intent = new Intent(getContext(), RecipeActivity.class);
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    intent.putExtra("startDestination", "RecipeOverviewScreen");
+                    intent.putExtra("recipeID", recipeChosenByUser.getId());
                     startActivity(intent);
                 }
             });
