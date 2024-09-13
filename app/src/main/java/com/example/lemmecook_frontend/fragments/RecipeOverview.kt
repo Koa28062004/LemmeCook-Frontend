@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.fragments
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,10 +47,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.lemmecook_frontend.BuildConfig
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.activities.NavHost.RecipePrepScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.activities.explore.ExploreMain
+import com.example.lemmecook_frontend.api.RecipeService
 import com.example.lemmecook_frontend.models.recipe.ExtendedIngredient
 import com.example.lemmecook_frontend.models.recipe.Nutrient
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
@@ -58,6 +62,11 @@ import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 import com.example.lemmecook_frontend.utilities.DateTimeUtility
 import com.example.lemmecook_frontend.utilities.FavoriteApiUtility
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Preview(showBackground = true)
 @Composable
@@ -68,13 +77,69 @@ fun StateTestScreenForRecipeOverview() {
 }
 
 @Composable
-fun RecipeOverviewScreen(navHostController: NavHostController) {
-    val recipeViewModel: RecipeViewModel = viewModel()
-    val recipe = recipeViewModel.recipeInformation.value
-    if (recipe != null) {
-        RecipeOverview(navController = navHostController, recipeInfo = recipe)
+fun RecipeOverviewScreen(navHostController: NavHostController, recipeId: Int) {
+//    val recipeViewModel: RecipeViewModel = viewModel()
+//    recipeViewModel.fetchRecipeFromAPI(recipeId)
+//    val recipe = recipeViewModel.recipeInformation.value
+//    val recipe = fetchRecipe(recipeId)
+//    RecipeOverview(navController = navHostController, recipeInfo = recipe)
+    val recipeState = remember { mutableStateOf<RecipeInformation?>(null) }
+    val errorMessage = remember { mutableStateOf<String?>(null) }
+
+    // LaunchedEffect triggers fetching recipe information when the screen is displayed
+    LaunchedEffect(recipeId) {
+        fetchRecipe(recipeId) { recipeInfo, error ->
+            if (recipeInfo != null) {
+                recipeState.value = recipeInfo
+            } else {
+                errorMessage.value = error
+            }
+        }
+    }
+
+    // Check for errors or display loading state while the recipe is being fetched
+    when {
+        errorMessage.value != null -> {
+            Text("Error: ${errorMessage.value}")
+        }
+        recipeState.value != null -> {
+            RecipeOverview(navController = navHostController, recipeInfo = recipeState.value!!)
+        }
+        else -> {
+            Text("Loading recipe...")
+        }
     }
 }
+
+fun fetchRecipe(recipeId: Int, callback: (RecipeInformation?, String?) -> Unit) {
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://api.spoonacular.com/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val api: RecipeService = retrofit.create(RecipeService::class.java)
+
+    // Perform the network call asynchronously
+    api.getRecipeInformation(recipeId, BuildConfig.SPOON_API_KEY).enqueue(object :
+        Callback<RecipeInformation> {
+        override fun onResponse(
+            call: Call<RecipeInformation>,
+            response: Response<RecipeInformation>
+        ) {
+            if (response.isSuccessful) {
+                callback(response.body(), null)  // Pass the recipe if successful
+            } else {
+                callback(null, "API Error: ${response.errorBody()?.string()}")  // Handle error
+            }
+        }
+
+        override fun onFailure(call: Call<RecipeInformation>, t: Throwable) {
+            callback(null, "Network Error: ${t.message}")  // Handle network failure
+        }
+    })
+}
+
+
 
 @Composable
 fun RecipeOverview(
@@ -160,7 +225,15 @@ fun RecipeOverview(
                     modifier = Modifier.padding(0.dp, 14.dp, 0.dp, 4.dp)
                 )
 
-                AnimatedTextLoop(texts = recipeInfo.dishTypes)
+//                AnimatedTextLoop(texts = recipeInfo.dishTypes)
+
+                Text(
+                    text = recipeInfo.dishTypes[0],
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = sf_pro_display,
+                    fontSize = 17.sp,
+                    color = Color(67, 67, 67)
+                )
 
                 Box(
                     modifier = Modifier

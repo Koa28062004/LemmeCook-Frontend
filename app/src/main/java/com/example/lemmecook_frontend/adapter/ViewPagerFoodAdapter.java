@@ -19,7 +19,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
-import com.example.lemmecook_frontend.activities.recipe.RecipeActivity;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
 import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel;
 
@@ -69,11 +68,11 @@ public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdap
                     // fetch recipe info and store it in RecipeViewModel
                     int index = holder.llList.indexOf(l);
                     Recipe recipeChosenByUser = chunkedItems.get(position).get(index);
-                    recipeViewModel.fetchRecipeFromAPI(recipeChosenByUser.getId());
-
-                    // navigate to RecipeOverview
-                    Intent intent = new Intent(context, RecipeActivity.class);
-                    context.startActivity(intent);
+//                    recipeViewModel.fetchRecipeFromAPI(recipeChosenByUser.getId());
+//
+//                    // navigate to RecipeOverview
+//                    Intent intent = new Intent(context, RecipeActivity.class);
+//                    context.startActivity(intent);
                 }
             });
         }

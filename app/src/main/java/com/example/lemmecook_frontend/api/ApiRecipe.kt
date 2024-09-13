@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -29,13 +30,13 @@ interface RecipeService {
     ): List<Recipe>
 
     @GET("recipes/{id}/information")
-    suspend fun getRecipeInformation(
-        @Query("apiKey") apiKey: String,
+    fun getRecipeInformation(
         @Path("id") id: Int, //get id from searchRecipesByIngredients
+        @Query("apiKey") apiKey: String,
         @Query("includeNutrition") includeNutrition: Boolean = true,
         @Query("addWinePairing") addWinePairing: Boolean = false,
         @Query("addTasteData") addTasteData: Boolean = false
-    ): RecipeInformation
+    ): Call<RecipeInformation>
 }
 
 // if the above interface returns null, try the following:

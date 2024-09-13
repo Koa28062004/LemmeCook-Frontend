@@ -6,15 +6,15 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.lemmecook_frontend.activities.blog.BlogScreen
-import com.example.lemmecook_frontend.activities.plan.ScheduleScreen
+import com.example.lemmecook_frontend.activities.schedule.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.activities.explore.ExploreMain
-import com.example.lemmecook_frontend.fragments.EditProfileScreenPreview
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
@@ -25,17 +25,21 @@ import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 import com.example.lemmecook_frontend.fragments.SignUpScreenPreview
 import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
 import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
+import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
+    startDestination: String = LandingScreen.route,
+    recipeId: Int = -1,
     modifier: Modifier = Modifier
 ) {
     NavHost(
-        navController = navController,
-        startDestination = EditProfileScreen.route,
-        modifier = modifier
+        navController: NavHostController,
+        startDestination: String = LandingScreen.route,
+        recipeId: Int = -1,
+        modifier: Modifier = Modifier
     ) {
         // Authentication & Onboarding
         composable(route = LandingScreen.route) {
@@ -70,9 +74,10 @@ fun AppNavHost(
         composable(route = Schedule.route) {
             ScheduleScreen()
         }
+
         // Recipe Details
         composable(route = RecipeOverviewScreen.route) {
-            RecipeOverviewScreen(navController)
+            RecipeOverviewScreen(navController, recipeId)
         }
         composable(route = RecipePrepScreen.route) {
             RecipePrepScreen(navController)
@@ -87,8 +92,9 @@ fun AppNavHost(
         composable(route = Blog.route) {
             BlogScreen()
         }
-        composable(route = EditProfileScreen.route) {
-            EditProfileScreenPreview()
+        composable(route = SettingsScreen.route) {
+            val context = LocalContext.current
+            context.startActivity(Intent(context, Settings::class.java))
         }
     }
 }
@@ -128,7 +134,6 @@ private val bottomBarRoutes = bottomBarTabs.map { it.route }
 enum class BottomBarTab(
     val route: String
 ) {
-//    Blog, ExploreScreen, ScheduleScreen
     BLOG(
         Blog.route
     ),
@@ -137,6 +142,9 @@ enum class BottomBarTab(
     ),
     SCHEDULE(
         Schedule.route
+    ),
+    SETTINGS(
+        SettingsScreen.route
     )
 }
 
