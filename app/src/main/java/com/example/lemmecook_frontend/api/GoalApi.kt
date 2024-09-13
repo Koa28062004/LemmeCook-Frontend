@@ -15,7 +15,7 @@ interface GoalApi {
         @Query("user_id") userId: Int
     ): Call<GoalGetResponse>
 
-    @POST("progress/goal")
+    @POST("progress/set_goal")
     fun updateUserGoaL(
         @Body goalRequest: GoalDataModel
     ): Call<GoalPostResponse>

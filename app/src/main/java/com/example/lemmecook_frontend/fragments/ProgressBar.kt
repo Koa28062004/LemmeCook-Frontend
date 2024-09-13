@@ -24,6 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.fragments.MenuItem
+import com.example.lemmecook_frontend.fragments.SetCaloriesGoal
+import com.example.lemmecook_frontend.fragments.SetCarbGoal
+import com.example.lemmecook_frontend.fragments.SetFatGoal
+import com.example.lemmecook_frontend.fragments.SetProteinGoal
 import com.example.lemmecook_frontend.fragments.ThreeDotMenu
 import com.example.lemmecook_frontend.singleton.GoalSession
 import com.example.lemmecook_frontend.singleton.ProgressSession
@@ -36,7 +40,14 @@ fun ProgressComponent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+
     UserSession.userId = "1"
+
+    var showCaloriesDialog by remember { mutableStateOf(false) }
+    var showFatDialog by remember { mutableStateOf(false) }
+    var showProteinDialog by remember { mutableStateOf(false) }
+    var showCarbDialog by remember { mutableStateOf(false) }
+
     // Remember state for goal and progress
     var currentGoal by remember { mutableStateOf(GoalSession.goal) }
     var currentProgress by remember { mutableStateOf(ProgressSession.progress) }
@@ -93,12 +104,19 @@ fun ProgressComponent(
                     )
 
                     if (allowChange) {
-                        // TODO: Implement updating nutrition progress
                         ThreeDotMenu(buttonItems = listOf(
-                            MenuItem("Set calories goal") {},
-                            MenuItem("Set fat goal") {},
-                            MenuItem("Set protein goal") {},
-                            MenuItem("Set carb goal") {}
+                            MenuItem("Set calories goal") {
+                                showCaloriesDialog = true
+                            },
+                            MenuItem("Set fat goal") {
+                                showFatDialog = true
+                            },
+                            MenuItem("Set protein goal") {
+                                showProteinDialog = true
+                            },
+                            MenuItem("Set carb goal") {
+                                showCarbDialog = true
+                            }
                         ))
                     }
                 }
@@ -130,6 +148,45 @@ fun ProgressComponent(
                     }
                 }
             }
+        }
+    }
+    if (showCaloriesDialog) {
+        SetCaloriesGoal { calories ->
+            GoalSession.updateGoal(
+                context = context,
+                goalData = currentGoal.copy(calories = calories)
+            )
+            showCaloriesDialog = false
+        }
+    }
+
+    if (showFatDialog) {
+        SetFatGoal { fat ->
+            GoalSession.updateGoal(
+                context = context,
+                goalData = currentGoal.copy(fat = fat)
+            )
+            showFatDialog = false
+        }
+    }
+
+    if (showProteinDialog) {
+        SetProteinGoal { protein ->
+            GoalSession.updateGoal(
+                context = context,
+                goalData = currentGoal.copy(protein = protein)
+            )
+            showProteinDialog = false
+        }
+    }
+
+    if (showCarbDialog) {
+        SetCarbGoal { carb ->
+            GoalSession.updateGoal(
+                context = context,
+                goalData = currentGoal.copy(carb = carb)
+            )
+            showCarbDialog = false
         }
     }
 }
@@ -166,7 +223,6 @@ fun NutrientProgress(percentage: Float, label: String, color: Color) {
                 )
             }
         }
-
     }
 }
 

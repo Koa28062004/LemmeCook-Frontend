@@ -33,7 +33,13 @@ class GoalViewModel : ViewModel() {
         viewModelScope.launch {
             GoalApiUtility.setGoal(
                 goal = updatedGoal,
-                context = context
+                context = context,
+                onError = { error ->
+                    Toast.makeText(context, "GoalViewModel: $error", Toast.LENGTH_SHORT).show()
+                },
+                onSuccess = { fetchedGoal ->
+                    _goal.value = fetchedGoal
+                }
             )
         }
     }
