@@ -35,7 +35,7 @@ import com.google.gson.Gson
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    startDestination: String = LandingScreen.route,
+    startDestination: String = SettingsScreen.route,
     modifier: Modifier = Modifier
 ) {
     NavHost(

@@ -10,7 +10,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface GoalApi {
-    @GET("progress/goal")
+    @GET("progress/get_goal_data")
     fun getUserGoals(
         @Query("user_id") userId: Int
     ): Call<GoalGetResponse>

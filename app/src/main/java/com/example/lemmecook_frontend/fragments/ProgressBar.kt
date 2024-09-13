@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -5,6 +6,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -12,6 +15,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.fragments.MenuItem
 import com.example.lemmecook_frontend.fragments.ThreeDotMenu
+import com.example.lemmecook_frontend.singleton.GoalSession
+import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 
 @Composable
@@ -34,6 +40,18 @@ fun ProgressComponent(
     allowChange: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    UserSession.userId = "1"
+    val goalSession = remember { GoalSession }
+
+    // Fetch goal data when the composable is first composed
+    LaunchedEffect(Unit) {
+        goalSession.fetchGoalData(context)
+    }
+
+    // Observe goal data changes
+    val currentGoal = goalSession.goal
+
     Box(modifier = modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(10.dp))) {
@@ -91,17 +109,17 @@ fun ProgressComponent(
                         horizontalArrangement = Arrangement.End
                     ) {
                         NutrientProgress(
-                            percentage = (currentFat * 1f / goalFat),
+                            percentage = (currentFat * 1f / currentGoal.fat),
                             label = "Fat",
                             color = Color(253, 197, 52) // Gold color
                         )
                         NutrientProgress(
-                            percentage = (currentPro * 1f / goalPro),
+                            percentage = (currentPro * 1f / currentGoal.protein),
                             label = "Pro",
                             color = Color(52, 133, 253) // Blue color
                         )
                         NutrientProgress(
-                            percentage = (currentCarb * 1f / goalCarb),
+                            percentage = (currentCarb * 1f / currentGoal.carb),
                             label = "Carb",
                             color = Color(120, 118, 245) // Purple color
                         )

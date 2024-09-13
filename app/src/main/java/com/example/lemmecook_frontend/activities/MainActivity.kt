@@ -27,6 +27,7 @@ import com.example.lemmecook_frontend.activities.NavHost.AppNavHost
 import com.example.lemmecook_frontend.activities.NavHost.AppTabRowScreens
 import com.example.lemmecook_frontend.activities.NavHost.Blog
 import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
+import com.example.lemmecook_frontend.activities.NavHost.SettingsScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateSingleTopTo
 import com.example.lemmecook_frontend.activities.NavHost.shouldShowBottomBar
 import com.example.lemmecook_frontend.fragments.AppTabRow
@@ -52,7 +53,7 @@ class MainActivity : ComponentActivity() {
         val startDestination: String = if (startScreenRoute != null) {
             "${startScreenRoute}/$recipeId"
         } else {
-            LandingScreen.route
+            SettingsScreen.route
         }
 
         setContent {
