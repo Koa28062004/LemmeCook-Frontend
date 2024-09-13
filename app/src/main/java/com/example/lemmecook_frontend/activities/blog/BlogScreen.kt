@@ -85,6 +85,8 @@ fun BlogScreen() {
             verticalArrangement = Arrangement.Center
         ) {
             CustomFontText(text = "Food Blog", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(8.dp))
+            CustomFontText(text = "Source: https://pinchofyum.com/feed", fontSize = 16.sp, fontWeight = FontWeight.Bold)
 
 
             Box(
