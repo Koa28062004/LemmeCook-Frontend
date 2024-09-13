@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.lemmecook_frontend.activities.NavHost.Blog
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.google.accompanist.flowlayout.FlowRow
 import com.example.lemmecook_frontend.activities.NavHost.Step2Screen
@@ -60,7 +61,7 @@ fun Step1Screen(navController: NavHostController) {
             Text(
                 text = "Skip",
                 color = Color.Blue,
-                modifier = Modifier.clickable { onSkip() }
+                modifier = Modifier.clickable { onSkip(navController) }
             )
         }
 
@@ -231,8 +232,8 @@ fun Chip(
     }
 }
 
-fun onSkip() {
-    // Handle skip button click
+fun onSkip(navController: NavHostController) {
+    navController.navigateTo(Blog.route)
 }
 
 //@Preview(showBackground = true)
