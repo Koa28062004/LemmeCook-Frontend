@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.lemmecook_frontend.R
@@ -140,30 +141,15 @@ fun BlogPostCard(post: BlogPost, onPostClick: (BlogPost) -> Unit) {
     ) {
         Column(
             modifier = Modifier
-                .wrapContentSize()
+                .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            val imagePainter = rememberAsyncImagePainter(post.thumbnail)
-
-            // Log the state of the image painter
-            LaunchedEffect(key1 = imagePainter) {
-                // Log the image loading state
-                Log.d("ImageLoading", "Image state: ${imagePainter.state}")
-
-                // Check if the image loaded successfully
-                if (imagePainter.state is AsyncImagePainter.State.Success) {
-                    Log.d("ImageLoading", "Image loaded successfully!")
-                } else if (imagePainter.state is AsyncImagePainter.State.Error) {
-                    Log.e("ImageLoading", "Image loading failed")
-                }
-            }
-
-            Image(
-                painter = imagePainter,
+            AsyncImage(
+                model = post.thumbnail,
                 contentDescription = "Blog Post Thumbnail",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .wrapContentSize(),
+                    .fillMaxWidth()
             )
 
 
@@ -264,7 +250,7 @@ fun parseRssFeed(rssXml: String): RssFeed {
         val bodyText = Jsoup.clean(
             body,
             Safelist.none()
-        ) // Remove all HTML rssItems.add(BlogPost(title, bodyText, thumbnail ?: ""))
+        )
         var thumbnail: String? = null
         val mediaContents = item.getElementsByTagName("media:content")
         for (j in 0 until mediaContents.length) {
