@@ -23,7 +23,7 @@ object ProgressSession {
             context = context,
             onSuccess = { progressData ->
                 ProgressSession.progress = progressData
-                Log.d("ProgressSession", "Progress data fetched successfully: $progressData")
+                Log.d("ProgressSession", "Progress data fetched successfully: $progress")
             },
             onError = { errorMessage ->
                 Log.e("ProgressSession", "Error fetching goal data: $errorMessage")

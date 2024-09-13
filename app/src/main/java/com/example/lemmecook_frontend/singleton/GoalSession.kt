@@ -19,8 +19,8 @@ object GoalSession {
             userId = userId,
             context = context,
             onSuccess = { goalData ->
-                goal = goalData
-                Log.d("GoalSession", "Goal data fetched successfully: $goalData")
+                GoalSession.goal = goalData
+                Log.d("GoalSession", "Goal data fetched successfully: $goal")
             },
             onError = { errorMessage ->
                 Log.e("GoalSession", "Error fetching goal data: $errorMessage")

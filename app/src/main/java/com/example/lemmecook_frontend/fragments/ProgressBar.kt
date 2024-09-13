@@ -1,13 +1,14 @@
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,31 +32,28 @@ import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 
 @Composable
 fun ProgressComponent(
-    currentCalo: Int,
-    currentFat: Int,
-    currentPro: Int,
-    currentCarb: Int,
-    goalFat: Int,
-    goalPro: Int,
-    goalCarb: Int,
     allowChange: Boolean,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     UserSession.userId = "1"
-    val goalSession = remember { GoalSession }
+    // Remember state for goal and progress
+    var currentGoal by remember { mutableStateOf(GoalSession.goal) }
+    var currentProgress by remember { mutableStateOf(ProgressSession.progress) }
 
-    // Fetch goal data when the composable is first composed
+    // Fetch goal and progress data when the composable is first composed
     LaunchedEffect(Unit) {
-        goalSession.fetchGoalData(context)
+        GoalSession.fetchGoalData(context)
+        ProgressSession.fetchProgressData(context)
     }
 
-    // Observe goal data changes
-    val currentGoal = goalSession.goal
+    // Update state with the fetched data
+    LaunchedEffect(GoalSession.goal) {
+        currentGoal = GoalSession.goal
+    }
 
-    // Log the progress data
-    LaunchedEffect(currentGoal) {
-        ProgressSession.fetchProgressData(context)
+    LaunchedEffect(ProgressSession.progress) {
+        currentProgress = ProgressSession.progress
     }
 
     Box(modifier = modifier
@@ -108,24 +106,24 @@ fun ProgressComponent(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround,
                 ) {
-                    Calories(currentCalories = currentCalo)
+                    Calories(currentCalories = currentProgress.calories)
 
                     Row (
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
                         NutrientProgress(
-                            percentage = (currentFat * 1f / currentGoal.fat),
+                            percentage = (currentProgress.fat * 1f / currentGoal.fat),
                             label = "Fat",
                             color = Color(253, 197, 52) // Gold color
                         )
                         NutrientProgress(
-                            percentage = (currentPro * 1f / currentGoal.protein),
+                            percentage = (currentProgress.protein * 1f / currentGoal.protein),
                             label = "Pro",
                             color = Color(52, 133, 253) // Blue color
                         )
                         NutrientProgress(
-                            percentage = (currentCarb * 1f / currentGoal.carb),
+                            percentage = (currentProgress.carb * 1f / currentGoal.carb),
                             label = "Carb",
                             color = Color(120, 118, 245) // Purple color
                         )
@@ -174,7 +172,7 @@ fun NutrientProgress(percentage: Float, label: String, color: Color) {
 
 
 @Composable
-fun Calories(currentCalories: Int) {
+fun Calories(currentCalories: Float) {
     Column {
         Text(
             text = "Calories",
@@ -205,22 +203,8 @@ fun Calories(currentCalories: Int) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewProgressComponent() {
-    val currentCalories = 1284
-    val currentFat = 290
-    val currentPro = 650
-    val currentCarb = 850
-    val goalFat = 1000
-    val goalPro = 1000
-    val goalCarb = 1000
     val allowChange = true
     ProgressComponent(
-        currentCalories,
-        currentFat,
-        currentPro,
-        currentCarb,
-        goalFat,
-        goalPro,
-        goalCarb,
         allowChange
     )
 }

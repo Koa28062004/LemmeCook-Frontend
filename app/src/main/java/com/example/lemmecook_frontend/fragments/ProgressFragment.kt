@@ -22,13 +22,6 @@ class ProgressFragment : Fragment() {
                 LemmeCookFrontendTheme {
                     // Call your composable function here
                     ProgressComponent(
-                        currentCalo = 1284,
-                        currentFat = 290,
-                        currentPro = 650,
-                        currentCarb = 850,
-                        goalFat = 1000,
-                        goalPro = 1000,
-                        goalCarb = 1000,
                         allowChange = true
                     )
                 }

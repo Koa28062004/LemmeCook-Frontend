@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
         val startDestination: String = if (startScreenRoute != null) {
             "${startScreenRoute}/$recipeId"
         } else {
-            SettingsScreen.route
+            LandingScreen.route
         }
 
         setContent {
