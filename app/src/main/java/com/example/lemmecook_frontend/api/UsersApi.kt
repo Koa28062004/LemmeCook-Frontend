@@ -4,6 +4,7 @@ import com.example.lemmecook_frontend.models.request.EmailRequest
 import com.example.lemmecook_frontend.models.auth.ForgetPasswordDataModel
 import com.example.lemmecook_frontend.models.auth.LoginDataModel
 import com.example.lemmecook_frontend.models.auth.RegisterDataModel
+import com.example.lemmecook_frontend.models.request.UserInfoRequest
 import com.example.lemmecook_frontend.models.response.AuthResponse
 import com.example.lemmecook_frontend.models.response.UserInfoResponse
 import retrofit2.Call
@@ -41,4 +42,9 @@ interface UsersApi {
 
     @GET("users/get_user_info")
     fun getUserInfo(@Query("userId") userId: String): Call<UserInfoResponse>
+
+    @POST("users/update_user_info")
+    fun updateUserInfo(
+        @Body userInfoRequest : UserInfoRequest
+    ): Call<AuthResponse>
 }

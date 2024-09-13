@@ -250,7 +250,20 @@ fun EditProfileScreen() {
                     } else if (password.isBlank()) {
                         Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
                     } else {
-                        // Handle save logic here
+                        if (userId != null) {
+                            UserApiUtility.updateUserInfo(
+                                userId = userId,
+                                username = username,
+                                fullName = fullName,
+                                password = password,
+                                newPassword = newPassword,
+                                context = context
+                            ) { status ->
+                                if (status == "success") {
+                                    Toast.makeText(context, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = customGreen),
