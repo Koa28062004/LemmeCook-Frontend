@@ -1,11 +1,17 @@
 package com.example.lemmecook_frontend.fragments
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
@@ -23,8 +29,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberImagePainter
 import com.example.lemmecook_frontend.activities.NavHost.SignInScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.components.AvatarPicker
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.singleton.UserSession.userId
 import com.example.lemmecook_frontend.utilities.UserApiUtility
@@ -40,6 +48,7 @@ fun EditProfileScreen() {
     var oldPasswordVisible by remember { mutableStateOf(false) }
     var newPasswordVisible by remember { mutableStateOf(false) }
     var confirmNewPasswordVisible by remember { mutableStateOf(false) }
+    var avatarUri by remember { mutableStateOf<Uri?>(null) }
 
     val customGreen = Color(0xFF55915E)
     val context = LocalContext.current
@@ -87,6 +96,17 @@ fun EditProfileScreen() {
             fontSize = 14.sp,
             color = Color.Gray,
             modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Avatar Picker
+        AvatarPicker(
+            avatarUri = avatarUri,
+            onImagePicked = { uri ->
+                avatarUri = uri
+            },
+            modifier = Modifier.padding(bottom = 16.dp)
         )
 
         // Username TextField

@@ -7,10 +7,15 @@ import com.example.lemmecook_frontend.models.auth.RegisterDataModel
 import com.example.lemmecook_frontend.models.request.UserInfoRequest
 import com.example.lemmecook_frontend.models.response.AuthResponse
 import com.example.lemmecook_frontend.models.response.UserInfoResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Query
 
 
@@ -47,4 +52,15 @@ interface UsersApi {
     fun updateUserInfo(
         @Body userInfoRequest : UserInfoRequest
     ): Call<AuthResponse>
+
+//    @Multipart
+//    @POST("users/update_user_info")
+//    fun updateUserInfo(
+//        @Part("userId") userId: RequestBody,
+//        @Part("username") username: RequestBody,
+//        @Part("fullName") fullName: RequestBody,
+//        @Part("password") password: RequestBody,
+//        @Part("newPassword") newPassword: RequestBody,
+//        @Part avatar: MultipartBody.Part?
+//    ): Call<AuthResponse>
 }
