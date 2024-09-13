@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lemmecook_frontend.activities.schedule.RecipeInfoListener
 import com.example.lemmecook_frontend.api.RecipeService
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import com.example.lemmecook_frontend.models.recipe.SampleData
@@ -18,13 +17,6 @@ class RecipeViewModel : ViewModel() {
     private val apiKey = "72c52e0281ea48a1bb1c9ce506e067a4"
     private val _recipeInformation = MutableLiveData<RecipeInformation>()
     val recipeInformation: LiveData<RecipeInformation> = _recipeInformation
-
-    // Listener for recipe information updates
-    private var recipeInfoListener: RecipeInfoListener? = null
-
-    fun setRecipeInfoListener(listener: RecipeInfoListener) {
-        recipeInfoListener = listener
-    }
 
     fun setRecipeInformation(recipe: RecipeInformation) {
         _recipeInformation.value = recipe
@@ -47,9 +39,6 @@ class RecipeViewModel : ViewModel() {
 //                _recipeInformation.value = recipeInfo
 
                 Log.d("d", "fetching info recipe title: ${_recipeInformation.value?.title}")
-
-                // Notify the listener
-                recipeInfoListener?.onRecipeInformationUpdated(recipeInfo)
 
             } catch (e: Exception) {
                 // Handle any errors
