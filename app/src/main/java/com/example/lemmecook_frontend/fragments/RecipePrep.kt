@@ -104,7 +104,7 @@ fun RecipePrep(
                 )),
                 MenuItem("Share") {/* TODO: Share this recipe */},
                 MenuItem("Quit cooking") {
-                    navController.navigateTo(RecipeOverviewScreen.route)
+                    navController.navigateTo("${RecipeOverviewScreen.route}/${recipeInfo.id}")
                 }
             ),
             modifier = Modifier

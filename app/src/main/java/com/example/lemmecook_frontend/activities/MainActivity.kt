@@ -50,11 +50,16 @@ class MainActivity : ComponentActivity() {
                 .build()
         }
 
-        val startDestination = intent.getStringExtra("startDestination") ?: LandingScreen.route
+        val startScreenRoute = intent.getStringExtra("startDestination")
         val recipeId = intent.getIntExtra("recipeID", -1)
+        val startDestination: String = if (startScreenRoute != null) {
+            "${startScreenRoute}/$recipeId"
+        } else {
+            LandingScreen.route
+        }
 
         setContent {
-            LemmeCookFrontendApp(startDestination, recipeId)
+            LemmeCookFrontendApp(startDestination)
         }
     }
 }
@@ -62,17 +67,12 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LemmeCookFrontendApp(startDestination: String, recipeId: Int) {
+fun LemmeCookFrontendApp(startDestination: String) {
     LemmeCookFrontendTheme {
-        val recipeViewModel: RecipeViewModel = viewModel()
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
         var previousScreen by remember { mutableStateOf<AppDestination>(Home) }
-
-        if (recipeId != -1) {
-            recipeViewModel.fetchRecipeFromAPI(recipeId)
-        }
 
         LaunchedEffect(currentDestination?.route) {
             val newScreen = AppTabRowScreens.find { it.route == currentDestination?.route }
@@ -96,7 +96,6 @@ fun LemmeCookFrontendApp(startDestination: String, recipeId: Int) {
             AppNavHost(
                 navController = navController,
                 startDestination = startDestination,
-                recipeId = recipeId,
                 modifier = Modifier.padding(innerPadding)
             )
         }
