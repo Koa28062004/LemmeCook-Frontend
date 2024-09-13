@@ -25,6 +25,7 @@ import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.fragments.MenuItem
 import com.example.lemmecook_frontend.fragments.ThreeDotMenu
 import com.example.lemmecook_frontend.singleton.GoalSession
+import com.example.lemmecook_frontend.singleton.ProgressSession
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 
@@ -51,6 +52,11 @@ fun ProgressComponent(
 
     // Observe goal data changes
     val currentGoal = goalSession.goal
+
+    // Log the progress data
+    LaunchedEffect(currentGoal) {
+        ProgressSession.fetchProgressData(context)
+    }
 
     Box(modifier = modifier
         .fillMaxWidth()
