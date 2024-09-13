@@ -30,6 +30,7 @@ import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
@@ -41,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.lemmecook_frontend.activities.NavHost.RecipeCongratsScreen
 import com.example.lemmecook_frontend.activities.NavHost.RecipeOverviewScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateTo
@@ -50,6 +52,7 @@ import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import com.example.lemmecook_frontend.models.recipe.SampleData
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.FavoriteApiUtility
+import com.google.gson.Gson
 
 @Preview(showBackground = true)
 @Composable
@@ -62,9 +65,8 @@ fun StateTestScreenForRecipePrep() {
 }
 
 @Composable
-fun RecipePrepScreen(navController: NavHostController) {
-    val recipeInfo = SampleData.sampleRecipeInformation
-    RecipePrep(navController, recipeInfo)
+fun RecipePrepScreen(navController: NavHostController, recipeInfo: RecipeInformation?) {
+    RecipePrep(navController, recipeInfo ?: SampleData.sampleRecipeInformation)
 }
 
 @Composable
@@ -81,7 +83,11 @@ fun RecipePrep(
         contentAlignment = Alignment.TopCenter
     ) {
         Image(
-            painter = painterResource(id = R.drawable.recipe_demo_img1),
+            painter = rememberAsyncImagePainter(
+                model = recipeInfo.image,
+                placeholder = painterResource(id = R.drawable.recipe_demo_img1),
+                error = painterResource(id = R.drawable.recipe_demo_img1)
+            ),
             contentDescription = "Recipe overview image",
             modifier = Modifier
                 .fillMaxWidth()
@@ -113,11 +119,12 @@ fun RecipePrep(
                 .background(
                     Color.White,
                     RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp)
-                ),
-
+                )
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.8f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PrepStep(stepNumber = 1)
@@ -138,14 +145,16 @@ fun RecipePrep(
                 onNextClick = {
                     if (currentStep < totalStep)
                         currentStep++
-                    if (currentStep == totalStep)
+                    else {
+                        val recipeInfoJson = Gson().toJson(recipeInfo)
+                        navController.currentBackStackEntry?.savedStateHandle?.set("recipeInfo", recipeInfoJson)
                         navController.navigateTo(RecipeCongratsScreen.route)
+                    }
                 }
             )
         }
     }
 }
-
 
 @Composable
 fun PrepStep(stepNumber: Int) {
@@ -166,7 +175,8 @@ fun RecipeSteps(stepsCount: Int, currentStep: Int) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier
+            .padding(vertical = 8.dp)
     ) {
         // First row
         Row(
@@ -191,7 +201,7 @@ fun RecipeSteps(stepsCount: Int, currentStep: Int) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                for (i in (circlesPerRow + 1) until stepsCount) {
+                for (i in (circlesPerRow + 1) until stepsCount - 1) {
                     StepCircle(stepNumber = i, isActive = i == currentStep)
                 }
 
@@ -245,7 +255,9 @@ fun FlagCircle(isActive: Boolean) {
 @Composable
 fun IngredientList(ingredients: List<Pair<String, String>>) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .height((50 * ingredients.size).dp)
     ) {
         items(ingredients) { ingredient ->
             IngredientItemStep(ingredientName = ingredient.first, ingredientQuantity = ingredient.second)
@@ -292,21 +304,26 @@ fun StepContent(instructionStep: InstructionStep, extendedIngredient: List<Exten
             processedIngredients.add(processedIngredient)
         }
     }
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        IngredientList(ingredients = processedIngredients)
+        item {
+            IngredientList(ingredients = processedIngredients)
+        }
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = instructionStep.step,
-            modifier = Modifier.padding(horizontal = 30.dp, vertical = 8.dp),
-            fontFamily = sf_pro_display,
-            fontSize = 18.sp
-        )
+        }
+        item {
+            Text(
+                text = instructionStep.step,
+                modifier = Modifier.padding(horizontal = 30.dp, vertical = 8.dp),
+                fontFamily = sf_pro_display,
+                fontSize = 18.sp
+            )
+        }
     }
 }
 

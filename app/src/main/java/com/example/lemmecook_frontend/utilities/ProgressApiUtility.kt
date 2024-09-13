@@ -33,7 +33,7 @@ class ProgressApiUtility {
                     if (response.isSuccessful) {
                         Toast.makeText(context, "Progress updated successfully", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(context, "Failed to update progress", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                     }
                 }
 
