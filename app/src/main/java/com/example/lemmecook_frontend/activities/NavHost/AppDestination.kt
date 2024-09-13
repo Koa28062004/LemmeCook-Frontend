@@ -77,6 +77,16 @@ data object SettingsScreen : AppDestination {
     override val route = "Settings"
 }
 
+data object SettingsScreen : AppDestination {
+    override val icon = Icons.Outlined.Settings
+    override val route = "SettingsScreen"
+}
+
+data object EditProfileScreen : AppDestination {
+    override val icon = Icons.Outlined.Explore
+    override val route = "EditProfileScreen"
+}
+
 data object Schedule : AppDestination {
     override val icon = Icons.Outlined.Schedule
     override val route = "Schedule"
