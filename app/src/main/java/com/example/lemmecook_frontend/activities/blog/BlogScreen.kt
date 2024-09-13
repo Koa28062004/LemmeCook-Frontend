@@ -1,5 +1,7 @@
 package com.example.lemmecook_frontend.activities.blog
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -95,7 +98,7 @@ fun BlogScreen() {
                 } else if (error.value != null) {
                     Text("Error: ${error.value}", color = Color.Black)
                 } else {
-                    BlogPostList(blogPosts = blogPosts, viewModel = BlogViewModel())
+                    BlogPostList(blogPosts = blogPosts)
                 }
             }
         }
@@ -103,7 +106,8 @@ fun BlogScreen() {
 }
 
 @Composable
-fun BlogPostList(blogPosts: List<BlogPost>, viewModel: BlogViewModel) {
+fun BlogPostList(blogPosts: List<BlogPost>) {
+    val context = LocalContext.current
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -113,7 +117,9 @@ fun BlogPostList(blogPosts: List<BlogPost>, viewModel: BlogViewModel) {
             BlogPostCard(post = post, onPostClick = {
                 if (post.link != null) {
                     Log.d("BlogScreen BlogViewModel", "Opening browser with URL: ${post.link}")
-                    viewModel.launchBrowser(post.link)
+
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.link))
+                    context.startActivity(intent)
                 }
             })
         }
@@ -127,7 +133,7 @@ fun BlogPostCard(post: BlogPost, onPostClick: (BlogPost) -> Unit) {
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(vertical = 8.dp),
-        onClick = { onPostClick(post)},
+        onClick = { onPostClick(post) },
         colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.pastelGreen),
         )
