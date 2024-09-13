@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                 .build()
         }
 
-        val startDestination = intent.getStringExtra("startDestination") ?: LandingScreen.route
+        val startDestination = intent.getStringExtra("startDestination") ?: Blog.route
         val recipeId = intent.getIntExtra("recipeID", -1)
 
         setContent {

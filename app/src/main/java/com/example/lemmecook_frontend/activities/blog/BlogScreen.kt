@@ -38,10 +38,14 @@ import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
+import java.io.IOException
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -54,7 +58,7 @@ fun BlogScreen() {
     LaunchedEffect(Unit) {
         fetchAndDisplayBlogPosts(
             scope = this,
-            rssUrl = "https://www.androidauthority.com/feed",
+            rssUrl = "https://pinchofyum.com/feed",
             blogPosts = blogPosts,
             isLoading = isLoading,
             error = error
@@ -143,6 +147,7 @@ fun BlogPostCard(post: BlogPost) {
     }
 }
 
+
 fun fetchAndDisplayBlogPosts(
     scope: CoroutineScope,
     rssUrl: String,
@@ -152,28 +157,32 @@ fun fetchAndDisplayBlogPosts(
 ) {
     scope.launch {
         isLoading.value = true
-        try {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url(rssUrl)
-                .build()
 
-            val response = client.newCall(request).execute()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(rssUrl)
+            .build()
 
-            if (response.isSuccessful) {
-                val body = response.body?.string()
-                if (body != null) {
-                    val rssFeed = parseRssFeed(body)
-                    blogPosts.addAll(rssFeed.items)
-                }
-            } else {
-                error.value = response.message
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                error.value = e.message
+                isLoading.value = false
             }
-        } catch (e: Exception) {
-            error.value = e.message
-        } finally {
-            isLoading.value = false
-        }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+
+                    val body = response.body?.string()
+                    if (body != null) {
+                        val rssFeed = parseRssFeed(body)
+                        blogPosts.addAll(rssFeed.items)
+                    }
+                } else {
+                    error.value = response.message
+                }
+                isLoading.value = false
+            }
+        })
     }
 }
 
