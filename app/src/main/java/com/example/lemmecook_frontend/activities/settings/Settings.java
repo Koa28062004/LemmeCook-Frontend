@@ -1,12 +1,15 @@
 package com.example.lemmecook_frontend.activities.settings;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.adapter.FavoriteRecipeAdapter;
+import com.example.lemmecook_frontend.fragments.EditProfileFragment;
 import com.example.lemmecook_frontend.fragments.ProgressFragment;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
 
@@ -24,6 +28,8 @@ public class Settings extends AppCompatActivity {
     private RecyclerView rvFavorite;
     private List<Recipe> favoriteRecipes;
     private FavoriteRecipeAdapter adapter;
+    private ImageButton ibThreeDots;
+    boolean isOpenEditProfileFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,30 @@ public class Settings extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.view2, new ProgressFragment());
         fragmentTransaction.commit();
+
+        ibThreeDots = findViewById(R.id.imageButtonThreeDots);
+        ibThreeDots.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isOpenEditProfileFragment) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.framelayoutEditProfile, new EditProfileFragment());
+                    fragmentTransaction.commit();
+                }
+                else {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    Fragment editProfileFragment = fragmentManager.findFragmentById(R.id.framelayoutEditProfile);
+                    if (editProfileFragment != null) {
+                        fragmentTransaction.remove(editProfileFragment);
+                        fragmentTransaction.commit();
+                    }
+                }
+
+                isOpenEditProfileFragment = !isOpenEditProfileFragment;
+            }
+        });
     }
 
     private List<Recipe> getFavoriteRecipes() {
