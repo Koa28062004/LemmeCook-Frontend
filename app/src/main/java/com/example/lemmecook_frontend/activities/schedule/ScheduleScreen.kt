@@ -1,8 +1,7 @@
-package com.example.lemmecook_frontend.activities.plan
+package com.example.lemmecook_frontend.activities.schedule
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +51,7 @@ fun ScheduleScreen(
     viewModel: ScheduleViewModel = viewModel()
 ) {
     var showMealSchedule by remember { mutableStateOf(true) }
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
 
     Surface(color = Color.White)
     {
@@ -64,7 +64,12 @@ fun ScheduleScreen(
             Spacer(modifier = Modifier.height(16.dp))
             TodayDate()
 
-            CalendarTabs()
+            Spacer(modifier = Modifier.height(8.dp))
+
+            CalendarTabs(selectedDate = selectedDate, onDateSelected = { newDate ->
+                selectedDate = newDate
+                viewModel.updateSelectedDate(newDate)
+            })
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -76,7 +81,7 @@ fun ScheduleScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             if (showMealSchedule) {
-                MealSchedule(viewModel = viewModel)
+                MealSchedule(viewModel = viewModel, selectedDate = selectedDate)
             } else {
                 ChecklistContent(viewModel = viewModel, onCheckedChange = { updatedItem ->
                     viewModel.updateChecklistItem(updatedItem)
@@ -86,6 +91,7 @@ fun ScheduleScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("RememberReturnType")
 @Composable
 fun ChecklistContent(
@@ -217,35 +223,25 @@ fun TodayDate() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarTabs() {
-    val currentDate = LocalDate.now()
-    val days = (0..6).map { currentDate.plusDays(it.toLong()) }
-
-    Surface(color = Color.White) {
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            items(days) { date ->
-                CalendarTab(date = date) {
-                    Log.d("CalendarTab", "Date clicked: $it")
-                }
-            }
+fun CalendarTabs(selectedDate: LocalDate, onDateSelected: (LocalDate) -> Unit) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        items(7) { index ->
+            val date = LocalDate.now().plusDays(index.toLong())
+            CalendarTab(date = date, isSelected = date == selectedDate, onDateClick = onDateSelected)
         }
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarTab(date: LocalDate, onDateClick: (LocalDate) -> Unit) {
-    var isSelected by remember { mutableStateOf(false) }
-
+fun CalendarTab(date: LocalDate, isSelected: Boolean, onDateClick: (LocalDate) -> Unit) {
     Button(
-        onClick = {
-            onDateClick(date)
-            isSelected = !isSelected
-        },
+        onClick = { onDateClick(date) },
         modifier = Modifier
             .wrapContentWidth(),
         colors = ButtonDefaults.buttonColors(containerColor = if (isSelected) colorResource(id = R.color.bg_green) else Color.Transparent)
@@ -269,11 +265,15 @@ fun CalendarTab(date: LocalDate, onDateClick: (LocalDate) -> Unit) {
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MealSchedule(viewModel: ScheduleViewModel) {
+fun MealSchedule(viewModel: ScheduleViewModel, selectedDate: LocalDate) {
     Column {
-        viewModel.schedule.forEach { timeSlot ->
-            MealCard(timeSlot = timeSlot)
+        viewModel.schedule.value.forEach { timeSlot ->
+            if (timeSlot.date == selectedDate) {
+                MealCard(timeSlot = timeSlot)
+            }
         }
     }
 }
