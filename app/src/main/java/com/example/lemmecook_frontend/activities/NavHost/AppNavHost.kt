@@ -2,6 +2,7 @@ package com.example.lemmecook_frontend.activities.NavHost
 
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -36,6 +37,7 @@ import com.google.gson.Gson
 fun AppNavHost(
     navController: NavHostController,
     startDestination: String = LandingScreen.route,
+    defaultRecipeId: Int = -1,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -77,11 +79,12 @@ fun AppNavHost(
         }
 
         // Recipe Details
-        composable(
-            route = "${RecipeOverviewScreen.route}/{recipeId}"
-        ) {backStackEntry ->
-            val recipeId = backStackEntry.arguments?.getInt("recipeId")
-            RecipeOverviewScreen(navController, recipeId ?: -1)
+        composable(RecipeOverviewScreen.route) {
+            val recipeId = navController.previousBackStackEntry?.savedStateHandle?.get<Int>("recipeId")
+            Log.d("AppNavHost", "recipeId: $recipeId")
+            Log.d("AppNavHost", "defaultRecipeId: $defaultRecipeId")
+            Log.d("AppNavHost", "Choosing: ${recipeId ?: defaultRecipeId}")
+            RecipeOverviewScreen(navController, recipeId ?: defaultRecipeId)
         }
         composable(RecipePrepScreen.route) {
             val recipeInfoJson = navController.previousBackStackEntry?.savedStateHandle?.get<String>("recipeInfo")
