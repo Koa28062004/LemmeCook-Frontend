@@ -1,5 +1,5 @@
-package com.example.lemmecook_frontend.fragments
-
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Divider
@@ -18,6 +18,8 @@ fun EditProfileComponent() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .border(BorderStroke(2.dp, Color.Black)) // Add a black border
+            .padding(16.dp) // Add inner padding to ensure content is not touching the border
     ) {
         // Edit Profile Text
         Text(
