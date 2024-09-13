@@ -7,6 +7,7 @@ data class BlogPost(
     val title: String,
     val body: String,
     val thumbnail: String? = null,
+    val link: String? = null
 )
 
 @Serializable

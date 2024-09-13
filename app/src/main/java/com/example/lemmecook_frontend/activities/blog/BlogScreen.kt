@@ -1,6 +1,5 @@
 package com.example.lemmecook_frontend.activities.blog
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -8,8 +7,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -47,13 +48,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.jsoup.Jsoup
+import org.jsoup.safety.Safelist
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
 import java.io.IOException
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
-import org.jsoup.safety.Safelist;
 
 @Composable
 fun BlogScreen() {
@@ -94,7 +95,7 @@ fun BlogScreen() {
                 } else if (error.value != null) {
                     Text("Error: ${error.value}", color = Color.Black)
                 } else {
-                    BlogPostList(blogPosts)
+                    BlogPostList(blogPosts = blogPosts, viewModel = BlogViewModel())
                 }
             }
         }
@@ -102,24 +103,31 @@ fun BlogScreen() {
 }
 
 @Composable
-fun BlogPostList(blogPosts: List<BlogPost>) {
+fun BlogPostList(blogPosts: List<BlogPost>, viewModel: BlogViewModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         items(blogPosts) { post ->
-            BlogPostCard(post)
+            BlogPostCard(post = post, onPostClick = {
+                if (post.link != null) {
+                    Log.d("BlogScreen BlogViewModel", "Opening browser with URL: ${post.link}")
+                    viewModel.launchBrowser(post.link)
+                }
+            })
         }
     }
 }
 
 @Composable
-fun BlogPostCard(post: BlogPost) {
+fun BlogPostCard(post: BlogPost, onPostClick: (BlogPost) -> Unit) {
     Card(
         modifier = Modifier
-            .wrapContentSize()
+            .fillMaxWidth()
+            .wrapContentHeight()
             .padding(vertical = 8.dp),
+        onClick = { onPostClick(post)},
         colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.pastelGreen),
         )
@@ -151,7 +159,6 @@ fun BlogPostCard(post: BlogPost) {
                 modifier = Modifier
                     .wrapContentSize(),
             )
-
 
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -245,6 +252,7 @@ fun parseRssFeed(rssXml: String): RssFeed {
         val title = item.getElementsByTagName("title").item(0).textContent
         val descriptionElement = item.getElementsByTagName("description").item(0)
         val body = descriptionElement.textContent  // Get the description text
+        val link = item.getElementsByTagName("link").item(0).textContent
 
         // Clean up HTML (optional)
         val bodyText = Jsoup.clean(
@@ -269,7 +277,7 @@ fun parseRssFeed(rssXml: String): RssFeed {
                 break // Found a URL, stop searching
             }
         }
-        rssItems.add(BlogPost(title, bodyText, thumbnail ?: ""))
+        rssItems.add(BlogPost(title, bodyText, thumbnail ?: "", link))
     }
 
     return RssFeed(rssItems)
