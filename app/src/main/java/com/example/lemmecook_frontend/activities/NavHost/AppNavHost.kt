@@ -36,7 +36,6 @@ import com.google.gson.Gson
 fun AppNavHost(
     navController: NavHostController,
     startDestination: String = LandingScreen.route,
-    recipeId: Int = -1,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -78,8 +77,11 @@ fun AppNavHost(
         }
 
         // Recipe Details
-        composable(route = RecipeOverviewScreen.route) {
-            RecipeOverviewScreen(navController, recipeId)
+        composable(
+            route = "${RecipeOverviewScreen.route}/{recipeId}"
+        ) {backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getInt("recipeId")
+            RecipeOverviewScreen(navController, recipeId ?: -1)
         }
         composable(RecipePrepScreen.route) {
             val recipeInfoJson = navController.previousBackStackEntry?.savedStateHandle?.get<String>("recipeInfo")
