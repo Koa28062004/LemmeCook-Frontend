@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BlogPost(
     val title: String,
+    val body: String,
     val thumbnail: String? = null,
-    val body: String
 )
 
 @Serializable

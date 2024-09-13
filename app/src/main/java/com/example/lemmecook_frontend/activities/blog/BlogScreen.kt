@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.activities.blog
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.lemmecook_frontend.R
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
@@ -45,11 +46,14 @@ import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.jsoup.Jsoup
 import org.w3c.dom.Element
+import org.w3c.dom.NodeList
 import org.xml.sax.InputSource
 import java.io.IOException
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilderFactory
+import org.jsoup.safety.Safelist;
 
 @Composable
 fun BlogScreen() {
@@ -75,7 +79,7 @@ fun BlogScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            CustomFontText(text = "News Blog", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            CustomFontText(text = "Food Blog", fontSize = 24.sp, fontWeight = FontWeight.Bold)
 
 
             Box(
@@ -125,13 +129,30 @@ fun BlogPostCard(post: BlogPost) {
                 .wrapContentSize()
                 .padding(16.dp)
         ) {
+            val imagePainter = rememberAsyncImagePainter(post.thumbnail)
+
+            // Log the state of the image painter
+            LaunchedEffect(key1 = imagePainter) {
+                // Log the image loading state
+                Log.d("ImageLoading", "Image state: ${imagePainter.state}")
+
+                // Check if the image loaded successfully
+                if (imagePainter.state is AsyncImagePainter.State.Success) {
+                    Log.d("ImageLoading", "Image loaded successfully!")
+                } else if (imagePainter.state is AsyncImagePainter.State.Error) {
+                    Log.e("ImageLoading", "Image loading failed")
+                }
+            }
+
             Image(
-                painter = rememberAsyncImagePainter(post.thumbnail),
+                painter = imagePainter,
                 contentDescription = "Blog Post Thumbnail",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .wrapContentSize()
+                    .wrapContentSize(),
             )
+
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -144,9 +165,9 @@ fun BlogPostCard(post: BlogPost) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = post.body.take(500) + "...", // Show truncated body text
+                text = post.body.take(500) + "...",
                 style = MaterialTheme.typography.bodyMedium,
-                maxLines = 5, // Limit lines for a more compact preview
+                maxLines = 3, // Limit lines for a more compact preview
                 overflow = TextOverflow.Ellipsis,
                 color = colorResource(id = R.color.darkGreen),
             )
@@ -209,20 +230,27 @@ private fun CustomFontText(
     )
 }
 
-@SuppressLint("NewApi")
 fun parseRssFeed(rssXml: String): RssFeed {
     val rssItems = mutableListOf<BlogPost>()
-    val factory = DocumentBuilderFactory.newInstance()
-    val builder = factory.newDocumentBuilder()
-    val document = builder.parse(InputSource(StringReader(rssXml)))
-    val items = document.getElementsByTagName("item")
+    val dbFactory = DocumentBuilderFactory.newInstance()
+    val dBuilder = dbFactory.newDocumentBuilder()
+    val doc = dBuilder.parse(InputSource(StringReader(rssXml)))
+    doc.documentElement.normalize()
+
+    val items: NodeList = doc.getElementsByTagName("item")
 
     for (i in 0 until items.length) {
         val item = items.item(i) as Element
 
         val title = item.getElementsByTagName("title").item(0).textContent
-        val body = item.getElementsByTagName("description").item(0).textContent
+        val descriptionElement = item.getElementsByTagName("description").item(0)
+        val body = descriptionElement.textContent  // Get the description text
 
+        // Clean up HTML (optional)
+        val bodyText = Jsoup.clean(
+            body,
+            Safelist.none()
+        ) // Remove all HTML rssItems.add(BlogPost(title, bodyText, thumbnail ?: ""))
         var thumbnail: String? = null
         val mediaContents = item.getElementsByTagName("media:content")
         for (j in 0 until mediaContents.length) {
@@ -241,8 +269,7 @@ fun parseRssFeed(rssXml: String): RssFeed {
                 break // Found a URL, stop searching
             }
         }
-
-        rssItems.add(BlogPost(title, body, thumbnail ?: ""))
+        rssItems.add(BlogPost(title, bodyText, thumbnail ?: ""))
     }
 
     return RssFeed(rssItems)

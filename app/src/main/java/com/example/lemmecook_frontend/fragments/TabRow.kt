@@ -114,7 +114,7 @@ private fun AppTab(
     onSelected: () -> Unit,
     selected: Boolean
 ) {
-    val color = colorResource(id = R.color.bg_green)
+    val color = colorResource(id = R.color.gr_text)
     val durationMillis = if (selected) TabFadeInAnimationDuration else TabFadeOutAnimationDuration
     val animSpec = remember {
         tween<Color>(
@@ -181,10 +181,6 @@ private fun AppTab(
 
 private val TabHeight = 70.dp
 private const val InactiveTabOpacity = 0.60f
-
-//private const val TabFadeInAnimationDuration = 150
-//private const val TabFadeInAnimationDelay = 100
-//private const val TabFadeOutAnimationDuration = 100
 
 private const val TabFadeInAnimationDuration = 10
 private const val TabFadeInAnimationDelay = 10

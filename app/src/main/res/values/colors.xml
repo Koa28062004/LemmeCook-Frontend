@@ -6,9 +6,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="bg" >#F5F5F5</color>
-    <color name="pastelGreen">#B7DFDB</color>
-    <color name="teal_700">#089083</color>
-    <color name="darkGreen">#01635D</color>
+    <color name="pastelGreen">#C4DAD2</color>
+    <color name="l_green">#6A9C89</color>
+    <color name="darkGreen">#16423C</color>
     <color name="peach">#FEA36B</color>
     <color name="alert">#FF3636</color>
     <color name="beige">#FFDDA2</color>

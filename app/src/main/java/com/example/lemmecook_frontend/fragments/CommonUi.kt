@@ -25,7 +25,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.MoreHoriz
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -71,8 +70,7 @@ fun TitleWithBackButton(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        IconButton(
-            onClick = onBack,
+        IconButton(            onClick = onBack,
             modifier = Modifier
                 .padding(vertical = 16.dp, horizontal = 8.dp)
                 .align(Alignment.TopStart)
@@ -398,7 +396,7 @@ fun SelectableRowText(
                     .clickable { onOptionSelected(option) }
                     .wrapContentSize()
                     .clip(RoundedCornerShape(8.dp))
-                    .background(if (selectedOption == option) colorResource(id = R.color.teal_700) else Color.White)
+                    .background(if (selectedOption == option) colorResource(id = R.color.l_green) else Color.White)
                     .padding(8.dp)
             ) {
                 Text(
@@ -406,49 +404,13 @@ fun SelectableRowText(
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = if (selectedOption == option) Color.White else colorResource(id = R.color.teal_700)
+                        color = if (selectedOption == option) Color.White else colorResource(id = R.color.l_green)
                     )
                 )
             }
         }
     }
 }
-
-//@Composable
-//fun SelectableRowText(
-//    options: List<String>,
-//    selectedOption: String,
-//    onOptionSelected: (String) -> Unit
-//) {
-//    Row(
-//        modifier = Modifier.wrapContentSize(),
-//        horizontalArrangement = Arrangement.spacedBy(16.dp),
-//
-//    ) {
-//        options.forEach { option ->
-//            Box(
-//                modifier = Modifier
-//                    .clickable { onOptionSelected(option) }
-////                    .weight(1f)
-//                    .wrapContentSize()
-//                    .clip(RoundedCornerShape(8.dp))
-//                    .background(if (selectedOption == option) colorResource(id = R.color.teal_700) else Color.White)
-////                    .padding(vertical = 8.dp, horizontal = 16.dp)
-//                    .padding(8.dp)
-//            ) {
-//                Text(
-//                    text = option,
-//                    style = TextStyle(
-//                        fontSize = 16.sp,
-//                        fontWeight = FontWeight.Medium,
-//                        color = if (selectedOption == option) Color.White else colorResource(id = R.color.teal_700)
-//                    )
-//                )
-//
-//            }
-//        }
-//    }
-//}
 
 @Composable
 fun CustomIconButton(
@@ -470,12 +432,12 @@ fun CustomIconButton(
         modifier = Modifier
             .padding(8.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(if (isClicked) colorResource(id = R.color.teal_700) else Color.White)
+            .background(if (isClicked) colorResource(id = R.color.l_green) else Color.White)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = if (isClicked) Color.White else colorResource(id = R.color.teal_700),
+            tint = if (isClicked) Color.White else colorResource(id = R.color.l_green),
             modifier = Modifier.size(24.dp)
         )
     }

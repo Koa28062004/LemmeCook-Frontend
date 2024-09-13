@@ -124,4 +124,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.30.0")
     implementation("com.google.accompanist:accompanist-flowlayout:0.30.0")
     implementation("io.coil-kt:coil-compose:2.0.0")
+
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation("org.jsoup:jsoup:1.18.1")
+
 }
