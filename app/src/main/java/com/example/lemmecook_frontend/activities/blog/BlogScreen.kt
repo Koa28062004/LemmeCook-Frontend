@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -67,7 +69,8 @@ fun BlogScreen() {
 
     Surface(color = Color.White) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -111,12 +114,15 @@ fun BlogPostList(blogPosts: List<BlogPost>) {
 fun BlogPostCard(post: BlogPost) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .wrapContentSize()
+            .padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = colorResource(id = R.color.pastelGreen),
+        )
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .wrapContentSize()
                 .padding(16.dp)
         ) {
             Image(
@@ -124,24 +130,25 @@ fun BlogPostCard(post: BlogPost) {
                 contentDescription = "Blog Post Thumbnail",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
+                    .wrapContentSize()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = post.title,
-                style = MaterialTheme.typography.displayMedium
+                style = MaterialTheme.typography.bodyLarge,
+                color = colorResource(id = R.color.darkGreen),
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = post.body.take(100) + "...", // Show truncated body text
-                style = MaterialTheme.typography.displayMedium,
-                maxLines = 2, // Limit lines to 2 for a more compact preview
-                overflow = TextOverflow.Ellipsis
+                text = post.body.take(500) + "...", // Show truncated body text
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 5, // Limit lines for a more compact preview
+                overflow = TextOverflow.Ellipsis,
+                color = colorResource(id = R.color.darkGreen),
             )
         }
     }
@@ -187,10 +194,10 @@ fun fetchAndDisplayBlogPosts(
 }
 
 @Composable
-fun CustomFontText(
+private fun CustomFontText(
     text: String,
     fontWeight: FontWeight = FontWeight.SemiBold,
-    color: Color = colorResource(id = R.color.gr_text),
+    color: Color = colorResource(id = R.color.darkGreen),
     fontSize: TextUnit = 16.sp
 ) {
     Text(
@@ -220,9 +227,18 @@ fun parseRssFeed(rssXml: String): RssFeed {
         val mediaContents = item.getElementsByTagName("media:content")
         for (j in 0 until mediaContents.length) {
             val mediaContent = mediaContents.item(j) as Element
+
+            // 1. Check for a direct <media:thumbnail> within <media:content>
+            val thumbnailElement = mediaContent.getElementsByTagName("media:thumbnail").item(0)
+            if (thumbnailElement != null && (thumbnailElement as Element).hasAttribute("url")) { // Cast to Element
+                thumbnail = thumbnailElement.getAttribute("url")
+                break // Found a thumbnail, stop searching
+            }
+
+            // 2. Check for a "url" attribute on the <media:content> itself
             if (mediaContent.hasAttribute("url")) {
                 thumbnail = mediaContent.getAttribute("url")
-                break
+                break // Found a URL, stop searching
             }
         }
 
