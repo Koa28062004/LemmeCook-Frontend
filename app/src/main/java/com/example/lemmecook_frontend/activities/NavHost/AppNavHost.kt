@@ -15,7 +15,6 @@ import com.example.lemmecook_frontend.activities.blog.BlogScreen
 import com.example.lemmecook_frontend.activities.schedule.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.activities.explore.ExploreMain
-import com.example.lemmecook_frontend.activities.settings.Settings
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
@@ -37,9 +36,10 @@ fun AppNavHost(
     modifier: Modifier = Modifier
 ) {
     NavHost(
-        navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
+        navController: NavHostController,
+        startDestination: String = LandingScreen.route,
+        recipeId: Int = -1,
+        modifier: Modifier = Modifier
     ) {
         // Authentication & Onboarding
         composable(route = LandingScreen.route) {
@@ -92,7 +92,6 @@ fun AppNavHost(
         composable(route = Blog.route) {
             BlogScreen()
         }
-
         composable(route = SettingsScreen.route) {
             val context = LocalContext.current
             context.startActivity(Intent(context, Settings::class.java))

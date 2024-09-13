@@ -176,7 +176,7 @@ fun ChooseNameAction(navController: NavHostController, context: Context, usernam
                     val statusResponse = response.body()
                     if (statusResponse?.status == "success") {
                         Toast.makeText(context, "Register successful!", Toast.LENGTH_SHORT).show()
-                        UserSession.userId = statusResponse.userId
+                        UserSession.userId = statusResponse.userId.toString()
                         Log.d("ChooseNameScreen", "User ID set to: ${UserSession.userId}")
                         navController.navigateTo(OnboardScreen.route)
                     } else {

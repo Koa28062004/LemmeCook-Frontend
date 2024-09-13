@@ -60,9 +60,11 @@ fun SignUpScreen(navController: NavHostController) {
 
     val customGreen = Color(0xFF55915E)
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
 
         // Top Image
         Image(
@@ -202,7 +204,15 @@ fun SignUpScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(
-                onClick = { signUpAction(context, navController, textEmail, textPassword, textConfirmPassword) },
+                onClick = {
+                    signUpAction(
+                        context,
+                        navController,
+                        textEmail,
+                        textPassword,
+                        textConfirmPassword
+                    )
+                },
                 modifier = Modifier
                     .height(60.dp)
                     .width(350.dp)
@@ -240,41 +250,64 @@ fun SignUpScreen(navController: NavHostController) {
     }
 }
 
-fun signUpAction(context: Context, navController: NavHostController, textEmail: String, textPassword: String, textConfirmPassword: String) {
+fun signUpAction(
+    context: Context,
+    navController: NavHostController,
+    textEmail: String,
+    textPassword: String,
+    textConfirmPassword: String
+) {
     if (validateInputs(context, textEmail, textPassword, textConfirmPassword)) {
         if (textPassword != textConfirmPassword) {
             Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
-        }
-        else {
+        } else {
             val usersApi = ApiUtility.getApiClient().create(UsersApi::class.java)
             val emailRequest = EmailRequest(
                 textEmail = textEmail
             )
 
             usersApi.userCheckEmail(emailRequest).enqueue(object : Callback<AuthResponse> {
-                override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+                override fun onResponse(
+                    call: Call<AuthResponse>,
+                    response: Response<AuthResponse>
+                ) {
                     if (response.isSuccessful) {
                         val statusResponse = response.body()
                         if (statusResponse?.status == "success") {
-                            Toast.makeText(context, "Sign Up successful!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Sign Up successful!", Toast.LENGTH_SHORT)
+                                .show()
                             navController.navigate("choose_name/$textEmail/$textPassword")
                         } else {
-                            Toast.makeText(context, "1 - Sign Up failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                context,
+                                "1 - Sign Up failed: ${statusResponse?.status}",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(context, "2 - Sign Up failed: ${response.message()}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            context,
+                            "2 - Sign Up failed: ${response.message()}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-                    Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Failed to connect to the server", Toast.LENGTH_LONG)
+                        .show()
                 }
             })
         }
     }
 }
 
-private fun validateInputs(context: Context, textEmail: String, textPassword: String, textConfirmPassword: String): Boolean {
+private fun validateInputs(
+    context: Context,
+    textEmail: String,
+    textPassword: String,
+    textConfirmPassword: String
+): Boolean {
     var isValid = true
 
     if (textEmail.isBlank() || textPassword.isBlank() || textConfirmPassword.isBlank()) {
