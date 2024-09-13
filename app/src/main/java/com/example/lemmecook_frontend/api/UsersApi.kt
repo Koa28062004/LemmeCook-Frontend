@@ -5,9 +5,12 @@ import com.example.lemmecook_frontend.models.auth.ForgetPasswordDataModel
 import com.example.lemmecook_frontend.models.auth.LoginDataModel
 import com.example.lemmecook_frontend.models.auth.RegisterDataModel
 import com.example.lemmecook_frontend.models.response.AuthResponse
+import com.example.lemmecook_frontend.models.response.UserInfoResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 
 interface UsersApi {
@@ -35,4 +38,7 @@ interface UsersApi {
     fun googleCheckUserExist(
         @Body checkEmailData : EmailRequest
     ): Call<AuthResponse>
+
+    @GET("users/get_user_info")
+    fun getUserInfo(@Query("userId") userId: String): Call<UserInfoResponse>
 }

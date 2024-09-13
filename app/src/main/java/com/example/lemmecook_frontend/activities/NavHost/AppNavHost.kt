@@ -14,6 +14,7 @@ import com.example.lemmecook_frontend.activities.blog.BlogScreen
 import com.example.lemmecook_frontend.activities.plan.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.activities.explore.ExploreMain
+import com.example.lemmecook_frontend.fragments.EditProfileScreenPreview
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
@@ -33,7 +34,7 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = LandingScreen.route,
+        startDestination = EditProfileScreen.route,
         modifier = modifier
     ) {
         // Authentication & Onboarding
@@ -85,6 +86,9 @@ fun AppNavHost(
         }
         composable(route = Blog.route) {
             BlogScreen()
+        }
+        composable(route = EditProfileScreen.route) {
+            EditProfileScreenPreview()
         }
     }
 }
