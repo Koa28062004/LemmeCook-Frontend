@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.activities.settings;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -12,6 +13,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavHostController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +34,7 @@ public class Settings extends AppCompatActivity {
     private FavoriteRecipeAdapter adapter;
     private ImageButton ibThreeDots;
     boolean isOpenEditProfileFragment = false;
+    private NavHostController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,12 @@ public class Settings extends AppCompatActivity {
                 isOpenEditProfileFragment = !isOpenEditProfileFragment;
             }
         });
+
+        SharedViewModelSettings sharedViewModel = new ViewModelProvider(this).get(SharedViewModelSettings.class);
+        navController = sharedViewModel.getData();
+        if (navController == null) {
+            Log.e("Settings", "NavHostController is not available");
+        }
     }
 
     private List<Recipe> getFavoriteRecipes() {

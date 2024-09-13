@@ -10,10 +10,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun EditProfileComponent() {
+fun EditProfileComponent(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,7 +29,7 @@ fun EditProfileComponent() {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onEditProfile() }
+                .clickable { onEditProfile(navController) }
                 .padding(8.dp)
         )
 
@@ -46,18 +47,14 @@ fun EditProfileComponent() {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onLogOut() }
+                .clickable { onLogOut(navController) }
                 .padding(8.dp)
         )
     }
 }
 
-fun onLogOut() {
-    // Implementation for log out
-    TODO("Not yet implemented")
-}
-
-fun onEditProfile() {
-    // Implementation for edit profile
-    TODO("Not yet implemented")
+// Function to handle Edit Profile navigation
+fun onEditProfile(navController: NavHostController) {
+    // Use the navController to navigate to the edit profile screen
+    navController.navigate("edit_profile_screen") // Replace with the actual route of your destination
 }
