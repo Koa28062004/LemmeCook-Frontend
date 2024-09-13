@@ -70,6 +70,7 @@
     </LinearLayout>
 
     <ImageButton
+        android:id="@+id/imageButtonThreeDots"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="@+id/view1"
@@ -79,6 +80,7 @@
         android:scaleType="centerInside"
         android:backgroundTint="@color/white"
         android:layout_marginRight="10dp"/>
+
 
 
     <FrameLayout
@@ -128,5 +130,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         tools:layout_editor_absoluteX="14dp" />
+
+    <FrameLayout
+        android:id="@+id/framelayoutEditProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view1"
+        android:layout_marginHorizontal="15dp"
+        android:background="@color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
