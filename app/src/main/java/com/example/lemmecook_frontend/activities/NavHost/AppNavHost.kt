@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -15,6 +14,7 @@ import com.example.lemmecook_frontend.activities.blog.BlogScreen
 import com.example.lemmecook_frontend.activities.schedule.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.activities.explore.ExploreMain
+import com.example.lemmecook_frontend.activities.settings.Settings
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
@@ -36,10 +36,9 @@ fun AppNavHost(
     modifier: Modifier = Modifier
 ) {
     NavHost(
-        navController: NavHostController,
-        startDestination: String = LandingScreen.route,
-        recipeId: Int = -1,
-        modifier: Modifier = Modifier
+        navController = navController, // Correct usage
+        startDestination = startDestination, // Pass the startDestination from function parameters
+        modifier = modifier // Pass the modifier from function parameters
     ) {
         // Authentication & Onboarding
         composable(route = LandingScreen.route) {
@@ -101,7 +100,6 @@ fun AppNavHost(
 
 fun NavHostController.navigateTo(route: String) =
     this.navigate(route) {
-
         // Avoid multiple copies of the same destination when
         // reselecting the same item
         launchSingleTop = true
