@@ -38,7 +38,7 @@ class FavoriteApiUtility {
                                 Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
                             } else {
                                 // Handle the error
-                                Toast.makeText(context, "Failed to add to favorites", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
                             }
                         }
 

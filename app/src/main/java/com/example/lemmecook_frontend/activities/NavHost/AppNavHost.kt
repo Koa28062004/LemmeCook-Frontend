@@ -8,8 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.lemmecook_frontend.activities.blog.BlogScreen
 import com.example.lemmecook_frontend.activities.schedule.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
@@ -25,7 +27,9 @@ import com.example.lemmecook_frontend.fragments.SignInScreenPreview
 import com.example.lemmecook_frontend.fragments.SignUpScreenPreview
 import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
 import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
+import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
+import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -69,7 +73,6 @@ fun AppNavHost(
             val password = backStackEntry.arguments?.getString("password")
             ChooseNameScreenPreview(navController, email, password)
         }
-
         composable(route = Schedule.route) {
             ScheduleScreen()
         }
@@ -78,11 +81,15 @@ fun AppNavHost(
         composable(route = RecipeOverviewScreen.route) {
             RecipeOverviewScreen(navController, recipeId)
         }
-        composable(route = RecipePrepScreen.route) {
-            RecipePrepScreen(navController)
+        composable(RecipePrepScreen.route) {
+            val recipeInfoJson = navController.previousBackStackEntry?.savedStateHandle?.get<String>("recipeInfo")
+            val recipeInfo = Gson().fromJson(recipeInfoJson, RecipeInformation::class.java)
+            RecipePrepScreen(navController, recipeInfo)
         }
         composable(route = RecipeCongratsScreen.route) {
-            RecipeCongratsScreen(navController)
+            val recipeInfoJson = navController.previousBackStackEntry?.savedStateHandle?.get<String>("recipeInfo")
+            val recipeInfo = Gson().fromJson(recipeInfoJson, RecipeInformation::class.java)
+            RecipeCongratsScreen(navController, recipeInfo)
         }
         composable(route = ExploreScreen.route) {
             val context = LocalContext.current
