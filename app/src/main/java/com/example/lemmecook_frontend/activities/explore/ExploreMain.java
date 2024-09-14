@@ -1,10 +1,12 @@
 package com.example.lemmecook_frontend.activities.explore;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -15,8 +17,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.BuildConfig;
 import com.example.lemmecook_frontend.R;
+import com.example.lemmecook_frontend.activities.settings.Settings;
 import com.example.lemmecook_frontend.api.ApiRecipeJava;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
 
@@ -26,6 +31,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import com.example.lemmecook_frontend.singleton.UserSession;
 
 public class ExploreMain extends AppCompatActivity {
     private final String apiKey = BuildConfig.SPOON_API_KEY;
@@ -34,8 +40,9 @@ public class ExploreMain extends AppCompatActivity {
     private RecyclerView rvPopularRecipes, rvRecommendedRecipes, rvVeganRecipes;
     private PopularRecipeAdapter adapterPopularRecipes, adapterRecommendedRecipes, adapterVeganRecipes;
     private List<Recipe> recentSearchedRecipe;
-    private TextView tvSearch;
+    private TextView tvSearch, tv1;
     private ImageButton imgButtonBack;
+    private ImageView ivAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +103,34 @@ public class ExploreMain extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        tv1 = findViewById(R.id.tv1);
+        tv1.setText("Welcome, " + UserSession.INSTANCE.getFullName());
+
+        Uri avatarUri = UserSession.INSTANCE.getAvatar();
+        ivAvatar = findViewById(R.id.imageViewAvatar);
+        RequestOptions requestOptions = new RequestOptions()
+                .error(R.drawable.avatar)
+                .circleCrop();
+        if (avatarUri != null) {
+            Glide.with(this)
+                    .load(avatarUri.toString())
+                    .apply(requestOptions)
+                    .into(ivAvatar);
+        } else {
+            // If avatarUri is null, load the default avatar
+            Glide.with(this)
+                    .load(R.drawable.avatar)
+                    .apply(requestOptions)
+                    .into(ivAvatar);
+        }
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ExploreMain.this, Settings.class);
+                startActivity(intent);
             }
         });
     }

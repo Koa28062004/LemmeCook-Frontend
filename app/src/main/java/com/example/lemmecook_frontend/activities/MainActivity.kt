@@ -25,6 +25,7 @@ import com.example.lemmecook_frontend.activities.NavHost.AppDestination
 import com.example.lemmecook_frontend.activities.NavHost.AppNavHost
 import com.example.lemmecook_frontend.activities.NavHost.AppTabRowScreens
 import com.example.lemmecook_frontend.activities.NavHost.Blog
+import com.example.lemmecook_frontend.activities.NavHost.EditProfileScreen
 import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateSingleTopTo
 import com.example.lemmecook_frontend.activities.NavHost.shouldShowBottomBar

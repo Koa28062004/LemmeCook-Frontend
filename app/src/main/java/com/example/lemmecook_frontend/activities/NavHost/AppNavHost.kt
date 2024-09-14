@@ -31,6 +31,8 @@ import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
 import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import com.google.gson.Gson
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.lemmecook_frontend.fragments.EditProfileScreenPreview
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -102,6 +104,9 @@ fun AppNavHost(
         }
         composable(route = Blog.route) {
             BlogScreen()
+        }
+        composable(route = EditProfileScreen.route) {
+            EditProfileScreenPreview()
         }
         composable(route = SettingsScreen.route) {
             val context = LocalContext.current

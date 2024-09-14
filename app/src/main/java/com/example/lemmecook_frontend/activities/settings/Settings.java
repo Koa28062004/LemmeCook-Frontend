@@ -1,9 +1,12 @@
 package com.example.lemmecook_frontend.activities.settings;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,17 +16,19 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavHostController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.adapter.FavoriteRecipeAdapter;
 import com.example.lemmecook_frontend.fragments.EditProfileFragment;
 import com.example.lemmecook_frontend.fragments.ProgressFragment;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
+import com.example.lemmecook_frontend.singleton.UserSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +40,8 @@ public class Settings extends AppCompatActivity {
     private ImageButton ibThreeDots;
     boolean isOpenEditProfileFragment = false;
     private NavHostController navController;
+    private TextView tvName;
+    private ImageView ivAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +94,27 @@ public class Settings extends AppCompatActivity {
         if (navController == null) {
             Log.e("Settings", "NavHostController is not available");
         }
+
+        tvName = findViewById(R.id.textViewName);
+        tvName.setText(UserSession.INSTANCE.getFullName());
+
+        ivAvatar = findViewById(R.id.ImageViewAvatar);
+        Uri avatarUri = UserSession.INSTANCE.getAvatar();
+        RequestOptions requestOptions = new RequestOptions()
+                .error(R.drawable.avatar)
+                .circleCrop();
+        if (avatarUri != null) {
+            Glide.with(this)
+                    .load(avatarUri.toString())
+                    .apply(requestOptions)
+                    .into(ivAvatar);
+        } else {
+            // If avatarUri is null, load the default avatar
+            Glide.with(this)
+                    .load(R.drawable.avatar)
+                    .apply(requestOptions)
+                    .into(ivAvatar);
+        }
     }
 
     private List<Recipe> getFavoriteRecipes() {
@@ -95,7 +123,7 @@ public class Settings extends AppCompatActivity {
         recipes.add(new Recipe(637942, "Chicken Arrozcaldo", "https://img.spoonacular.com/recipes/637942-312x231.jpg", "jpg"));
         recipes.add(new Recipe(157375, "Steamy Creamy Mushroom Risotto", "https://img.spoonacular.com/recipes/157375-312x231.jpg", "jpg"));
         recipes.add(new Recipe(649985, "Light and Chunky Chicken Soup", "https://img.spoonacular.com/recipes/649985-312x231.jpg", "jpg"));
-        recipes.add(new Recipe(660283, "SLOW COOKER CHICKEN GUMBO SOUP", "https://img.spoonacular.com/recipes/660283-312x231.jpg", "jpg"));
+        recipes.add(new Recipe(660283, "Slow Cooker Chicken Gumbo Soup", "https://img.spoonacular.com/recipes/660283-312x231.jpg", "jpg"));
         // Add more recipes
         return recipes;
     }

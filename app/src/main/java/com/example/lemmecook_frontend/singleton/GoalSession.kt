@@ -5,8 +5,12 @@ import android.util.Log
 import com.example.lemmecook_frontend.models.health.GoalDataModel
 import com.example.lemmecook_frontend.utilities.GoalApiUtility
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+
 object GoalSession {
-    var goal: GoalDataModel = GoalApiUtility.getDefaultGoal()
+    private val _goal = MutableStateFlow(GoalApiUtility.getDefaultGoal())
+    val goal: StateFlow<GoalDataModel> = _goal
 
     fun fetchGoalData(context: Context) {
         val userId = UserSession.userId?.toInt() ?: -1
@@ -19,8 +23,8 @@ object GoalSession {
             userId = userId,
             context = context,
             onSuccess = { goalData ->
-                GoalSession.goal = goalData
-                Log.d("GoalSession", "Goal data fetched successfully: $goal")
+                _goal.value = goalData
+                Log.d("GoalSession", "Goal data fetched successfully: $goalData")
             },
             onError = { errorMessage ->
                 Log.e("GoalSession", "Error fetching goal data: $errorMessage")
@@ -40,9 +44,9 @@ object GoalSession {
         GoalApiUtility.setGoal(
             context = context,
             goal = updatedGoalData,
-            onSuccess = { updatedGoal: GoalDataModel ->
-                GoalSession.goal = updatedGoal
-                Log.d("GoalSession", "Goal updated successfully: $goal")
+            onSuccess = { updatedGoal ->
+                _goal.value = updatedGoal
+                Log.d("GoalSession", "Goal updated successfully: $updatedGoal")
             },
             onError = { errorMessage ->
                 Log.e("GoalSession", "Error updating goal data: $errorMessage")

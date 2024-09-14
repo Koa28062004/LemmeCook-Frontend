@@ -1,6 +1,5 @@
 package com.example.lemmecook_frontend.fragments
 
-import ProgressComponent
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -59,13 +58,6 @@ import com.example.lemmecook_frontend.utilities.ProgressApiUtility
 fun StateTestScreenForRecipeCongrats() {
     RecipeCongrats(
         recipeId = -1,
-        currentCalo = 1289,
-        currentFat = 290,
-        currentPro = 580,
-        currentCarb = 850,
-        goalFat = 1000,
-        goalPro = 1000,
-        goalCarb = 1000,
         rate = 3
     )
 }
@@ -74,11 +66,6 @@ fun StateTestScreenForRecipeCongrats() {
 fun RecipeCongratsScreen(navHostController: NavHostController, recipe: RecipeInformation) {
     val context = LocalContext.current
     val userId = UserSession.userId?.toInt() ?: -1
-
-    // Get goal from goal view model
-    val goal = GoalSession.goal
-
-    // Get progress from progress view model
     val currentProgress = ProgressSession.progress
 
     // Update current progress
@@ -103,13 +90,6 @@ fun RecipeCongratsScreen(navHostController: NavHostController, recipe: RecipeInf
     RecipeCongrats(
         recipeId = recipe.id,
         imgUrl = recipe.image,
-        currentCalo = updatedProgress.calories.toInt(),
-        currentFat = updatedProgress.fat.toInt(),
-        currentPro = updatedProgress.protein.toInt(),
-        currentCarb = updatedProgress.carb.toInt(),
-        goalFat = goal.fat.toInt(),
-        goalPro = goal.protein.toInt(),
-        goalCarb = goal.carb.toInt(),
         rate = 5
     )
 }
@@ -118,13 +98,6 @@ fun RecipeCongratsScreen(navHostController: NavHostController, recipe: RecipeInf
 fun RecipeCongrats(
     recipeId: Int,
     imgUrl: String = "",
-    currentCalo: Int,
-    currentFat: Int,
-    currentPro: Int,
-    currentCarb: Int,
-    goalFat: Int,
-    goalPro: Int,
-    goalCarb: Int,
     rate: Int
 ) {
     var rating by remember { mutableIntStateOf(rate) }

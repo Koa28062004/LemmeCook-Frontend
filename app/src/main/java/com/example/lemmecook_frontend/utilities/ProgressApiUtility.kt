@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.utilities
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.example.lemmecook_frontend.api.ProgressApi
 import com.example.lemmecook_frontend.models.health.ProgressDataModel
@@ -33,7 +34,8 @@ class ProgressApiUtility {
                     if (response.isSuccessful) {
                         Toast.makeText(context, "Progress updated successfully", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
+                        Log.d("ProgressApiUtility", response.message())
                     }
                 }
 

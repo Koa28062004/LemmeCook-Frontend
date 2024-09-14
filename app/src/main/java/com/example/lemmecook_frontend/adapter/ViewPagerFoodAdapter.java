@@ -2,6 +2,7 @@ package com.example.lemmecook_frontend.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
+import com.example.lemmecook_frontend.activities.MainActivity;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
 import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel;
 
@@ -27,13 +29,11 @@ import java.util.List;
 
 public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdapter.ViewHolder> {
     private List<List<Recipe>> chunkedItems;
-    private RecipeViewModel recipeViewModel;
     private Context context;
 
-    public ViewPagerFoodAdapter(Fragment hostFragment, Context context, List<Recipe> items) {
+    public ViewPagerFoodAdapter(Context context, List<Recipe> items) {
         this.chunkedItems = chunkItems(items, 4);
         this.context = context;
-        recipeViewModel = new ViewModelProvider(hostFragment).get(RecipeViewModel.class);
     }
 
     private List<List<Recipe>> chunkItems(List<Recipe> items, int chunkSize) {
@@ -61,18 +61,20 @@ public class ViewPagerFoodAdapter extends RecyclerView.Adapter<ViewPagerFoodAdap
         bindRecipe(holder.textView3, holder.imageView3, chunk, 2);
         bindRecipe(holder.textView4, holder.imageView4, chunk, 3);
 
-        for (LinearLayout l : holder.llList) {
+        for (int i = 0; i < holder.llList.size(); i++) {
+            LinearLayout l = holder.llList.get(i);
+            int index = i; // capture the correct index for this loop iteration
             l.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // fetch recipe info and store it in RecipeViewModel
-                    int index = holder.llList.indexOf(l);
-                    Recipe recipeChosenByUser = chunkedItems.get(position).get(index);
-//                    recipeViewModel.fetchRecipeFromAPI(recipeChosenByUser.getId());
-//
-//                    // navigate to RecipeOverview
-//                    Intent intent = new Intent(context, RecipeActivity.class);
-//                    context.startActivity(intent);
+                    Recipe recipeChosenByUser = chunk.get(index);
+
+                    Log.d("ViewPagerFoodAdapter", "recipe chosen: " + recipeChosenByUser.getId());
+
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("startDestination", "RecipeOverviewScreen");
+                    intent.putExtra("recipeID", recipeChosenByUser.getId());
+                    context.startActivity(intent);
                 }
             });
         }
