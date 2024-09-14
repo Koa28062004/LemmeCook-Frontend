@@ -83,7 +83,16 @@
         android:backgroundTint="@color/white"
         android:layout_marginRight="10dp"/>
 
-
+    <ImageButton
+        android:id="@+id/imageRefresh"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view1"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonThreeDots"
+        app:layout_constraintTop_toTopOf="@+id/view1"
+        android:src="@drawable/refresh"
+        android:scaleType="centerInside"
+        android:backgroundTint="@color/white" />
 
     <FrameLayout
         android:id="@+id/view2"

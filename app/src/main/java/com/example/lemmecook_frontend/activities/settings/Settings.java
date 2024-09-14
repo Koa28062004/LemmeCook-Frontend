@@ -37,7 +37,7 @@ public class Settings extends AppCompatActivity {
     private RecyclerView rvFavorite;
     private List<Recipe> favoriteRecipes;
     private FavoriteRecipeAdapter adapter;
-    private ImageButton ibThreeDots;
+    private ImageButton ibThreeDots, ibRefresh;
     boolean isOpenEditProfileFragment = false;
     private NavHostController navController;
     private TextView tvUserName, tvFullName;
@@ -117,6 +117,35 @@ public class Settings extends AppCompatActivity {
                     .apply(requestOptions)
                     .into(ivAvatar);
         }
+
+        ibRefresh = findViewById(R.id.imageRefresh);
+        ibRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvUserName = findViewById(R.id.textViewUserName);
+                tvUserName.setText(UserSession.INSTANCE.getUsername());
+                tvFullName = findViewById(R.id.textViewFullName);
+                tvFullName.setText(UserSession.INSTANCE.getFullName());
+
+                ivAvatar = findViewById(R.id.ImageViewAvatar);
+                Uri avatarUri = UserSession.INSTANCE.getAvatar();
+                RequestOptions requestOptions = new RequestOptions()
+                        .error(R.drawable.avatar)
+                        .circleCrop();
+                if (avatarUri != null) {
+                    Glide.with(Settings.this)
+                            .load(avatarUri.toString())
+                            .apply(requestOptions)
+                            .into(ivAvatar);
+                } else {
+                    // If avatarUri is null, load the default avatar
+                    Glide.with(Settings.this)
+                            .load(R.drawable.avatar)
+                            .apply(requestOptions)
+                            .into(ivAvatar);
+                }
+            }
+        });
     }
 
     private List<Recipe> getFavoriteRecipes() {
