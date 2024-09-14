@@ -3,10 +3,12 @@ package com.example.lemmecook_frontend.activities.NavHost
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -18,6 +20,7 @@ import com.example.lemmecook_frontend.activities.schedule.ScheduleScreen
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
 import com.example.lemmecook_frontend.activities.explore.ExploreMain
 import com.example.lemmecook_frontend.activities.settings.Settings
+import com.example.lemmecook_frontend.activities.settings.SharedViewModelSettings
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
@@ -31,6 +34,7 @@ import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
 import com.google.gson.Gson
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -105,6 +109,8 @@ fun AppNavHost(
         }
         composable(route = SettingsScreen.route) {
             val context = LocalContext.current
+            val sharedViewModel = ViewModelProvider(context as ComponentActivity).get(SharedViewModelSettings::class.java)
+            sharedViewModel.setData(navController)
             context.startActivity(Intent(context, Settings::class.java))
         }
     }

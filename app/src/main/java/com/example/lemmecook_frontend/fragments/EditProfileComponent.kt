@@ -1,3 +1,5 @@
+package com.example.lemmecook_frontend.fragments
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,10 +12,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.lemmecook_frontend.activities.NavHost.Blog
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
+import com.example.lemmecook_frontend.activities.NavHost.EditProfileScreen
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun EditProfileComponent() {
+fun EditProfileComponent(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,7 +35,7 @@ fun EditProfileComponent() {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onEditProfile() }
+                .clickable { onEditProfile(navController) }
                 .padding(8.dp)
         )
 
@@ -46,18 +53,17 @@ fun EditProfileComponent() {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onLogOut() }
+                .clickable { onLogOut(navController) }
                 .padding(8.dp)
         )
     }
 }
 
-fun onLogOut() {
-    // Implementation for log out
-    TODO("Not yet implemented")
+fun onLogOut(navController: NavHostController) {
+    navController.navigateTo(LandingScreen.route)
 }
 
-fun onEditProfile() {
-    // Implementation for edit profile
-    TODO("Not yet implemented")
+// Function to handle Edit Profile navigation
+fun onEditProfile(navController: NavHostController) {
+    navController.navigateTo(EditProfileScreen.route)
 }

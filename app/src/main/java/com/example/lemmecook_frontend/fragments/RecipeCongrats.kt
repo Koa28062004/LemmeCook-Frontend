@@ -195,13 +195,6 @@ fun RecipeCongrats(
             LazyColumn {
                 item {
                     ProgressComponent(
-                        currentCalo = currentCalo,
-                        currentFat = currentFat,
-                        currentPro = currentPro,
-                        currentCarb = currentCarb,
-                        goalFat = goalFat,
-                        goalPro = goalPro,
-                        goalCarb = goalCarb,
                         allowChange = false,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
                     )
