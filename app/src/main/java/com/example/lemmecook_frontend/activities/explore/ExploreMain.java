@@ -106,16 +106,13 @@ public class ExploreMain extends AppCompatActivity {
             }
         });
 
-        UserSession.INSTANCE.setFullName("Phat");
-        UserSession.INSTANCE.setAvatar(Uri.parse("https://img.spoonacular.com/recipes/637942-312x231.jpg"));
-
         tv1 = findViewById(R.id.tv1);
         tv1.setText("Welcome, " + UserSession.INSTANCE.getFullName());
 
         Uri avatarUri = UserSession.INSTANCE.getAvatar();
         ivAvatar = findViewById(R.id.imageViewAvatar);
         RequestOptions requestOptions = new RequestOptions()
-                .error(R.drawable.default_avatar)
+                .error(R.drawable.avatar)
                 .circleCrop();
         if (avatarUri != null) {
             Glide.with(this)
@@ -125,7 +122,7 @@ public class ExploreMain extends AppCompatActivity {
         } else {
             // If avatarUri is null, load the default avatar
             Glide.with(this)
-                    .load(R.drawable.default_avatar)
+                    .load(R.drawable.avatar)
                     .apply(requestOptions)
                     .into(ivAvatar);
         }
