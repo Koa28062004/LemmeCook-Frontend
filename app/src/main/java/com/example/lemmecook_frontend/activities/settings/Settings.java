@@ -40,7 +40,7 @@ public class Settings extends AppCompatActivity {
     private ImageButton ibThreeDots;
     boolean isOpenEditProfileFragment = false;
     private NavHostController navController;
-    private TextView tvName;
+    private TextView tvUserName, tvFullName;
     private ImageView ivAvatar;
 
     @Override
@@ -95,8 +95,10 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        tvName = findViewById(R.id.textViewName);
-        tvName.setText(UserSession.INSTANCE.getFullName());
+        tvUserName = findViewById(R.id.textViewUserName);
+        tvUserName.setText(UserSession.INSTANCE.getUsername());
+        tvFullName = findViewById(R.id.textViewFullName);
+        tvFullName.setText(UserSession.INSTANCE.getFullName());
 
         ivAvatar = findViewById(R.id.ImageViewAvatar);
         Uri avatarUri = UserSession.INSTANCE.getAvatar();

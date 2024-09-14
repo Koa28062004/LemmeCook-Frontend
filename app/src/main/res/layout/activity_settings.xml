@@ -55,7 +55,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewName"
+                android:id="@+id/textViewUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Alena Sabyan"
@@ -63,6 +63,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/textViewFullName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Recipe Developer"
