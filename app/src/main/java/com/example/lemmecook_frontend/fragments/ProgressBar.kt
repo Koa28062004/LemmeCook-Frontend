@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -33,7 +34,6 @@ import com.example.lemmecook_frontend.singleton.GoalSession
 import com.example.lemmecook_frontend.singleton.ProgressSession
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
-
 @Composable
 fun ProgressComponent(
     allowChange: Boolean,
@@ -41,14 +41,13 @@ fun ProgressComponent(
 ) {
     val context = LocalContext.current
 
-    UserSession.userId = "1"
-
+    // State for showing dialogs
     var showCaloriesDialog by remember { mutableStateOf(false) }
     var showFatDialog by remember { mutableStateOf(false) }
     var showProteinDialog by remember { mutableStateOf(false) }
     var showCarbDialog by remember { mutableStateOf(false) }
 
-    // Remember state for goal and progress
+    // State for goal and progress
     var currentGoal by remember { mutableStateOf(GoalSession.goal) }
     var currentProgress by remember { mutableStateOf(ProgressSession.progress) }
 
@@ -58,106 +57,84 @@ fun ProgressComponent(
         ProgressSession.fetchProgressData(context)
     }
 
-    // Update state with the fetched data
+    // Observe changes to GoalSession.goal and update the state
     LaunchedEffect(GoalSession.goal) {
         currentGoal = GoalSession.goal
+        Log.d("ProgressComponent", "Current goal updated: $currentGoal")
     }
 
+    // Observe changes to ProgressSession.progress and update the state
     LaunchedEffect(ProgressSession.progress) {
         currentProgress = ProgressSession.progress
     }
 
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .clip(RoundedCornerShape(10.dp))) {
-        Box(
+    Box(modifier = modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp))) {
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .graphicsLayer {
-                    shadowElevation = 0.5.dp.toPx() // Convert dp to pixels
-                    translationY = (-0.8).dp.toPx() // Y-axis translation for the shadow
-                }
-                .shadow(
-                    elevation = 2.dp,
-                    shape = RoundedCornerShape(30.dp),
-                    clip = false,
-                    ambientColor = Color(242, 242, 242), // Custom shadow color with opacity
-                    spotColor = Color(242, 242, 242) // Custom shadow color with opacity
-                ),
+                .padding(start = 20.dp, end = 20.dp, top = 30.dp, bottom = 20.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 20.dp, end = 20.dp, top = 30.dp, bottom = 20.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row (
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Today's Progress",
-                        fontFamily = sf_pro_display,
-                        fontSize = 21.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(bottom = 10.dp)
+                Text(
+                    text = "Today's Progress",
+                    fontFamily = sf_pro_display,
+                    fontSize = 21.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(bottom = 10.dp)
+                )
+
+                if (allowChange) {
+                    ThreeDotMenu(
+                        buttonItems = listOf(
+                            MenuItem("Set calories goal") { showCaloriesDialog = true },
+                            MenuItem("Set fat goal") { showFatDialog = true },
+                            MenuItem("Set protein goal") { showProteinDialog = true },
+                            MenuItem("Set carb goal") { showCarbDialog = true }
+                        )
                     )
-
-                    if (allowChange) {
-                        ThreeDotMenu(buttonItems = listOf(
-                            MenuItem("Set calories goal") {
-                                showCaloriesDialog = true
-                            },
-                            MenuItem("Set fat goal") {
-                                showFatDialog = true
-                            },
-                            MenuItem("Set protein goal") {
-                                showProteinDialog = true
-                            },
-                            MenuItem("Set carb goal") {
-                                showCarbDialog = true
-                            }
-                        ))
-                    }
                 }
-                Row (
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                ) {
-                    Calories(currentCalories = currentProgress.calories)
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                Calories(currentCalories = currentProgress.calories)
 
-                    Row (
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        NutrientProgress(
-                            percentage = (currentProgress.fat * 1f / currentGoal.fat),
-                            label = "Fat",
-                            color = Color(253, 197, 52) // Gold color
-                        )
-                        NutrientProgress(
-                            percentage = (currentProgress.protein * 1f / currentGoal.protein),
-                            label = "Pro",
-                            color = Color(52, 133, 253) // Blue color
-                        )
-                        NutrientProgress(
-                            percentage = (currentProgress.carb * 1f / currentGoal.carb),
-                            label = "Carb",
-                            color = Color(120, 118, 245) // Purple color
-                        )
-                    }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    NutrientProgress(
+                        percentage = (currentProgress.fat * 1f / currentGoal.fat),
+                        label = "Fat",
+                        color = Color(253, 197, 52)
+                    )
+                    NutrientProgress(
+                        percentage = (currentProgress.protein * 1f / currentGoal.protein),
+                        label = "Pro",
+                        color = Color(52, 133, 253)
+                    )
+                    NutrientProgress(
+                        percentage = (currentProgress.carb * 1f / currentGoal.carb),
+                        label = "Carb",
+                        color = Color(120, 118, 245)
+                    )
                 }
             }
         }
     }
+
+    // Handle Dialogs and updates after goal change
     if (showCaloriesDialog) {
         SetCaloriesGoal { calories ->
-            // Update the goal first
             GoalSession.updateGoal(
                 context = context,
-                goalData = currentGoal
+                goalData = currentGoal.copy(calories = calories)
             )
-            // Fetch the updated goal data after updating
             showCaloriesDialog = false
         }
     }
@@ -166,7 +143,7 @@ fun ProgressComponent(
         SetFatGoal { fat ->
             GoalSession.updateGoal(
                 context = context,
-                goalData = currentGoal
+                goalData = currentGoal.copy(fat = fat)
             )
             showFatDialog = false
         }
@@ -176,7 +153,7 @@ fun ProgressComponent(
         SetProteinGoal { protein ->
             GoalSession.updateGoal(
                 context = context,
-                goalData = currentGoal
+                goalData = currentGoal.copy(protein = protein)
             )
             showProteinDialog = false
         }
@@ -186,7 +163,7 @@ fun ProgressComponent(
         SetCarbGoal { carb ->
             GoalSession.updateGoal(
                 context = context,
-                goalData = currentGoal
+                goalData = currentGoal.copy(carb = carb)
             )
             showCarbDialog = false
         }

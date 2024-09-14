@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.fragments
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -227,6 +228,9 @@ fun SignInAction(context: Context, textEmail: String, textPassword: String, navC
                     if (statusResponse?.status == "success") {
                         Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                         UserSession.userId = statusResponse.userId
+                        UserSession.fullName = statusResponse.fullName
+                        UserSession.username = statusResponse.username
+                        Log.d("SignInScreen", "User ID set to: ${UserSession.userId} - FullName: ${UserSession.fullName} - Username: ${UserSession.username}")
                         navController.navigateTo(Blog.route)
                     } else {
                         Toast.makeText(context, "1 - Login failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
@@ -241,7 +245,6 @@ fun SignInAction(context: Context, textEmail: String, textPassword: String, navC
             }
         })
     }
-
 }
 
 private fun validateInputs(context: Context, textEmail: String, textPassword: String): Boolean {

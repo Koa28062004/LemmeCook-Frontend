@@ -35,6 +35,7 @@ class GoalApiUtility {
                 override fun onResponse(call: Call<GoalPostResponse>, response: Response<GoalPostResponse>) {
                     if (response.isSuccessful) {
                         Toast.makeText(context, "Goal set successfully", Toast.LENGTH_SHORT).show()
+                        onSuccess(goal)
                     } else {
                         Toast.makeText(context, "Failed to set goal", Toast.LENGTH_SHORT).show()
                     }
