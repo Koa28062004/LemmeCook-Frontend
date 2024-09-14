@@ -36,19 +36,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
+import com.example.lemmecook_frontend.activities.NavHost.navigateSingleTopTo
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleScreen(
-    viewModel: ScheduleViewModel = viewModel()
+    navController: NavHostController,
+    viewModel: ScheduleViewModel = viewModel(),
 ) {
     var showMealSchedule by remember { mutableStateOf(true) }
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
@@ -81,7 +85,11 @@ fun ScheduleScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             if (showMealSchedule) {
-                MealSchedule(viewModel = viewModel, selectedDate = selectedDate)
+                MealSchedule(
+                    viewModel = viewModel,
+                    selectedDate = selectedDate,
+                    navController = navController
+                )
             } else {
                 ChecklistContent(viewModel = viewModel, onCheckedChange = { updatedItem ->
                     viewModel.updateChecklistItem(updatedItem)
@@ -232,7 +240,11 @@ fun CalendarTabs(selectedDate: LocalDate, onDateSelected: (LocalDate) -> Unit) {
     ) {
         items(7) { index ->
             val date = LocalDate.now().plusDays(index.toLong())
-            CalendarTab(date = date, isSelected = date == selectedDate, onDateClick = onDateSelected)
+            CalendarTab(
+                date = date,
+                isSelected = date == selectedDate,
+                onDateClick = onDateSelected
+            )
         }
     }
 }
@@ -268,18 +280,20 @@ fun CalendarTab(date: LocalDate, isSelected: Boolean, onDateClick: (LocalDate) -
 @SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MealSchedule(viewModel: ScheduleViewModel, selectedDate: LocalDate) {
-    Column {
-        viewModel.schedule.value.forEach { timeSlot ->
-            if (timeSlot.date == selectedDate) {
-                MealCard(timeSlot = timeSlot)
-            }
+fun MealSchedule(
+    viewModel: ScheduleViewModel,
+    selectedDate: LocalDate,
+    navController: NavHostController
+) {
+    LazyColumn {
+        items(viewModel.schedule.value.filter { it.date == selectedDate }) { timeSlot ->
+            MealCard(timeSlot = timeSlot, navController = navController)
         }
     }
 }
 
 @Composable
-fun MealCard(timeSlot: TimeSlot) {
+fun MealCard(timeSlot: TimeSlot, navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -308,6 +322,7 @@ fun MealCard(timeSlot: TimeSlot) {
             colors = CardDefaults.cardColors(
                 containerColor = colorResource(id = R.color.bg_green)
             ),
+            onClick = { navController.navigateSingleTopTo("recipe/${timeSlot.meal?.id}") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -348,5 +363,5 @@ fun MealCard(timeSlot: TimeSlot) {
 @Preview
 @Composable
 private fun ScheduleScreenPreview() {
-    ScheduleScreen()
+    ScheduleScreen(navController = NavHostController(LocalContext.current))
 }

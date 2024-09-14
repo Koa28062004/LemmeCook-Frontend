@@ -2,12 +2,21 @@ package com.example.lemmecook_frontend.activities.schedule
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import com.example.lemmecook_frontend.fragments.RecipeOverviewScreenWithRecipeID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
 
-data class Meal(val name: String, val description: String? = null, val ingredients: List<String> = emptyList())
+data class Meal(
+    val name: String,
+    val id: Int,
+    val description: String? = null,
+    val ingredients: List<String> = emptyList()
+)
+
 data class TimeSlot(val time: String, val meal: Meal? = null, val date: LocalDate)
 
 data class ChecklistItem(
@@ -20,13 +29,26 @@ data class ChecklistItem(
 class ScheduleViewModel : androidx.lifecycle.ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     private val defaultSchedule = listOf(
-        TimeSlot("8:00 AM", Meal("Breakfast", "Pancakes", listOf("Flour", "Eggs", "Milk")), LocalDate.now()),
-        TimeSlot("12:00 PM", Meal("Lunch", "Salad", listOf("Lettuce", "Tomato", "Cucumber")), LocalDate.now().plusDays(1)),
-        TimeSlot("6:00 PM", Meal("Dinner", "Pasta", listOf("Pasta", "Tomato Sauce", "Cheese")), LocalDate.now().plusDays(2))
+        TimeSlot(
+            "8:00 AM",
+            Meal("Breakfast", 1, "Pancakes", listOf("Flour", "Eggs", "Milk")),
+            LocalDate.now()
+        ),
+        TimeSlot(
+            "12:00 PM",
+            Meal("Lunch", 2, "Salad", listOf("Lettuce", "Tomato", "Cucumber")),
+            LocalDate.now().plusDays(1)
+        ),
+        TimeSlot(
+            "6:00 PM",
+            Meal("Dinner", 3, "Pasta", listOf("Pasta", "Tomato Sauce", "Cheese")),
+            LocalDate.now().plusDays(2)
+        )
     )
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val _selectedDate = MutableStateFlow(LocalDate.now())
+
     @RequiresApi(Build.VERSION_CODES.O)
     val selectedDate: StateFlow<LocalDate> = _selectedDate.asStateFlow()
 
@@ -40,6 +62,12 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
     fun updateSelectedDate(newDate: LocalDate) {
         _selectedDate.value = newDate
         updateChecklist()
+    }
+
+    fun getMealByID(mealID: Int): Meal? {
+        return schedule.value
+            .mapNotNull { it.meal }
+            .find { it.id == mealID }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
