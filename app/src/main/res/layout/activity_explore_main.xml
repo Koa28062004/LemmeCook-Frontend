@@ -54,6 +54,7 @@
 
 
     <ImageView
+        android:id="@+id/imageViewAvatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/avatar"

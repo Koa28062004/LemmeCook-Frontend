@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lemmecook_frontend.BuildConfig;
 import com.example.lemmecook_frontend.R;
+import com.example.lemmecook_frontend.activities.settings.Settings;
 import com.example.lemmecook_frontend.api.ApiRecipeJava;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
 
@@ -36,6 +38,7 @@ public class ExploreMain extends AppCompatActivity {
     private List<Recipe> recentSearchedRecipe;
     private TextView tvSearch;
     private ImageButton imgButtonBack;
+    private ImageView ivAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,15 @@ public class ExploreMain extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        ivAvatar = findViewById(R.id.imageViewAvatar);
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ExploreMain.this, Settings.class);
+                startActivity(intent);
             }
         });
     }
