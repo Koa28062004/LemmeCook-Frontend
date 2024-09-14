@@ -7,4 +7,11 @@ object UserSession {
     var fullName: String? = null
     var username: String? = null
     var avatar: Uri? = null
+
+    fun clear() {
+        userId = null
+        fullName = null
+        username = null
+        avatar = null
+    }
 }
