@@ -24,6 +24,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.schedule.ScheduleActivity"
+            android:exported="false"
+            android:label="@string/title_activity_schedule"
+            android:theme="@style/Theme.LemmeCookFrontend" />
+        <activity
             android:name=".activities.settings.LandingActivity"
             android:exported="false"
             android:label="@string/title_activity_landing"

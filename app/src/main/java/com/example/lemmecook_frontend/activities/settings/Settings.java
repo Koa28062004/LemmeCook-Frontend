@@ -1,5 +1,6 @@
 package com.example.lemmecook_frontend.activities.settings;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
+import com.example.lemmecook_frontend.activities.schedule.ScheduleActivity;
 import com.example.lemmecook_frontend.adapter.FavoriteRecipeAdapter;
 import com.example.lemmecook_frontend.fragments.EditProfileComponentJava;
 import com.example.lemmecook_frontend.fragments.ProgressFragment;
@@ -42,6 +44,7 @@ public class Settings extends AppCompatActivity {
     private NavHostController navController;
     private TextView tvUserName, tvFullName;
     private ImageView ivAvatar;
+    private TextView tvSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +147,15 @@ public class Settings extends AppCompatActivity {
                             .apply(requestOptions)
                             .into(ivAvatar);
                 }
+            }
+        });
+
+        tvSchedule = findViewById(R.id.tvSchedule);
+        tvSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.this, ScheduleActivity.class);
+                startActivity(intent);
             }
         });
     }
