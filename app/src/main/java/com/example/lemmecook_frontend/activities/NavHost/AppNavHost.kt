@@ -111,7 +111,7 @@ fun AppNavHost(
         composable(route = SettingsScreen.route) {
             val context = LocalContext.current
             val sharedViewModel = ViewModelProvider(context as ComponentActivity).get(SharedViewModelSettings::class.java)
-            sharedViewModel.setData(navController)
+            sharedViewModel.data = navController
             context.startActivity(Intent(context, Settings::class.java))
         }
 

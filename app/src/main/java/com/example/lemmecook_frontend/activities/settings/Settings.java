@@ -65,6 +65,12 @@ public class Settings extends AppCompatActivity {
         fragmentTransaction.replace(R.id.view2, new ProgressFragment());
         fragmentTransaction.commit();
 
+        SharedViewModelSettings sharedViewModel = new ViewModelProvider(this).get(SharedViewModelSettings.class);
+        navController = sharedViewModel.getData();
+        if (navController == null) {
+            Log.e("Settings", "NavHostController is not available");
+        }
+
         ibThreeDots = findViewById(R.id.imageButtonThreeDots);
         ibThreeDots.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,12 +94,6 @@ public class Settings extends AppCompatActivity {
                 isOpenEditProfileFragment = !isOpenEditProfileFragment;
             }
         });
-
-        SharedViewModelSettings sharedViewModel = new ViewModelProvider(this).get(SharedViewModelSettings.class);
-        navController = sharedViewModel.getData();
-        if (navController == null) {
-            Log.e("Settings", "NavHostController is not available");
-        }
 
         tvName = findViewById(R.id.textViewName);
         tvName.setText(UserSession.INSTANCE.getFullName());
