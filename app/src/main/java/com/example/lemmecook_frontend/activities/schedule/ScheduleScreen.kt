@@ -336,7 +336,8 @@ fun MealCard(
         Box(
             modifier = Modifier
                 .padding(8.dp)
-                .width(80.dp)
+                .width(80.dp),
+            contentAlignment = Alignment.Center
         ) {
             Text(
                 text = timeSlot.time,
