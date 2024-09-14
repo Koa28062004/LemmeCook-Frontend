@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -48,16 +49,11 @@ class MainActivity : ComponentActivity() {
                 .build()
         }
 
-        val startScreenRoute = intent.getStringExtra("startDestination")
-        val recipeId = intent.getIntExtra("recipeID", -1)
-        val startDestination: String = if (startScreenRoute != null) {
-            "${startScreenRoute}/$recipeId"
-        } else {
-            LandingScreen.route
-        }
+        val startDestination = intent.getStringExtra("startDestination") ?: LandingScreen.route
+        val defaultRecipeId = intent.getIntExtra("recipeID", -1)
 
         setContent {
-            LemmeCookFrontendApp(startDestination)
+            LemmeCookFrontendApp(startDestination, defaultRecipeId)
         }
     }
 }
@@ -65,7 +61,7 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LemmeCookFrontendApp(startDestination: String) {
+fun LemmeCookFrontendApp(startDestination: String, defaultRecipeId: Int) {
     LemmeCookFrontendTheme {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
@@ -94,6 +90,7 @@ fun LemmeCookFrontendApp(startDestination: String) {
             AppNavHost(
                 navController = navController,
                 startDestination = startDestination,
+                defaultRecipeId = defaultRecipeId,
                 modifier = Modifier.padding(innerPadding)
             )
         }
