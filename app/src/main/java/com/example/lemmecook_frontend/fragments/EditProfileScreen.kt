@@ -48,12 +48,14 @@ fun EditProfileScreen() {
     var oldPasswordVisible by remember { mutableStateOf(false) }
     var newPasswordVisible by remember { mutableStateOf(false) }
     var confirmNewPasswordVisible by remember { mutableStateOf(false) }
-    var avatarUri by remember { mutableStateOf<Uri?>(null) }
+    var avatarUri by remember { mutableStateOf(UserSession.avatar) }
 
     val customGreen = Color(0xFF55915E)
     val context = LocalContext.current
-    UserSession.userId = "2"
+    UserSession.userId = "1"
     val userId = UserSession.userId
+
+
 
     // Fetch user data when the composable is first composed
     LaunchedEffect(userId) {
@@ -61,6 +63,7 @@ fun EditProfileScreen() {
             UserApiUtility.getUserInfo(userId, context) { userInfo ->
                 username = userInfo.username
                 fullName = userInfo.fullName
+                password = userInfo.password
             }
         }
     }
@@ -280,6 +283,9 @@ fun EditProfileScreen() {
                                 context = context
                             ) { status ->
                                 if (status == "success") {
+                                    UserSession.userId = userId
+                                    UserSession.username = username
+                                    UserSession.fullName = fullName
                                     Toast.makeText(context, "Profile updated successfully", Toast.LENGTH_SHORT).show()
                                 }
                             }
