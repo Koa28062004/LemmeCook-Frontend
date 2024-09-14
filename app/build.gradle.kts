@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.material3.android)
     implementation(libs.material3)
     implementation(libs.activity)
+    implementation(libs.test.core.ktx)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -124,4 +125,8 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.30.0")
     implementation("com.google.accompanist:accompanist-flowlayout:0.30.0")
     implementation("io.coil-kt:coil-compose:2.0.0")
+
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation("org.jsoup:jsoup:1.18.1")
+
 }
