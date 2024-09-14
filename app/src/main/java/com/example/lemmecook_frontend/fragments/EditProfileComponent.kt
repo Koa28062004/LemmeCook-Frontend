@@ -1,3 +1,5 @@
+package com.example.lemmecook_frontend.fragments
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,6 +13,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.lemmecook_frontend.activities.NavHost.Blog
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
+import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
+import com.example.lemmecook_frontend.activities.NavHost.EditProfileScreen
 
 //@Preview(showBackground = true)
 @Composable
@@ -53,8 +59,11 @@ fun EditProfileComponent(navController: NavHostController) {
     }
 }
 
+fun onLogOut(navController: NavHostController) {
+    navController.navigateTo(LandingScreen.route)
+}
+
 // Function to handle Edit Profile navigation
 fun onEditProfile(navController: NavHostController) {
-    // Use the navController to navigate to the edit profile screen
-    navController.navigate("edit_profile_screen") // Replace with the actual route of your destination
+    navController.navigateTo(EditProfileScreen.route)
 }

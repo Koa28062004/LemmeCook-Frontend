@@ -1,6 +1,5 @@
 package com.example.lemmecook_frontend.fragments
 
-import EditProfileComponent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
