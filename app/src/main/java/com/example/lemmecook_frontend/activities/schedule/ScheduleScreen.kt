@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -25,11 +26,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -285,15 +288,43 @@ fun MealSchedule(
     selectedDate: LocalDate,
     navController: NavHostController
 ) {
+    var showEditDialog by remember { mutableStateOf(false) }
+    var timeSlotToEdit by remember { mutableStateOf(TimeSlot("", date = selectedDate)) }
+
     LazyColumn {
         items(viewModel.schedule.value.filter { it.date == selectedDate }) { timeSlot ->
-            MealCard(timeSlot = timeSlot, navController = navController)
+            MealCard(
+                timeSlot = timeSlot,
+                navController = navController,
+                onDelete = { viewModel.deleteTimeSlot(it) },
+                onEdit = {
+                    timeSlotToEdit = it
+                    showEditDialog = true
+                }
+            )
         }
+    }
+
+    if (showEditDialog) {
+        EditTimeSlotDialog(
+            timeSlot = timeSlotToEdit,
+            viewModel = viewModel,
+            onConfirm = { updatedTimeSlot ->
+                viewModel.editTimeSlot(updatedTimeSlot)
+                showEditDialog = false
+            },
+            onDismiss = { showEditDialog = false }
+        )
     }
 }
 
 @Composable
-fun MealCard(timeSlot: TimeSlot, navController: NavHostController) {
+fun MealCard(
+    timeSlot: TimeSlot,
+    navController: NavHostController,
+    onDelete: (TimeSlot) -> Unit,
+    onEdit: (TimeSlot) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -311,12 +342,39 @@ fun MealCard(timeSlot: TimeSlot, navController: NavHostController) {
                 text = timeSlot.time,
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier
+                    .padding(8.dp)
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
+            Button(
+                onClick = { onDelete(timeSlot) },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.White,
+                    containerColor = colorResource(id = R.color.bg_green)
+                ),
+                modifier = Modifier
+                    .wrapContentWidth()
+            ) {
+                Text("Del")
+            }
 
+            Button(
+                onClick = { onEdit(timeSlot) },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.White,
+                    containerColor = colorResource(id = R.color.bg_green)
+                ),
+                modifier = Modifier
+                    .wrapContentWidth()
+            ) {
+                Text("Edit")
+            }
+        }
         //Meal
         Card(
             colors = CardDefaults.cardColors(
@@ -357,6 +415,45 @@ fun MealCard(timeSlot: TimeSlot, navController: NavHostController) {
             }
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun EditTimeSlotDialog(
+    viewModel: ScheduleViewModel,
+    timeSlot: TimeSlot,
+    onConfirm: (TimeSlot) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var newTime by remember { mutableStateOf(timeSlot.time) }
+    var newMealId by remember { mutableIntStateOf(timeSlot.meal?.id ?: 0) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Edit Time Slot") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = newTime,
+                    onValueChange = { newTime = it },
+                    label = { Text("Time") }
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                onConfirm(timeSlot.copy(time = newTime, meal = viewModel.getMealByID(newMealId)))
+                onDismiss()
+            }) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

@@ -2,9 +2,9 @@ package com.example.lemmecook_frontend.activities.schedule
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import com.example.lemmecook_frontend.fragments.RecipeOverviewScreenWithRecipeID
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,18 +30,18 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     private val defaultSchedule = listOf(
         TimeSlot(
-            "8:00 AM",
-            Meal("Breakfast", 1, "Pancakes", listOf("Flour", "Eggs", "Milk")),
+            "8:00",
+            Meal("Breakfast", 640352, "Cranberry Apple Crisp", listOf("2 cups fresh cranberries", "1/2 stick unsalted butter, cut into cubes", "1 1/2 cups regular oats (not quick-cooking)")),
             LocalDate.now()
         ),
         TimeSlot(
-            "12:00 PM",
-            Meal("Lunch", 2, "Salad", listOf("Lettuce", "Tomato", "Cucumber")),
+            "12:00",
+            Meal("Lunch", 641803, "Easy & Delish! ~ Apple Crumble", listOf("1 Zest of lemon", "Dash of ground cloves", "3/4 stick of butter")),
             LocalDate.now().plusDays(1)
         ),
         TimeSlot(
-            "6:00 PM",
-            Meal("Dinner", 3, "Pasta", listOf("Pasta", "Tomato Sauce", "Cheese")),
+            "18:00",
+            Meal("Dinner", 73420, "Apple Or Peach Strudel", listOf("Milk, Eggs, Other Dairy", "1 tsp cinnamon", "1 tsp baking powder")),
             LocalDate.now().plusDays(2)
         )
     )
@@ -73,11 +73,14 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateChecklist() {
         _checklistItems.value = schedule.value
-            .filter { it.meal != null && it.date == selectedDate.value } // Filter by selected date
+            .filter { it.meal != null && it.date == selectedDate.value }
             .flatMap { it.meal!!.ingredients }
             .distinct()
             .mapIndexed { index, ingredient ->
-                ChecklistItem(id = index + 1, text = ingredient)
+                ChecklistItem(
+                    id = index +
+                            1, text = ingredient
+                )
             }
     }
 
@@ -85,6 +88,20 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
         _checklistItems.value = _checklistItems.value.map {
             if (it.id == item.id) item else it
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun deleteTimeSlot(timeSlot: TimeSlot) {
+        _schedule.value = _schedule.value.toMutableList().also { it.remove(timeSlot) }
+        updateChecklist()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun editTimeSlot(updatedTimeSlot: TimeSlot) {
+        _schedule.value = _schedule.value.toMutableList().also {
+            it[it.indexOf(updatedTimeSlot)] = updatedTimeSlot
+        }
+        updateChecklist()
     }
 
     init {

@@ -248,7 +248,7 @@ fun parseRssFeed(rssXml: String): RssFeed {
         val body = descriptionElement.textContent  // Get the description text
         val link = item.getElementsByTagName("link").item(0).textContent
 
-        // Clean up HTML (optional)
+        // Clean up HTML
         val bodyText = Jsoup.clean(
             body,
             Safelist.none()
@@ -262,13 +262,13 @@ fun parseRssFeed(rssXml: String): RssFeed {
             val thumbnailElement = mediaContent.getElementsByTagName("media:thumbnail").item(0)
             if (thumbnailElement != null && (thumbnailElement as Element).hasAttribute("url")) { // Cast to Element
                 thumbnail = thumbnailElement.getAttribute("url")
-                break // Found a thumbnail, stop searching
+                break
             }
 
             // 2. Check for a "url" attribute on the <media:content> itself
             if (mediaContent.hasAttribute("url")) {
                 thumbnail = mediaContent.getAttribute("url")
-                break // Found a URL, stop searching
+                break
             }
         }
         rssItems.add(BlogPost(title, bodyText, thumbnail ?: "", link))
