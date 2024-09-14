@@ -42,7 +42,7 @@ object GoalSession {
             goal = updatedGoalData,
             onSuccess = { updatedGoal: GoalDataModel ->
                 GoalSession.goal = updatedGoal
-                Log.d("GoalSession", "Goal updated successfully: $goal")
+                Log.d("GoalSession", "Goal updated successfully: $updatedGoal")
             },
             onError = { errorMessage ->
                 Log.e("GoalSession", "Error updating goal data: $errorMessage")

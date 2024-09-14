@@ -43,58 +43,6 @@ class UserApiUtility {
         }
 
         // Update the User Information
-//        fun updateUserInfo(
-//            userId: String,
-//            username: String,
-//            fullName: String,
-//            password: String,
-//            newPassword: String,
-//            avatarUri: Uri?,
-//            context: Context,
-//            onSuccess: (String) -> Unit
-//        ) {
-//            val updateUserInfoApi = ApiUtility.getApiClient().create(UsersApi::class.java)
-//
-//            // Convert fields to RequestBody
-//            val userIdRequestBody = userId.toRequestBody("text/plain".toMediaTypeOrNull())
-//            val usernameRequestBody = username.toRequestBody("text/plain".toMediaTypeOrNull())
-//            val fullNameRequestBody = fullName.toRequestBody("text/plain".toMediaTypeOrNull())
-//            val passwordRequestBody = password.toRequestBody("text/plain".toMediaTypeOrNull())
-//            val newPasswordRequestBody = newPassword.toRequestBody("text/plain".toMediaTypeOrNull())
-//
-//            // Prepare avatar if present
-//            val avatarPart: MultipartBody.Part? = avatarUri?.let {
-//                val file = ImageUtility.uriToFile(it, context)
-//                val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-//                MultipartBody.Part.createFormData("avatar", file.name, requestFile)
-//            }
-//
-//            // Make API call
-//            updateUserInfoApi.updateUserInfo(
-//                userIdRequestBody,
-//                usernameRequestBody,
-//                fullNameRequestBody,
-//                passwordRequestBody,
-//                newPasswordRequestBody,
-//                avatarPart
-//            ).enqueue(object : Callback<AuthResponse> {
-//                override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
-//                    val statusResponse = response.body()
-//                    if (response.isSuccessful && statusResponse?.status == "success") {
-//                        Toast.makeText(context, "Update successful!", Toast.LENGTH_SHORT).show()
-//                        onSuccess(statusResponse.status)
-//                    } else {
-//                        Toast.makeText(context, "Update failed: ${statusResponse?.status}", Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
-//                    Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-//                }
-//            })
-//        }
-
-        // Update the User Information
         fun updateUserInfo(
             userId: String,
             username: String,
