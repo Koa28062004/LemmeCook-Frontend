@@ -2,6 +2,7 @@ package com.example.lemmecook_frontend.fragments
 
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -294,7 +295,10 @@ fun RecipeOverview(
                         // Pick a date time to cook
                         DateTimeUtility.showDateTimePicker(
                             context = context,
-                            onDateTimePicked = {/* TODO: POST new schedule to backend */}
+                            onDateTimePicked = {
+                                /* TODO: POST new schedule to backend */
+                                Toast.makeText(context, "Schedule saved", Toast.LENGTH_SHORT).show()
+                            }
                         )
                     }
                 )
