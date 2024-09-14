@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -27,6 +28,7 @@ import com.example.lemmecook_frontend.activities.NavHost.AppNavHost
 import com.example.lemmecook_frontend.activities.NavHost.AppTabRowScreens
 import com.example.lemmecook_frontend.activities.NavHost.Blog
 import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
+import com.example.lemmecook_frontend.activities.NavHost.SettingsScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateSingleTopTo
 import com.example.lemmecook_frontend.activities.NavHost.shouldShowBottomBar
 import com.example.lemmecook_frontend.fragments.AppTabRow
@@ -47,11 +49,11 @@ class MainActivity : ComponentActivity() {
                 .build()
         }
 
-        val startDestination = intent.getStringExtra("startDestination") ?: Blog.route
-        val recipeId = intent.getIntExtra("recipeID", -1)
+        val startDestination = intent.getStringExtra("startDestination") ?: LandingScreen.route
+        val defaultRecipeId = intent.getIntExtra("recipeID", -1)
 
         setContent {
-            LemmeCookFrontendApp(startDestination, recipeId)
+            LemmeCookFrontendApp(startDestination, defaultRecipeId)
         }
     }
 }
@@ -59,17 +61,12 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LemmeCookFrontendApp(startDestination: String, recipeId: Int) {
+fun LemmeCookFrontendApp(startDestination: String, defaultRecipeId: Int) {
     LemmeCookFrontendTheme {
-        val recipeViewModel: RecipeViewModel = viewModel()
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
         val currentDestination = currentBackStack?.destination
         var previousScreen by remember { mutableStateOf<AppDestination>(Blog) }
-
-        if (recipeId != -1) {
-            recipeViewModel.fetchRecipeFromAPI(recipeId)
-        }
 
         LaunchedEffect(currentDestination?.route) {
             val newScreen = AppTabRowScreens.find { it.route == currentDestination?.route }
@@ -93,7 +90,7 @@ fun LemmeCookFrontendApp(startDestination: String, recipeId: Int) {
             AppNavHost(
                 navController = navController,
                 startDestination = startDestination,
-                recipeId = recipeId,
+                defaultRecipeId = defaultRecipeId,
                 modifier = Modifier.padding(innerPadding)
             )
         }

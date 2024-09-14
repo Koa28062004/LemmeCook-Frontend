@@ -62,6 +62,7 @@ import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 import com.example.lemmecook_frontend.utilities.DateTimeUtility
 import com.example.lemmecook_frontend.utilities.FavoriteApiUtility
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -78,11 +79,6 @@ fun StateTestScreenForRecipeOverview() {
 
 @Composable
 fun RecipeOverviewScreen(navHostController: NavHostController, recipeId: Int) {
-//    val recipeViewModel: RecipeViewModel = viewModel()
-//    recipeViewModel.fetchRecipeFromAPI(recipeId)
-//    val recipe = recipeViewModel.recipeInformation.value
-//    val recipe = fetchRecipe(recipeId)
-//    RecipeOverview(navController = navHostController, recipeInfo = recipe)
     val recipeState = remember { mutableStateOf<RecipeInformation?>(null) }
     val errorMessage = remember { mutableStateOf<String?>(null) }
 
@@ -100,7 +96,8 @@ fun RecipeOverviewScreen(navHostController: NavHostController, recipeId: Int) {
     // Check for errors or display loading state while the recipe is being fetched
     when {
         errorMessage.value != null -> {
-            Text("Error: ${errorMessage.value}")
+//            Text("Error: ${errorMessage.value}")
+            RecipeOverview(navController = navHostController, recipeInfo = SampleData.sampleRecipeInformation)
         }
         recipeState.value != null -> {
             RecipeOverview(navController = navHostController, recipeInfo = recipeState.value!!)
@@ -147,14 +144,6 @@ fun RecipeOverview(
         recipeInfo: RecipeInformation,
 ) {
     val context = LocalContext.current
-    val ingredientsFor1Portion = getIngredientFor1Portion(
-        recipeInfo.extendedIngredients,
-        recipeInfo.servings
-    )
-    val ingredientsOnDisplay = recipeInfo.extendedIngredients
-    val serves = remember { mutableIntStateOf(recipeInfo.servings) }
-
-    val recipeViewModel: RecipeViewModel = viewModel()
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -238,18 +227,18 @@ fun RecipeOverview(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(0.dp, 15.dp)
+                        .padding(0.dp, 8.dp)
                         .background(color = Color(244, 244, 244))
                 ) {
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         // Displaying nutritional values in a row
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp, vertical = 16.dp),
+                                .padding(horizontal = 20.dp, vertical = 12.dp),
                             horizontalArrangement = Arrangement.SpaceAround
                         ) {
                             NutrientItem("Calories", recipeInfo.nutrition.nutrients)
@@ -260,35 +249,21 @@ fun RecipeOverview(
                     }
                 }
 
-                IngredientsSection(
-                    serves = serves,
-                    ingredientsOnDisplay = ingredientsOnDisplay,
-                    ingredientsPer1Serving = ingredientsFor1Portion
-                )
-                IngredientsList(ingredients = ingredientsOnDisplay)
+                IngredientsSection(serves = recipeInfo.servings)
+                IngredientsList(ingredients = recipeInfo.extendedIngredients)
                 BottomButtonsSection(
                     onStartCookingClick = {
-                        // update servings and ingredient amounts
-                        recipeInfo.servings = serves.intValue
-                        recipeInfo.extendedIngredients = ingredientsOnDisplay
-                        recipeViewModel.setRecipeInformation(recipeInfo)
-
                         // navigate to RecipePrepScreen
+                        val recipeInfoJson = Gson().toJson(recipeInfo)
+                        navController.currentBackStackEntry?.savedStateHandle?.set("recipeInfo", recipeInfoJson)
                         navController.navigateTo(RecipePrepScreen.route)
                     },
                     onScheduleClick = {
-                        // update servings and ingredient amounts
-                        recipeInfo.servings = serves.intValue
-                        recipeInfo.extendedIngredients = ingredientsOnDisplay
-                        recipeViewModel.setRecipeInformation(recipeInfo)
-
                         // Pick a date time to cook
                         DateTimeUtility.showDateTimePicker(
                             context = context,
                             onDateTimePicked = {/* TODO: POST new schedule to backend */}
                         )
-
-                        // TODO: navigate to Schedule
                     }
                 )
             }
@@ -349,11 +324,7 @@ fun NutrientItem(label: String, nutrients: List<Nutrient>) {
 }
 
 @Composable
-fun IngredientsSection(
-    serves: MutableIntState,
-    ingredientsOnDisplay: List<ExtendedIngredient>,
-    ingredientsPer1Serving: List<ExtendedIngredient>
-) {
+fun IngredientsSection(serves: Int) {
     // Initialize and remember the serves state
     Row(
         modifier = Modifier
@@ -377,7 +348,7 @@ fun IngredientsSection(
             Spacer(modifier = Modifier.width(18.dp))
 
             Text(
-                text = "${serves.intValue} serves",
+                text = "$serves serves",
                 fontWeight = FontWeight.Normal,
                 fontFamily = sf_pro_display,
                 fontSize = 18.sp,
@@ -385,46 +356,46 @@ fun IngredientsSection(
             )
         }
 
-        // Increment and Decrement Buttons
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextButton(
-                onClick = {
-                    if (serves.intValue > 1) {
-                        serves.intValue
-                        for (i in ingredientsPer1Serving.indices) {
-                            ingredientsOnDisplay[i].amount -= ingredientsPer1Serving[i].amount
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .size(30.dp)
-                    .background(Color.Transparent),
-                border = BorderStroke(0.5.dp, Color.Black),
-                shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp),
-                contentPadding = PaddingValues()
-            ) {
-                Text("-")
-            }
-
-            TextButton(
-                onClick = {
-                    serves.intValue += 1
-                    for (i in ingredientsPer1Serving.indices) {
-                        ingredientsOnDisplay[i].amount += ingredientsPer1Serving[i].amount
-                    }
-                },
-                modifier = Modifier
-                    .size(30.dp)
-                    .background(Color.Transparent),
-                border = BorderStroke(0.5.dp, Color.Black),
-                shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp),
-                contentPadding = PaddingValues()
-            ) {
-                Text("+")
-            }
-        }
+//        // Increment and Decrement Buttons
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            TextButton(
+//                onClick = {
+//                    if (serves.intValue > 1) {
+//                        serves.intValue
+//                        for (i in ingredientsPer1Serving.indices) {
+//                            ingredientsOnDisplay[i].amount -= ingredientsPer1Serving[i].amount
+//                        }
+//                    }
+//                },
+//                modifier = Modifier
+//                    .size(30.dp)
+//                    .background(Color.Transparent),
+//                border = BorderStroke(0.5.dp, Color.Black),
+//                shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp),
+//                contentPadding = PaddingValues()
+//            ) {
+//                Text("-")
+//            }
+//
+//            TextButton(
+//                onClick = {
+//                    serves.intValue += 1
+//                    for (i in ingredientsPer1Serving.indices) {
+//                        ingredientsOnDisplay[i].amount += ingredientsPer1Serving[i].amount
+//                    }
+//                },
+//                modifier = Modifier
+//                    .size(30.dp)
+//                    .background(Color.Transparent),
+//                border = BorderStroke(0.5.dp, Color.Black),
+//                shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp),
+//                contentPadding = PaddingValues()
+//            ) {
+//                Text("+")
+//            }
+//        }
     }
 }
 
@@ -433,14 +404,14 @@ fun IngredientsList(ingredients: List<ExtendedIngredient>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp) // Set a fixed height for the ingredients list
+            .height(190.dp) // Set a fixed height for the ingredients list
             .padding(start = 40.dp, end = 15.dp)
     ) {
         // The scrollable list of ingredients
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 16.dp, bottom = 10.dp) // Adjust for padding or spacing if needed
+                .padding(end = 16.dp, bottom = 6.dp) // Adjust for padding or spacing if needed
         ) {
             items(ingredients) { ingredient ->
                 // Assuming IngredientItem has name and quantity parameters
@@ -471,7 +442,7 @@ fun IngredientItem(name: String, quantity: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 3.dp)
     ) {
         Text(
             text = name,

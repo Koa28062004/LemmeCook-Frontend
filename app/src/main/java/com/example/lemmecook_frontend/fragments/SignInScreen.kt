@@ -18,6 +18,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,8 @@ import com.example.lemmecook_frontend.activities.NavHost.ForgetPasswordScreen
 import com.example.lemmecook_frontend.api.UsersApi
 import com.example.lemmecook_frontend.models.auth.LoginDataModel
 import com.example.lemmecook_frontend.models.response.AuthResponse
+import com.example.lemmecook_frontend.singleton.GoalSession
+import com.example.lemmecook_frontend.singleton.ProgressSession
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.ApiUtility
 import retrofit2.Call

@@ -30,6 +30,7 @@ import com.example.lemmecook_frontend.ui.theme.sf_pro_display
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.getValue
@@ -42,13 +43,16 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.lemmecook_frontend.activities.NavHost.ExploreScreen
 import com.example.lemmecook_frontend.models.health.ProgressDataModel
+import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import com.example.lemmecook_frontend.models.viewmodels.GoalViewModel
 import com.example.lemmecook_frontend.models.viewmodels.ProgressViewModel
-import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
+import com.example.lemmecook_frontend.singleton.GoalSession
+import com.example.lemmecook_frontend.singleton.ProgressSession
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.utilities.DateTimeUtility
 import com.example.lemmecook_frontend.utilities.FavoriteApiUtility
 import com.example.lemmecook_frontend.utilities.GoalApiUtility
+import com.example.lemmecook_frontend.utilities.ProgressApiUtility
 
 @Preview(showBackground = true)
 @Composable
@@ -62,46 +66,38 @@ fun StateTestScreenForRecipeCongrats() {
         goalFat = 1000,
         goalPro = 1000,
         goalCarb = 1000,
-        allowChange = false,
-        difficult = 4,
         rate = 3
     )
 }
 
 @Composable
-fun RecipeCongratsScreen(navHostController: NavHostController) {
+fun RecipeCongratsScreen(navHostController: NavHostController, recipe: RecipeInformation) {
     val context = LocalContext.current
     val userId = UserSession.userId?.toInt() ?: -1
 
-    // Get recipe to get img src
-    val recipeViewModel: RecipeViewModel = viewModel()
-    val recipe = recipeViewModel.recipeInformation.value
-
     // Get goal from goal view model
-    val goalViewModel: GoalViewModel = viewModel()
-    val goal = goalViewModel.goal.value
-    val defaultGoal = GoalApiUtility.getDefaultGoal()
+    val goal = GoalSession.goal
 
     // Get progress from progress view model
-    val progressViewModel: ProgressViewModel = viewModel()
-    val currentProgress = progressViewModel.progress.value
+    val currentProgress = ProgressSession.progress
 
     // Update current progress
-    val mealCalo = recipe?.nutrition?.nutrients?.find { it.name == "Calories" }
-    val mealFat = recipe?.nutrition?.nutrients?.find { it.name == "Fat" }
-    val mealPro = recipe?.nutrition?.nutrients?.find { it.name == "Protein" }
-    val mealCarb = recipe?.nutrition?.nutrients?.find { it.name == "Carbohydrates" }
+    val mealCalo = recipe.nutrition.nutrients.find { it.name == "Calories" }
+    val mealFat = recipe.nutrition.nutrients.find { it.name == "Fat" }
+    val mealPro = recipe.nutrition.nutrients.find { it.name == "Protein" }
+    val mealCarb = recipe.nutrition.nutrients.find { it.name == "Carbohydrates" }
 
     val updatedProgress = ProgressDataModel (
         user_id = userId,
         date = DateTimeUtility.getCurrentDateAsString(),
-        calories = currentProgress?.calories!! + mealCalo?.amount?.toFloat()!!,
+        calories = currentProgress.calories + mealCalo?.amount?.toFloat()!!,
         fat = currentProgress.fat + mealFat?.amount?.toFloat()!!,
         protein = currentProgress.protein + mealPro?.amount?.toFloat()!!,
         carb = currentProgress.carb + mealCarb?.amount?.toFloat()!!
     )
 
-    progressViewModel.updateProgress(updatedProgress, context)
+    ProgressApiUtility.setProgress(updatedProgress, context)
+    ProgressSession.progress = updatedProgress
 
     // Screen display
     RecipeCongrats(
@@ -111,11 +107,9 @@ fun RecipeCongratsScreen(navHostController: NavHostController) {
         currentFat = updatedProgress.fat.toInt(),
         currentPro = updatedProgress.protein.toInt(),
         currentCarb = updatedProgress.carb.toInt(),
-        goalFat = goal?.fat?.toInt() ?: defaultGoal.fat.toInt(),
-        goalPro = goal?.protein?.toInt() ?: defaultGoal.protein.toInt(),
-        goalCarb = goal?.carb?.toInt() ?: defaultGoal.carb.toInt(),
-        allowChange = false,
-        difficult = 5,
+        goalFat = goal.fat.toInt(),
+        goalPro = goal.protein.toInt(),
+        goalCarb = goal.carb.toInt(),
         rate = 5
     )
 }
@@ -131,11 +125,8 @@ fun RecipeCongrats(
     goalFat: Int,
     goalPro: Int,
     goalCarb: Int,
-    allowChange: Boolean,
-    difficult: Int,
     rate: Int
 ) {
-    var difficulty by remember { mutableIntStateOf(difficult) }
     var rating by remember { mutableIntStateOf(rate) }
     val context = LocalContext.current
 
@@ -201,33 +192,22 @@ fun RecipeCongrats(
                 )
             }
 
-            ProgressComponent(
-                currentCalo = currentCalo,
-                currentFat = currentFat,
-                currentPro = currentPro,
-                currentCarb = currentCarb,
-                goalFat = goalFat,
-                goalPro = goalPro,
-                goalCarb = goalCarb,
-                allowChange = allowChange,
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
-            )
-
-            DifficultyRating(
-                rating = difficulty,
-                onRatingChanged = {difficulty = it},
-                criteria = "difficulty",
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 12.dp)
-            )
-
-            DifficultyRating(
-                rating = rating,
-                onRatingChanged = {rating = it},
-                criteria = "food",
-                modifier = Modifier.padding(horizontal = 28.dp, vertical = 12.dp)
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
+            LazyColumn {
+                item {
+                    ProgressComponent(
+                        allowChange = false,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+                    )
+                }
+                item {
+                    DifficultyRating(
+                        rating = rating,
+                        onRatingChanged = {rating = it},
+                        criteria = "food",
+                        modifier = Modifier.padding(horizontal = 28.dp, vertical = 12.dp)
+                    )
+                }
+            }
 
             DoneButton(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 15.dp),

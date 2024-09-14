@@ -25,7 +25,10 @@ class GoalApiUtility {
         }
 
         // Function to set a goal
-        fun setGoal(goal: GoalDataModel, context: Context) {
+        fun setGoal(goal: GoalDataModel,
+                    context: Context,
+                    onSuccess: (GoalDataModel) -> Unit,
+                    onError: (String) -> Unit) {
             val goalApi = ApiUtility.getApiClient().create(GoalApi::class.java)
 
             goalApi.updateUserGoaL(goal).enqueue(object : Callback<GoalPostResponse> {
