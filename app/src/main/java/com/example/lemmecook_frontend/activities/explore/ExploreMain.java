@@ -107,7 +107,7 @@ public class ExploreMain extends AppCompatActivity {
         });
 
         tv1 = findViewById(R.id.tv1);
-        tv1.setText("Welcome, " + UserSession.INSTANCE.getFullName());
+        tv1.setText("Welcome, " + UserSession.INSTANCE.getUsername());
 
         Uri avatarUri = UserSession.INSTANCE.getAvatar();
         ivAvatar = findViewById(R.id.imageViewAvatar);
