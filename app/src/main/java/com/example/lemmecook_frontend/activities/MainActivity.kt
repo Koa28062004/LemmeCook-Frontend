@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -18,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.Coil
@@ -29,11 +27,9 @@ import com.example.lemmecook_frontend.activities.NavHost.AppTabRowScreens
 import com.example.lemmecook_frontend.activities.NavHost.Blog
 import com.example.lemmecook_frontend.activities.NavHost.EditProfileScreen
 import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
-import com.example.lemmecook_frontend.activities.NavHost.SettingsScreen
 import com.example.lemmecook_frontend.activities.NavHost.navigateSingleTopTo
 import com.example.lemmecook_frontend.activities.NavHost.shouldShowBottomBar
 import com.example.lemmecook_frontend.fragments.AppTabRow
-import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
 import com.example.lemmecook_frontend.ui.theme.LemmeCookFrontendTheme
 
 class MainActivity : ComponentActivity() {

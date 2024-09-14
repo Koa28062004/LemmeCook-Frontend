@@ -77,6 +77,38 @@ fun StateTestScreenForRecipeOverview() {
     RecipeOverview(navHostController, recipe)
 }
 
+
+@Composable
+fun RecipeOverviewScreenWithRecipeID(navHostController: NavHostController, recipeId: Int) {
+    val recipeState = remember { mutableStateOf<RecipeInformation?>(null) }
+    val errorMessage = remember { mutableStateOf<String?>(null) }
+
+    // LaunchedEffect triggers fetching recipe information when the screen is displayed
+    LaunchedEffect(recipeId) {
+        fetchRecipe(recipeId) { recipeInfo, error ->
+            if (recipeInfo != null) {
+                recipeState.value = recipeInfo
+            } else {
+                errorMessage.value = error
+            }
+        }
+    }
+
+    // Check for errors or display loading state while the recipe is being fetched
+    when {
+        errorMessage.value != null -> {
+//            Text("Error: ${errorMessage.value}")
+            RecipeOverview(navController = navHostController, recipeInfo = SampleData.sampleRecipeInformation)
+        }
+        recipeState.value != null -> {
+            RecipeOverview(navController = navHostController, recipeInfo = recipeState.value!!)
+        }
+        else -> {
+            Text("Loading recipe...")
+        }
+    }
+}
+
 @Composable
 fun RecipeOverviewScreen(navHostController: NavHostController, recipeId: Int) {
     val recipeState = remember { mutableStateOf<RecipeInformation?>(null) }
