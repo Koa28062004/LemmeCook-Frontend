@@ -56,7 +56,7 @@ fun Step2Screen(navController: NavHostController) {
             Text(
                 text = "Skip",
                 color = Color.Blue,
-                modifier = Modifier.clickable {  }
+                modifier = Modifier.clickable { onSkip(navController) }
             )
         }
 
@@ -204,7 +204,6 @@ fun addDietsToUser(context: Context, userId: String?, selectedDiets: Set<String>
         }
     })
 }
-
 
 //@Preview(showBackground = true)
 @Composable
