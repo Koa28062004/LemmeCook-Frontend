@@ -25,7 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lemmecook_frontend.R;
 import com.example.lemmecook_frontend.adapter.FavoriteRecipeAdapter;
-import com.example.lemmecook_frontend.fragments.EditProfileFragment;
+import com.example.lemmecook_frontend.fragments.EditProfileComponentJava;
 import com.example.lemmecook_frontend.fragments.ProgressFragment;
 import com.example.lemmecook_frontend.models.recipe.Recipe;
 import com.example.lemmecook_frontend.singleton.UserSession;
@@ -78,7 +78,7 @@ public class Settings extends AppCompatActivity {
                 if (!isOpenEditProfileFragment) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.framelayoutEditProfile, new EditProfileFragment());
+                    fragmentTransaction.replace(R.id.framelayoutEditProfile, EditProfileComponentJava.newInstance());
                     fragmentTransaction.commit();
                 }
                 else {
