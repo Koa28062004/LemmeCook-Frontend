@@ -18,9 +18,9 @@ import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import com.example.lemmecook_frontend.activities.NavHost.LandingScreen
 import com.example.lemmecook_frontend.activities.NavHost.EditProfileScreen
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
-fun EditProfileComponent(navController: NavHostController) {
+fun EditProfileComponent() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,7 +35,7 @@ fun EditProfileComponent(navController: NavHostController) {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onEditProfile(navController) }
+                .clickable { onEditProfile() }
                 .padding(8.dp)
         )
 
@@ -53,17 +53,17 @@ fun EditProfileComponent(navController: NavHostController) {
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onLogOut(navController) }
+                .clickable { onLogOut() }
                 .padding(8.dp)
         )
     }
 }
 
-fun onLogOut(navController: NavHostController) {
-    navController.navigateTo(LandingScreen.route)
+fun onLogOut() {
+//    navController.navigateTo(LandingScreen.route)
 }
 
 // Function to handle Edit Profile navigation
-fun onEditProfile(navController: NavHostController) {
-    navController.navigateTo(EditProfileScreen.route)
+fun onEditProfile() {
+//    navController.navigateTo(EditProfileScreen.route)
 }
