@@ -30,8 +30,8 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     private val defaultSchedule = listOf(
         TimeSlot(
-            "9:00",
-            Meal("Breakfast", 640352, "Cranberry Apple Crisp", listOf("2 cups fresh cranberries", "1/2 stick unsalted butter, cut into cubes", "1 1/2 cups regular oats (not quick-cooking)")),
+            "12:00",
+            Meal("Lunch", 649985, "Light and Chunky Chicken Soup", listOf("1 cup of basmati rice", "1 cup Chopped carrot", "1 stick of Celery finelly chopped")),
             LocalDate.now()
         ),
         TimeSlot(

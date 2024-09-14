@@ -342,8 +342,7 @@ fun MealCard(
                 text = timeSlot.time,
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Black,
-                modifier = Modifier
-                    .padding(8.dp)
+                modifier = Modifier.align(Alignment.Center)
             )
         }
 
