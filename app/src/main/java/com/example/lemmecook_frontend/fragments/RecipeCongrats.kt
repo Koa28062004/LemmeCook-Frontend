@@ -1,6 +1,5 @@
 package com.example.lemmecook_frontend.fragments
 
-import ProgressComponent
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -1,3 +1,5 @@
+package com.example.lemmecook_frontend.fragments
+
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -34,6 +36,8 @@ import com.example.lemmecook_frontend.singleton.GoalSession
 import com.example.lemmecook_frontend.singleton.ProgressSession
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
+import androidx.compose.runtime.*
+
 @Composable
 fun ProgressComponent(
     allowChange: Boolean,
@@ -48,19 +52,13 @@ fun ProgressComponent(
     var showCarbDialog by remember { mutableStateOf(false) }
 
     // State for goal and progress
-    var currentGoal by remember { mutableStateOf(GoalSession.goal) }
+    val currentGoal by GoalSession.goal.collectAsState()
     var currentProgress by remember { mutableStateOf(ProgressSession.progress) }
 
     // Fetch goal and progress data when the composable is first composed
     LaunchedEffect(Unit) {
         GoalSession.fetchGoalData(context)
         ProgressSession.fetchProgressData(context)
-    }
-
-    // Observe changes to GoalSession.goal and update the state
-    LaunchedEffect(GoalSession.goal) {
-        currentGoal = GoalSession.goal
-        Log.d("ProgressComponent", "Current goal updated: $currentGoal")
     }
 
     // Observe changes to ProgressSession.progress and update the state
