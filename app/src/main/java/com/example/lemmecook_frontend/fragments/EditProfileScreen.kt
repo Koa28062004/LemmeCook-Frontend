@@ -52,7 +52,6 @@ fun EditProfileScreen() {
 
     val customGreen = Color(0xFF55915E)
     val context = LocalContext.current
-    UserSession.userId = "1"
     val userId = UserSession.userId
 
 
