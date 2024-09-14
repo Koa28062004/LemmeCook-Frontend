@@ -93,13 +93,6 @@ public class recent_search extends Fragment {
                     removeDuplicates(recentSearchedRecipe);
                     updateRecentSearch();
 
-//                    // fetch recipe info and store it in RecipeViewModel
-//                    recipeViewModel.fetchRecipeFromAPI(recipeChosenByUser.getId());
-//
-//                    // navigate to RecipeOverview
-//                    Intent intent = new Intent(getContext(), RecipeActivity.class);
-//                    startActivity(intent);
-
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     intent.putExtra("startDestination", "RecipeOverviewScreen");
                     intent.putExtra("recipeID", recipeChosenByUser.getId());
