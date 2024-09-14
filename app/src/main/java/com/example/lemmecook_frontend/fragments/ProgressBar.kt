@@ -152,10 +152,12 @@ fun ProgressComponent(
     }
     if (showCaloriesDialog) {
         SetCaloriesGoal { calories ->
+            // Update the goal first
             GoalSession.updateGoal(
                 context = context,
-                goalData = currentGoal.copy(calories = calories)
+                goalData = currentGoal
             )
+            // Fetch the updated goal data after updating
             showCaloriesDialog = false
         }
     }
@@ -164,7 +166,7 @@ fun ProgressComponent(
         SetFatGoal { fat ->
             GoalSession.updateGoal(
                 context = context,
-                goalData = currentGoal.copy(fat = fat)
+                goalData = currentGoal
             )
             showFatDialog = false
         }
@@ -174,7 +176,7 @@ fun ProgressComponent(
         SetProteinGoal { protein ->
             GoalSession.updateGoal(
                 context = context,
-                goalData = currentGoal.copy(protein = protein)
+                goalData = currentGoal
             )
             showProteinDialog = false
         }
@@ -184,7 +186,7 @@ fun ProgressComponent(
         SetCarbGoal { carb ->
             GoalSession.updateGoal(
                 context = context,
-                goalData = currentGoal.copy(carb = carb)
+                goalData = currentGoal
             )
             showCarbDialog = false
         }
