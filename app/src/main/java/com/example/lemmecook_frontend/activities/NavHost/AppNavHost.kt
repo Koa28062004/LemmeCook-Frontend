@@ -19,6 +19,7 @@ import com.example.lemmecook_frontend.activities.schedule.ScheduleScreen
 import com.example.lemmecook_frontend.activities.settings.Settings
 import com.example.lemmecook_frontend.activities.settings.SharedViewModelSettings
 import com.example.lemmecook_frontend.fragments.ChooseNameScreenPreview
+import com.example.lemmecook_frontend.fragments.EditProfileScreenPreview
 import com.example.lemmecook_frontend.fragments.ForgetPasswordScreenPreview
 import com.example.lemmecook_frontend.fragments.LandingScreenPreview
 import com.example.lemmecook_frontend.fragments.OnboardScreenPreview
@@ -31,8 +32,6 @@ import com.example.lemmecook_frontend.fragments.Step1ScreenPreview
 import com.example.lemmecook_frontend.fragments.Step2ScreenPreview
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
 import com.google.gson.Gson
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.lemmecook_frontend.fragments.EditProfileScreenPreview
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -113,11 +112,6 @@ fun AppNavHost(
             val sharedViewModel = ViewModelProvider(context as ComponentActivity).get(SharedViewModelSettings::class.java)
             sharedViewModel.data = navController
             context.startActivity(Intent(context, Settings::class.java))
-        }
-
-        composable("recipeOverview/{recipeId}") { backStackEntry ->
-            val recipeId = backStackEntry.arguments?.getString("recipeId")?.toIntOrNull() ?: -1
-            RecipeOverviewScreen(navController, recipeId)
         }
     }
 }

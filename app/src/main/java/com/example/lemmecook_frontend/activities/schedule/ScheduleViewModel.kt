@@ -1,6 +1,7 @@
 package com.example.lemmecook_frontend.activities.schedule
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,17 +32,36 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
     private val defaultSchedule = listOf(
         TimeSlot(
             "12:00",
-            Meal("Lunch", 649985, "Light and Chunky Chicken Soup", listOf("1 cup of basmati rice", "1 cup Chopped carrot", "1 stick of Celery finelly chopped")),
+            Meal(
+                "Lunch",
+                649985,
+                "Light and Chunky Chicken Soup",
+                listOf(
+                    "1 cup of basmati rice",
+                    "1 cup Chopped carrot",
+                    "1 stick of Celery finelly chopped"
+                )
+            ),
             LocalDate.now()
         ),
         TimeSlot(
-            "9:00",
-            Meal("Lunch", 641803, "Easy & Delish! ~ Apple Crumble", listOf("1 Zest of lemon", "Dash of ground cloves", "3/4 stick of butter")),
+            "12:00",
+            Meal(
+                "Lunch",
+                641803,
+                "Easy & Delish! ~ Apple Crumble",
+                listOf("1 Zest of lemon", "Dash of ground cloves", "3/4 stick of butter")
+            ),
             LocalDate.now().plusDays(1)
         ),
         TimeSlot(
-            "9:00",
-            Meal("Dinner", 73420, "Apple Or Peach Strudel", listOf("Milk, Eggs, Other Dairy", "1 tsp cinnamon", "1 tsp baking powder")),
+            "18:00",
+            Meal(
+                "Dinner",
+                73420,
+                "Apple Or Peach Strudel",
+                listOf("Milk, Eggs, Other Dairy", "1 tsp cinnamon", "1 tsp baking powder")
+            ),
             LocalDate.now().plusDays(2)
         )
     )
@@ -69,26 +89,26 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
             .mapNotNull { it.meal }
             .find { it.id == mealID }
     }
+//
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    private fun updateChecklist() {
+//        _checklistItems.value = schedule.value
+//            .filter { it.meal != null && it.date == selectedDate.value }
+//            .flatMap { it.meal!!.ingredients }
+//            .distinct()
+//            .mapIndexed { index, ingredient ->
+//                ChecklistItem(
+//                    id = index +
+//                            1, text = ingredient
+//                )
+//            }
+//    }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateChecklist() {
-        _checklistItems.value = schedule.value
-            .filter { it.meal != null && it.date == selectedDate.value }
-            .flatMap { it.meal!!.ingredients }
-            .distinct()
-            .mapIndexed { index, ingredient ->
-                ChecklistItem(
-                    id = index +
-                            1, text = ingredient
-                )
-            }
-    }
-
-    fun updateChecklistItem(item: ChecklistItem) {
-        _checklistItems.value = _checklistItems.value.map {
-            if (it.id == item.id) item else it
-        }
-    }
+//    fun updateChecklistItem(item: ChecklistItem) {
+//        _checklistItems.value = _checklistItems.value.map {
+//            if (it.id == item.id) item else it
+//        }
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun deleteTimeSlot(timeSlot: TimeSlot) {
@@ -96,12 +116,72 @@ class ScheduleViewModel : androidx.lifecycle.ViewModel() {
         updateChecklist()
     }
 
+    //    @RequiresApi(Build.VERSION_CODES.O)
+//    fun editTimeSlot(updatedTimeSlot: TimeSlot) {
+//        _schedule.value = _schedule.value.toMutableList().also {
+//            it[it.indexOf(updatedTimeSlot)] = updatedTimeSlot
+//        }
+//        updateChecklist()
+//    }
+
+
+    fun updateChecklistItem(item: ChecklistItem) {
+        Log.d("Linh ChecklistApp", "Updating Checklist Item: $item") // Log before updating
+        _checklistItems.value = _checklistItems.value.map {
+            if (it.id == item.id) item else it
+        }
+        Log.d(
+            "Linh ChecklistApp",
+            "Checklist updated: ${_checklistItems.value}"
+        ) // Log after updating
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateChecklist() {
+        val filteredSchedule = schedule.value
+            .filter { it.meal != null && it.date == selectedDate.value }
+        Log.d("Linh updateChecklist", "Filtered schedule items: $filteredSchedule")
+
+        val allIngredients = filteredSchedule
+            .flatMap { it.meal!!.ingredients }
+            .distinct()
+        Log.d("Linh updateChecklist", "Unique ingredients: $allIngredients")
+
+        _checklistItems.value = allIngredients
+            .mapIndexed { index, ingredient ->
+                ChecklistItem(
+                    id = index + 1,
+                    text = ingredient
+                )
+            }
+        Log.d("Linh updateChecklist", "Updated checklist: ${_checklistItems.value}")
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     fun editTimeSlot(updatedTimeSlot: TimeSlot) {
-        _schedule.value = _schedule.value.toMutableList().also {
-            it[it.indexOf(updatedTimeSlot)] = updatedTimeSlot
+        // 1. Find the index of the TimeSlot to update using the identifier:
+        val index = _schedule.value.indexOfFirst {
+            // Adjust the condition based on your identifier:
+            val identifier = Pair(updatedTimeSlot.date, updatedTimeSlot.meal?.id)
+            Log.d("Linh ScheduleViewModel", "Checking TimeSlot: date=${it.date}, MealId=${it.meal?.id}")
+            Log.d("Linh ScheduleViewModel", "Identifier: $identifier")
+            when (identifier) {
+                is Pair<*, *> -> (it.date == identifier.first &&
+                        it.meal?.id == identifier.second)  // If identifier is a Triple
+                else -> false // Handle other identifier types if needed
+            }
         }
-        updateChecklist()
+
+        // 2. Update the schedule:
+        if (index != -1) {
+            Log.d("Linh ScheduleViewModel", "Found matching TimeSlot at index: $index")
+            val updatedSchedule = _schedule.value.toMutableList()
+            updatedSchedule[index] = updatedTimeSlot
+            _schedule.value = updatedSchedule
+            updateChecklist()
+        } else {
+            // Handle the case where the TimeSlot doesn't exist
+            Log.e("Linh ScheduleViewModel", "Cannot edit TimeSlot: TimeSlot not found")
+        }
     }
 
     init {

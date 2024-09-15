@@ -47,7 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.lemmecook_frontend.R
-import com.example.lemmecook_frontend.activities.NavHost.navigateSingleTopTo
+import com.example.lemmecook_frontend.activities.NavHost.RecipeOverviewScreen
+import com.example.lemmecook_frontend.activities.NavHost.navigateTo
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -380,7 +381,13 @@ fun MealCard(
             colors = CardDefaults.cardColors(
                 containerColor = colorResource(id = R.color.bg_green)
             ),
-            onClick = { navController.navigateSingleTopTo("recipe/${timeSlot.meal?.id}") },
+            onClick = {
+                navController.currentBackStackEntry?.savedStateHandle?.set(
+                    "recipeId",
+                    timeSlot.meal?.id ?: 649985
+                )
+                navController.navigateTo(RecipeOverviewScreen.route)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),

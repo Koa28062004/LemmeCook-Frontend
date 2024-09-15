@@ -3,13 +3,11 @@ package com.example.lemmecook_frontend.fragments
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +41,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
@@ -57,7 +53,6 @@ import com.example.lemmecook_frontend.api.RecipeService
 import com.example.lemmecook_frontend.models.recipe.ExtendedIngredient
 import com.example.lemmecook_frontend.models.recipe.Nutrient
 import com.example.lemmecook_frontend.models.recipe.RecipeInformation
-import com.example.lemmecook_frontend.models.viewmodels.RecipeViewModel
 import com.example.lemmecook_frontend.models.recipe.SampleData
 import com.example.lemmecook_frontend.singleton.UserSession
 import com.example.lemmecook_frontend.ui.theme.sf_pro_display
@@ -99,11 +94,16 @@ fun RecipeOverviewScreenWithRecipeID(navHostController: NavHostController, recip
     when {
         errorMessage.value != null -> {
 //            Text("Error: ${errorMessage.value}")
-            RecipeOverview(navController = navHostController, recipeInfo = SampleData.sampleRecipeInformation)
+            RecipeOverview(
+                navController = navHostController,
+                recipeInfo = SampleData.sampleRecipeInformation
+            )
         }
+
         recipeState.value != null -> {
             RecipeOverview(navController = navHostController, recipeInfo = recipeState.value!!)
         }
+
         else -> {
             Text("Loading recipe...")
         }
@@ -129,12 +129,14 @@ fun RecipeOverviewScreen(navHostController: NavHostController, recipeId: Int) {
     // Check for errors or display loading state while the recipe is being fetched
     when {
         errorMessage.value != null -> {
-//            Text("Error: ${errorMessage.value}")
-            RecipeOverview(navController = navHostController, recipeInfo = SampleData.sampleRecipeInformation)
+            Text("Error: ${errorMessage.value}")
+//            RecipeOverview(navController = navHostController, recipeInfo = SampleData.sampleRecipeInformation)
         }
+
         recipeState.value != null -> {
             RecipeOverview(navController = navHostController, recipeInfo = recipeState.value!!)
         }
+
         else -> {
             Text("Loading recipe...")
         }
@@ -170,11 +172,10 @@ fun fetchRecipe(recipeId: Int, callback: (RecipeInformation?, String?) -> Unit) 
 }
 
 
-
 @Composable
 fun RecipeOverview(
-        navController: NavHostController,
-        recipeInfo: RecipeInformation,
+    navController: NavHostController,
+    recipeInfo: RecipeInformation,
 ) {
     val context = LocalContext.current
 
@@ -214,12 +215,14 @@ fun RecipeOverview(
 
         ThreeDotMenu(
             buttonItems = listOf(
-                MenuItem("Add to Favorites", FavoriteApiUtility.addToFavorites(
-                    userId = UserSession.userId?.toInt() ?: -1,
-                    mealId = recipeInfo.id,
-                    context = context
-                )),
-                MenuItem("Share") {/* TODO: Share this recipe */}
+                MenuItem(
+                    "Add to Favorites", FavoriteApiUtility.addToFavorites(
+                        userId = UserSession.userId?.toInt() ?: -1,
+                        mealId = recipeInfo.id,
+                        context = context
+                    )
+                ),
+                MenuItem("Share") {/* TODO: Share this recipe */ }
             ),
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -243,8 +246,9 @@ fun RecipeOverview(
                     text = recipeInfo.title,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = sf_pro_display,
-                    fontSize = 26.sp,
-                    modifier = Modifier.padding(0.dp, 14.dp, 0.dp, 4.dp)
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(0.dp, 14.dp, 0.dp, 4.dp),
+                    color = Color.Black
                 )
 
 //                AnimatedTextLoop(texts = recipeInfo.dishTypes)
@@ -288,7 +292,10 @@ fun RecipeOverview(
                     onStartCookingClick = {
                         // navigate to RecipePrepScreen
                         val recipeInfoJson = Gson().toJson(recipeInfo)
-                        navController.currentBackStackEntry?.savedStateHandle?.set("recipeInfo", recipeInfoJson)
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "recipeInfo",
+                            recipeInfoJson
+                        )
                         navController.navigateTo(RecipePrepScreen.route)
                     },
                     onScheduleClick = {
@@ -345,7 +352,8 @@ fun NutrientItem(label: String, nutrients: List<Nutrient>) {
                 text = nutrient.amount.toInt().toString() + nutrient.unit,
                 fontWeight = FontWeight.Normal,
                 fontFamily = sf_pro_display,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                color = Color.Black
             )
 
             Text(
@@ -453,7 +461,12 @@ fun IngredientsList(ingredients: List<ExtendedIngredient>) {
                 // Assuming IngredientItem has name and quantity parameters
                 IngredientItem(
                     name = ingredient.name,
-                    quantity = "${if (ingredient.amount % 1.0 == 0.0) ingredient.amount.toInt() else String.format("%.1f", ingredient.amount)} ${ingredient.unit}" // Display quantity and unit
+                    quantity = "${
+                        if (ingredient.amount % 1.0 == 0.0) ingredient.amount.toInt() else String.format(
+                            "%.1f",
+                            ingredient.amount
+                        )
+                    } ${ingredient.unit}" // Display quantity and unit
                 )
             }
         }
